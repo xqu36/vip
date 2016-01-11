@@ -358,4 +358,15 @@ regenerate_bd_layout
 make_wrapper -files [get_files $design_name.bd] -top -import
 validate_bd_design
 
+# Generate output products
+generate_target all [get_files $origin_dir/project/zedboard_baseline.srcs/sources_1/bd/zedboard_baseline/zedboard_baseline.bd]
+
+# Run synthesis
+launch_runs impl_1 -to_step write_bitstream
+wait_on_run impl_1
+
+# Export HW
+file mkdir $origin_dir/zedboard_baseline/zedboard_baseline.sdk
+file copy $origin_dir/zedboard_baseline/zedboard_baseline.runs/impl_1/zedboard_baseline_wrapper.sysdef $origin_dir/zedboard_baseline/zedboard_baseline.sdk/zedboard_baseline_wrapper.hdf
+
 puts "INFO: Project created:zedboard_baseline"
