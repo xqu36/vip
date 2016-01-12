@@ -362,11 +362,15 @@ validate_bd_design
 generate_target all [get_files $origin_dir/project/zedboard_baseline.srcs/sources_1/bd/zedboard_baseline/zedboard_baseline.bd]
 
 # Run synthesis
+launch_runs synth_1
+wait_on_run synth_1
+
+# run impl
 launch_runs impl_1 -to_step write_bitstream
 wait_on_run impl_1
 
 # Export HW
-file mkdir $origin_dir/zedboard_baseline/zedboard_baseline.sdk
-file copy $origin_dir/zedboard_baseline/zedboard_baseline.runs/impl_1/zedboard_baseline_wrapper.sysdef $origin_dir/zedboard_baseline/zedboard_baseline.sdk/zedboard_baseline_wrapper.hdf
+file mkdir $origin_dir/project/zedboard_baseline.sdk
+file copy -force $origin_dir/project/zedboard_baseline.runs/impl_1/zedboard_baseline_wrapper.sysdef $origin_dir/project/zedboard_baseline.sdk/zedboard_baseline_wrapper.hdf
 
 puts "INFO: Project created:zedboard_baseline"

@@ -12,8 +12,13 @@
 
 # default
 TARGETS=all
-HWPATH=../hw/
-SWPATH=
+CLEAN=0
+VERBOSE=0
+HWPATH=../hw
+SWPATH=../sw
+HLSPATH=../hw/src/hls
+
+PROJNAME=zedboard-baseline
 
 for i in "$@"
 do 
@@ -30,8 +35,16 @@ case $i in
     SWPATH="${i#*=}"
     shift
     ;;
+    -hlsp=*|--hlspath=*)
+    HLSPATH="${i#*=}"
+    shift
+    ;;
     -c|--clean)
-    CLEAN=YES
+    CLEAN=1
+    shift
+    ;;
+    -v|--verbose)
+    VERBOSE=1
     shift
     ;;
     *)
@@ -41,13 +54,24 @@ case $i in
 esac
 done
 
-# Process TARGETS
-IFS=","
+#########
+# BUILD #
+#########
 
-if [ $TARGETS==all ] && [ ${#TARGETS}==1 ]
+IFS=","
+TGTARRAY=( $TARGETS )
+
+if [ ${#TGTARRAY[@]} -eq 1 ]
 then
-    TARGETS=hw,sw,hls,boot,key
+    if [ "$TARGETS" == "all" ]
+    then
+        TARGETS=hw,sw,hls,boot,key
+    fi
 fi
+
+echo "TARGETS: $TARGETS"
+echo "CLEAN: $CLEAN"
+echo "VERBOSE: $VERBOSE"
 
 for a in $TARGETS
 do
@@ -58,12 +82,35 @@ case $a in
     # Build HW #
     ############
 
-    # run vivado
-    setup_vivado14
-    vivado -mode tcl -source $HWPATH/build.tcl -notrace
-    # source tcl
-    # integrate IP
+    if [ "$VERBOSE" -eq 1 ]
+    then
+        echo "Building HW..."
+    fi
 
+    # clean
+    if [ "$CLEAN" -eq 1 ]
+    then
+        if [ -d "$HWPATH/project" ]
+        then
+            echo "rm -rf $HWPATH/project"
+            rm -rf $HWPATH/project
+        fi
+    fi
+
+    # check if project directory already exists
+    # NOTE: project name "project" is defined in HWPATH/build.tcl
+    if [ -d "$HWPATH/project" ]
+    then
+        echo "Project directory $HWPATH/project already exists. Include -c|--clean if you want to rebuild."
+    else
+        # run vivado & source tcl
+        echo "Starting Vivado in tcl mode."
+
+        source /opt/Xilinx/Vivado/2014.4/settings64.sh
+        vivado -mode batch -source $HWPATH/build.tcl -notrace -nolog -nojournal
+
+        echo "HW build done!"
+    fi
     ;;
 
     sw)
@@ -71,13 +118,26 @@ case $a in
     ############
     # Build SW #
     ############
-    echo "running sw"    
+
+    if [ $VERBOSE -eq 1 ]
+    then
+        echo "Building SW..."    
+        echo "NOTE: HW must be built first!"
+    fi
+
+    # clean
+    if [ $CLEAN -eq 1 ]
+    then
+        echo "petalinux-build -p $SWPATH/petalinux/$PROJNAME -x mrproper"
+        petalinux-build -p $SWPATH/petalinux/$PROJNAME/ -x mrproper
+    fi
     
-    # clean petalinux
-    # build petalinux
+    # get hw description & config
+    petalinux-config -p $SWPATH/petalinux/$PROJNAME --get-hw-description=$HWPATH/project/zedboard_baseline.sdk/
+    petalinux-build -p $SWPATH/petalinux/$PROJNAME
+
     # build apps
     # build drivers
-    # create boot image
 
     ;;
 
@@ -86,7 +146,7 @@ case $a in
     #############
     # Build HLS #
     #############
-    echo "running hls"    
+    echo "Building HLS..."    
     
     # run vivado_hls
     # run csim
@@ -102,7 +162,12 @@ case $a in
     # (Baby that's what makes you bootable) #
     #########################################
     
-    echo "running boot"    
+    if [ $VERBOSE -eq 1 ]
+    then
+        echo "Packaging boot images..."
+        echo "NOTE: HW & SW need to be built first!"
+    fi
+
     # petalinux-package
 
     ;;
@@ -116,10 +181,6 @@ case $a in
     echo "running keys"    
     # generate keys
 
-    ;;
-
-    all)
-    echo "skip all"
     ;;
 
     *)
