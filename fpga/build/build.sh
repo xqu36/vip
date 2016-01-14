@@ -33,6 +33,10 @@ function usage() {
     echo -e "\t -h|--help: Display this menu."
 }
 
+source /opt/Xilinx/Vivado/2014.4/settings64.sh
+source /opt/Xilinx/SDK/2014.4/settings64.sh
+source /opt/pkg/petalinux-v2014.4-final/settings.sh
+
 for i in "$@"
 do 
 case $i in
@@ -163,7 +167,6 @@ case $a in
         # run vivado & source tcl
         echo "Starting Vivado in tcl mode."
 
-        source /opt/Xilinx/Vivado/2014.4/settings64.sh
         vivado -mode batch -source $HWPATH/build.tcl -notrace -nolog -nojournal
 
         echo "HW build done!"
