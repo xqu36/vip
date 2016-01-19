@@ -14,28 +14,31 @@
 TARGETS=all
 CLEAN=0
 VERBOSE=0
-HWPATH=../hw
-SWPATH=../sw
-#TODO: where is the script run
-BUILDPATH=.
-HLSPATH=../hw/src/hls
 
+BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+HWPATH=$BUILDPATH/../hw
+SWPATH=$BUILDPATH/../sw
+HLSPATH=$BUILDPATH/../hw/src/hls
+
+# petalinux project name
 PROJNAME=zedboard-baseline
 
 function usage() {
-    echo "Usage: ./build.sh -t[=all] [optional args]"
+    echo "Usage: build.sh -t[=all] [optional args]"
     echo -e "\t -t|--targets: Available targets are key, hls, hw, sw, boot (or all). Targets must be run in this order. [Default all]"
     echo -e "\t -c|--clean: Clean specified targets before building. [Default 0]"
     echo -e "\t -v|--verbose: Enables verbose mode. [Default 0]"
-    echo -e "\t -hp|--hwpath: Path to /hw/. [Default ../hw]"
-    echo -e "\t -sp|--swpath: Path to /sw/. [Default ../sw]"
-    echo -e "\t -hlsp|--hlspath: Path to /hls/. [Default ../hw/src/hls]"
+    echo -e "\t -hp|--hwpath: Path to /hw/. [Default fpga/hw]"
+    echo -e "\t -sp|--swpath: Path to /sw/. [Default fpga/sw]"
+    echo -e "\t -hlsp|--hlspath: Path to /hls/. [Default fpga/hw/src/hls]"
     echo -e "\t -h|--help: Display this menu."
+    echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
+# machine-dependent
 source /opt/Xilinx/Vivado/2014.4/settings64.sh
 source /opt/Xilinx/SDK/2014.4/settings64.sh
-source /opt/pkg/petalinux-v2014.4-final/settings.sh
+#source /opt/pkg/petalinux-v2014.4-final/settings.sh
 
 for i in "$@"
 do 
@@ -94,7 +97,15 @@ fi
 echo "Starting build script..."
 echo ""
 
-echo "TARGETS: $TARGETS"
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "TARGETS: $TARGETS"
+    echo "BUILDPATH: $BUILDPATH"
+    echo "HWPATH: $HWPATH"
+    echo "SWPATH: $SWPATH"
+    echo "HLSPATH: $HLSPATH"
+    
+fi
 
 for a in $TARGETS
 do
