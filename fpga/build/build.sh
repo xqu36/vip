@@ -15,6 +15,8 @@ TARGETS=all
 CLEAN=0
 VERBOSE=0
 
+#TODO: Add CLEAN ONLY option
+
 BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HWPATH=$BUILDPATH/../hw
 SWPATH=$BUILDPATH/../sw
