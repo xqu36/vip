@@ -36,8 +36,8 @@ function usage() {
 }
 
 # machine-dependent
-source /opt/Xilinx/Vivado/2014.4/settings64.sh
-source /opt/Xilinx/SDK/2014.4/settings64.sh
+source /opt/Xilinx/Vivado/2015.4/settings64.sh
+source /opt/Xilinx/SDK/2015.4/settings64.sh
 #source /opt/pkg/petalinux-v2014.4-final/settings.sh
 
 for i in "$@"
