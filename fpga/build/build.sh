@@ -36,9 +36,9 @@ function usage() {
 }
 
 # machine-dependent
-source /opt/Xilinx/Vivado/2014.4/settings64.sh
-source /opt/Xilinx/SDK/2014.4/settings64.sh
-#source /opt/pkg/petalinux-v2014.4-final/settings.sh
+source /opt/Xilinx/Vivado/2015.4/settings64.sh
+source /opt/Xilinx/SDK/2015.4/settings64.sh
+# source /opt/Xilinx/petalinux-v2015.4-final/settings.sh
 
 for i in "$@"
 do 
@@ -203,12 +203,14 @@ case $a in
     # clean
     if [ $CLEAN -eq 1 ]
     then
-        echo "petalinux-build -p $SWPATH/petalinux/$PROJNAME -x distclean"
-        petalinux-build -p $SWPATH/petalinux/$PROJNAME/ -x distclean
+        echo "petalinux-build -p $SWPATH/petalinux/$PROJNAME -x mrproper"
+        petalinux-build -p $SWPATH/petalinux/$PROJNAME/ -x mrproper 
     fi
     
     if [ ! -d "$SWPATH/petalinux/$PROJNAME/build" ]
     then
+	# regenerate first stage bootloader for hardware
+#	hsi -mode batch -source $BUILDPATH/support/generate_fsbl.tcl -tclargs $HWPATH/project/zedboard_baseline.sdk/zedboard_baseline.hdf 
         # get hw description & config
         petalinux-config -p $SWPATH/petalinux/$PROJNAME --get-hw-description=$HWPATH/project/zedboard_baseline.sdk/
         petalinux-build -p $SWPATH/petalinux/$PROJNAME

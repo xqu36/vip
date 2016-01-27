@@ -43,7 +43,7 @@
 * ----- ---- -------- -------------------------------------------------------
 * 1.00a jz	04/28/11 Initial release
 * 7.00a kc  10/18/13 Integrated SD/MMC driver
-*
+* 7.00b jn   1/27/16  Modified arguments passed to f_mount causing build fail
 * </pre>
 *
 * @note
@@ -104,7 +104,11 @@ u32 InitSD(const char *filename)
 	FRESULT rc;
 
 	/* Register volume work area, initialize device */
-	rc = f_mount(0, &fatfs);
+	rc = f_mount(&fatfs, "", 0);
+	/*
+	@jnifong3 Edited 1/27/2016 by Jude Nifong to fix petalinux build error
+	Line originally read as follows: rc = f_mount(0, %fatfs);
+	*/
 	fsbl_printf(DEBUG_INFO,"SD: rc= %.8x\n\r", rc);
 
 	if (rc != FR_OK) {
