@@ -21,9 +21,9 @@ int main () {
   cout << "Enter filename: ";
   string videoFilename;
   getline (cin, videoFilename);
-  VideoCapture capture(videoFilename);
+  VideoCapture capture(0);
   VideoWriter output;
-  output.open("/home/mia/opencv-3.0.0/cpp/outputVideo.avi", CV_FOURCC('D', 'I', 'V', 'X'), 120, Size(1200, 1600), true);
+  //output.open("/home/mia/opencv-3.0.0/cpp/outputVideo.avi", CV_FOURCC('D', 'I', 'V', 'X'), 120, Size(1200, 1600), true);
   if (!capture.isOpened())
     return -1;
   Mat average, frame, average1, outaverage;

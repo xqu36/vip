@@ -23,20 +23,24 @@ int main() {
   /* IN */
 
   string infile = "/path/to/visual/input";
-  VideoCapture capture(infile);
+  //VideoCapture capture(infile);
+  VideoCapture capture(0);
 
   if (!capture.isOpened()) { cout << "Capture failed to open." << endl; return -1; }
 
-  Mat frame;
+  Mat frame, avgframe, frame_bw, avg_background, out_avg_background;
   capture >> frame;
 
-  Mat avg_background = frame;
+  cvtColor(frame, avg_background, CV_BGR2GRAY);
+  avg_background.convertTo(avg_background, CV_32F);
 
   // processing loop
   for(;;) {
 
     // take in new current frame from capture
     capture >> frame;
+
+    cvtColor(frame, frame_bw, CV_BGR2GRAY);
 
     /* PROCESSING */
 
@@ -51,13 +55,14 @@ int main() {
      */ 
 
     // create rough background model
-    accumulateWeighted(frame, avg_background, 0.01);
+    accumulateWeighted(frame_bw, avg_background, 0.01);
+    avg_background.convertTo(out_avg_background, CV_8U);
 
     sample_algorithm(frame);
 
     /* OUT */
     imshow("frame", frame);
-    imshow("avg_background", avg_background);
+    imshow("avg_background", out_avg_background);
 
     if(waitKey(30) >= 0) break;
   }
