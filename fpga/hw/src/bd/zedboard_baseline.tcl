@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: base_zynq_design
+# This is a generated script based on design: zedboard_baseline
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -10,7 +10,7 @@
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2014.4
+set scripts_vivado_version 2015.4
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -24,13 +24,13 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 # START
 ################################################################
 
-# CHANGE DESIGN NAME HERE
-#set design_name base_zynq_design @jdanner3
-set design_name zedboard_baseline
+# To test this script, run the following commands from Vivado Tcl console:
+# source zedboard_baseline_script.tcl
 
-# If you do not already have an existing IP Integrator design open,
-# you can create a design using the following command:
-#    create_bd_design $design_name
+# If you do not already have a project created,
+# you can create a project using the following command:
+#    create_project project_1 myproj -part xc7z020clg484-1
+#    set_property BOARD_PART em.avnet.com:zed:part0:1.2 [current_project]
 
 # CHECKING IF PROJECT EXISTS
 if { [get_projects -quiet] eq "" } {
@@ -38,6 +38,14 @@ if { [get_projects -quiet] eq "" } {
    return 1
 }
 
+
+
+# CHANGE DESIGN NAME HERE
+set design_name zedboard_baseline
+
+# If you do not already have an existing IP Integrator design open,
+# you can create a design using the following command:
+#    create_bd_design $design_name
 
 # Creating design if needed
 set errMsg ""
@@ -149,23 +157,40 @@ proc create_root_design { parentCell } {
 
   # Create instance: axi_bram_ctrl_0, and set properties
   set axi_bram_ctrl_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_bram_ctrl:4.0 axi_bram_ctrl_0 ]
-  set_property -dict [ list CONFIG.SINGLE_PORT_BRAM {1}  ] $axi_bram_ctrl_0
+  set_property -dict [ list \
+CONFIG.SINGLE_PORT_BRAM {1} \
+ ] $axi_bram_ctrl_0
 
   # Create instance: axi_dma_0, and set properties
   set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0 ]
-  set_property -dict [ list CONFIG.c_sg_include_stscntrl_strm {0}  ] $axi_dma_0
+  set_property -dict [ list \
+CONFIG.c_sg_include_stscntrl_strm {0} \
+ ] $axi_dma_0
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
-  set_property -dict [ list CONFIG.GPIO_BOARD_INTERFACE {leds_8bits} CONFIG.USE_BOARD_FLOW {true}  ] $axi_gpio_0
+  set_property -dict [ list \
+CONFIG.C_ALL_INPUTS {1} \
+CONFIG.C_GPIO_WIDTH {8} \
+CONFIG.GPIO_BOARD_INTERFACE {sws_8bits} \
+CONFIG.USE_BOARD_FLOW {true} \
+ ] $axi_gpio_0
 
   # Create instance: axi_gpio_1, and set properties
   set axi_gpio_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1 ]
-  set_property -dict [ list CONFIG.GPIO_BOARD_INTERFACE {sws_8bits} CONFIG.USE_BOARD_FLOW {true}  ] $axi_gpio_1
+  set_property -dict [ list \
+CONFIG.C_ALL_OUTPUTS {1} \
+CONFIG.C_GPIO_WIDTH {8} \
+CONFIG.GPIO_BOARD_INTERFACE {leds_8bits} \
+CONFIG.USE_BOARD_FLOW {true} \
+ ] $axi_gpio_1
 
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0 ]
-  set_property -dict [ list CONFIG.NUM_MI {1} CONFIG.NUM_SI {3}  ] $axi_interconnect_0
+  set_property -dict [ list \
+CONFIG.NUM_MI {1} \
+CONFIG.NUM_SI {3} \
+ ] $axi_interconnect_0
 
   # Create instance: axis_data_fifo_0, and set properties
   set axis_data_fifo_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:1.1 axis_data_fifo_0 ]
@@ -174,15 +199,27 @@ proc create_root_design { parentCell } {
   set axis_data_fifo_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:1.1 axis_data_fifo_1 ]
 
   # Create instance: blk_mem_gen_0, and set properties
-  set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.2 blk_mem_gen_0 ]
+  set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.3 blk_mem_gen_0 ]
 
   # Create instance: processing_system7_0, and set properties
   set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
-  set_property -dict [ list CONFIG.PCW_I2C0_I2C0_IO {EMIO} CONFIG.PCW_I2C0_PERIPHERAL_ENABLE {1} CONFIG.PCW_IRQ_F2P_INTR {1} CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_USE_S_AXI_HP1 {0} CONFIG.PCW_WDT_PERIPHERAL_ENABLE {1} CONFIG.PCW_WDT_WDT_IO {MIO 50 .. 51} CONFIG.preset {ZedBoard*}  ] $processing_system7_0
+  set_property -dict [ list \
+CONFIG.PCW_I2C0_I2C0_IO {EMIO} \
+CONFIG.PCW_I2C0_PERIPHERAL_ENABLE {1} \
+CONFIG.PCW_IRQ_F2P_INTR {1} \
+CONFIG.PCW_USE_FABRIC_INTERRUPT {1} \
+CONFIG.PCW_USE_S_AXI_HP0 {1} \
+CONFIG.PCW_USE_S_AXI_HP1 {0} \
+CONFIG.PCW_WDT_PERIPHERAL_ENABLE {1} \
+CONFIG.PCW_WDT_WDT_IO {MIO 50 .. 51} \
+CONFIG.preset {ZedBoard} \
+ ] $processing_system7_0
 
   # Create instance: processing_system7_0_axi_periph, and set properties
   set processing_system7_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 processing_system7_0_axi_periph ]
-  set_property -dict [ list CONFIG.NUM_MI {5}  ] $processing_system7_0_axi_periph
+  set_property -dict [ list \
+CONFIG.NUM_MI {5} \
+ ] $processing_system7_0_axi_periph
 
   # Create instance: rst_processing_system7_0_100M, and set properties
   set rst_processing_system7_0_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_processing_system7_0_100M ]
@@ -197,8 +234,8 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_MM2S [get_bd_intf_pins axi_dma_0/M_AXI_MM2S] [get_bd_intf_pins axi_interconnect_0/S01_AXI]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins axi_dma_0/M_AXI_S2MM] [get_bd_intf_pins axi_interconnect_0/S02_AXI]
   connect_bd_intf_net -intf_net axi_dma_0_M_AXI_SG [get_bd_intf_pins axi_dma_0/M_AXI_SG] [get_bd_intf_pins axi_interconnect_0/S00_AXI]
-  connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports leds_8bits] [get_bd_intf_pins axi_gpio_0/GPIO]
-  connect_bd_intf_net -intf_net axi_gpio_1_GPIO [get_bd_intf_ports sws_8bits] [get_bd_intf_pins axi_gpio_1/GPIO]
+  connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports sws_8bits] [get_bd_intf_pins axi_gpio_0/GPIO]
+  connect_bd_intf_net -intf_net axi_gpio_1_GPIO [get_bd_intf_ports leds_8bits] [get_bd_intf_pins axi_gpio_1/GPIO]
   connect_bd_intf_net -intf_net axi_interconnect_0_M00_AXI [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins processing_system7_0/S_AXI_HP0]
   connect_bd_intf_net -intf_net axis_data_fifo_0_M_AXIS [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins axis_data_fifo_0/M_AXIS]
   connect_bd_intf_net -intf_net axis_data_fifo_1_M_AXIS [get_bd_intf_pins axi4_stream_user_processing_core_0/S_AXIS] [get_bd_intf_pins axis_data_fifo_1/M_AXIS]
@@ -230,7 +267,59 @@ proc create_root_design { parentCell } {
   create_bd_addr_seg -range 0x10000 -offset 0x40400000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] SEG_axi_dma_0_Reg
   create_bd_addr_seg -range 0x10000 -offset 0x41200000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
   create_bd_addr_seg -range 0x10000 -offset 0x41210000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_1/S_AXI/Reg] SEG_axi_gpio_1_Reg
-  
+
+  # Perform GUI Layout
+  regenerate_bd_layout -layout_string {
+   guistr: "# # String gsaved with Nlview 6.5.5  2015-06-26 bk=1.3371 VDI=38 GEI=35 GUI=JA:1.8
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -y 100 -defaultsOSRD
+preplace port leds_8bits -pg 1 -y 390 -defaultsOSRD
+preplace port sws_8bits -pg 1 -y 300 -defaultsOSRD
+preplace port IIC_0 -pg 1 -y 140 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 120 -defaultsOSRD
+preplace inst axis_data_fifo_1 -pg 1 -lvl 2 -y 620 -defaultsOSRD
+preplace inst axi_dma_0 -pg 1 -lvl 5 -y 140 -defaultsOSRD
+preplace inst rst_processing_system7_0_100M -pg 1 -lvl 1 -y 580 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 7 -y 260 -defaultsOSRD
+preplace inst xlconcat_0 -pg 1 -lvl 6 -y 450 -defaultsOSRD
+preplace inst axi_gpio_1 -pg 1 -lvl 7 -y 390 -defaultsOSRD
+preplace inst blk_mem_gen_0 -pg 1 -lvl 4 -y 170 -defaultsOSRD
+preplace inst axi_interconnect_0 -pg 1 -lvl 6 -y 190 -defaultsOSRD
+preplace inst axi_bram_ctrl_0 -pg 1 -lvl 3 -y 200 -defaultsOSRD
+preplace inst axi4_stream_user_processing_core_0 -pg 1 -lvl 3 -y 420 -defaultsOSRD
+preplace inst processing_system7_0_axi_periph -pg 1 -lvl 2 -y 300 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 7 -y 50 -defaultsOSRD
+preplace inst axis_data_fifo_0 -pg 1 -lvl 4 -y 340 -defaultsOSRD
+preplace netloc processing_system7_0_DDR 1 7 1 NJ
+preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 5 NJ -40 NJ -40 NJ -40 NJ -40 NJ
+preplace netloc processing_system7_0_axi_periph_M03_AXI 1 2 3 NJ 80 NJ 80 NJ
+preplace netloc axi4_stream_user_processing_core_0_M_AXIS 1 3 1 1060
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 7 400 540 NJ 540 NJ 540 NJ 540 NJ 540 NJ 540 2660
+preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 3 1 NJ
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 8 20 700 NJ 700 NJ 700 NJ 700 NJ 700 NJ 700 NJ 700 2650
+preplace netloc processing_system7_0_IIC_0 1 7 1 NJ
+preplace netloc axi_dma_0_M_AXI_SG 1 5 1 N
+preplace netloc processing_system7_0_axi_periph_M02_AXI 1 2 5 NJ -20 NJ -20 NJ -20 NJ -20 2170
+preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 6 380 100 740 270 1070 260 1430 260 1820 -10 NJ
+preplace netloc axi_dma_0_s2mm_introut 1 5 1 1790
+preplace netloc axi_dma_0_M_AXI_MM2S 1 5 1 N
+preplace netloc xlconcat_0_dout 1 6 1 2180
+preplace netloc processing_system7_0_FIXED_IO 1 7 1 NJ
+preplace netloc axi_dma_0_mm2s_introut 1 5 1 1800
+preplace netloc axi_gpio_0_GPIO 1 7 1 2680
+preplace netloc axi_interconnect_0_M00_AXI 1 6 1 2160
+preplace netloc axi_dma_0_M_AXI_S2MM 1 5 1 N
+preplace netloc axis_data_fifo_1_M_AXIS 1 2 1 780
+preplace netloc axis_data_fifo_0_M_AXIS 1 4 1 1410
+preplace netloc rst_processing_system7_0_100M_interconnect_aresetn 1 1 1 370
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 10 670 360 90 770 300 1050 250 1420 270 1810 10 2140 460 2640
+preplace netloc axi_gpio_1_GPIO 1 7 1 N
+preplace netloc axi_dma_0_M_AXIS_MM2S 1 1 5 390 20 NJ 20 NJ 20 NJ 20 1790
+preplace netloc processing_system7_0_axi_periph_M04_AXI 1 2 1 760
+preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 760
+levelinfo -pg 1 -10 190 570 920 1250 1620 1990 2420 2730 -top -100 -bot 750
+",
+}
 
   # Restore current instance
   current_bd_instance $oldCurInst
