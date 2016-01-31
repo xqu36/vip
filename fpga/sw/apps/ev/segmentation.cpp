@@ -65,7 +65,7 @@ int main() {
 
 
     // create rough background model
-    accumulateWeighted(frame_bw, avg_background, 0.1); //.01
+    accumulateWeighted(frame_bw, avg_background, 0.05); //.01
 
     frame_bw.convertTo(frame_bw, CV_32F);
 
