@@ -22,9 +22,9 @@ int main() {
 
   /* IN */
 
-  string infile = "/path/to/visual/input";
-  //VideoCapture capture(infile);
-  VideoCapture capture(0);
+  string infile = "/dev/video1";
+  VideoCapture capture(1);
+  //VideoCapture capture("/dev/video1");
 
   if (!capture.isOpened()) { cout << "Capture failed to open." << endl; return -1; }
 
@@ -65,13 +65,13 @@ int main() {
 
 
     // create rough background model
-    accumulateWeighted(frame_bw, avg_background, 0.05); //.01
+    accumulateWeighted(frame_bw, avg_background, 0.05); //.05
 
     frame_bw.convertTo(frame_bw, CV_32F);
 
     absdiff(avg_background, frame_bw, frame_diff);
 
-    threshold(frame_diff, bk_frame, 50, 255, THRESH_BINARY);
+    threshold(frame_diff, bk_frame, 60, 255, THRESH_BINARY);
 
 
 
