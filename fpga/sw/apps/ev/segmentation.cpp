@@ -66,27 +66,20 @@ int main() {
 
     // create rough background model
     accumulateWeighted(frame_bw, avg_background, 0.05); //.05
-
     frame_bw.convertTo(frame_bw, CV_32F);
-
     absdiff(avg_background, frame_bw, frame_diff);
-
     threshold(frame_diff, bk_frame, 60, 255, THRESH_BINARY);
 
-
-    for(int i = 0; i < 20; i++){
+    //erode and dilate
+    for(int i = 0; i < 100; i++){
       dilate(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
       erode(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
     }
 
 
-
-
-
+    //converting image to displayable form
     avg_background.convertTo(out_avg_background, CV_8U);
-    
     frame_diff.convertTo(out_frame_diff, CV_8U);
-
     bk_frame.convertTo(out_bk_frame, CV_8U);
 
 
