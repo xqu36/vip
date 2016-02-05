@@ -23,7 +23,7 @@ int main() {
   /* IN */
 
   string infile = "/dev/video1";
-  VideoCapture capture(1);
+  VideoCapture capture(0);
   //VideoCapture capture("/dev/video1");
 
   if (!capture.isOpened()) { cout << "Capture failed to open." << endl; return -1; }
@@ -72,6 +72,14 @@ int main() {
     absdiff(avg_background, frame_bw, frame_diff);
 
     threshold(frame_diff, bk_frame, 60, 255, THRESH_BINARY);
+
+
+    for(int i = 0; i < 20; i++){
+      dilate(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
+      erode(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
+    }
+
+
 
 
 
