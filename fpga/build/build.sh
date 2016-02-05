@@ -35,10 +35,19 @@ function usage() {
     echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
-# machine-dependent
-source /opt/Xilinx/Vivado/2015.4/settings64.sh
-source /opt/Xilinx/SDK/2015.4/settings64.sh
-# source /opt/Xilinx/petalinux-v2015.4-final/settings.sh
+# Set up the most recent Vivado and the SDK
+if [ -d "/opt/Xilinx/Vivado/2014.4" ]
+then
+    source /opt/Xilinx/Vivado/2014.4/settings64.sh
+    source /opt/Xilinx/SDK/2014.4/settings64.sh
+    echo "INFO: Using the 2014.4 Xilinx tools"
+fi
+if [ -d "/opt/Xilinx/Vivado/2015.4" ]
+then
+    source /opt/Xilinx/Vivado/2015.4/settings64.sh
+    source /opt/Xilinx/SDK/2015.4/settings64.sh
+    echo "INFO: Using the 2015.4 Xilinx tools"
+fi
 
 for i in "$@"
 do 
@@ -128,10 +137,10 @@ case $a in
     # clean
     if [ "$CLEAN" -eq 1 ]
     then
-        if [ -f "$BUILDPATH/keygen/dummy_key.nky" ]
+        if [ -f "$BUILDPATH/keygen/keyfile.nky" ]
         then
-            echo "rm $BUILDPATH/keygen/dummy_key.nky"
-            rm $BUILDPATH/keygen/dummy_key.nky 
+            echo "rm $BUILDPATH/keygen/keyfile.nky"
+            rm $BUILDPATH/keygen/keyfile.nky
         fi
     fi
 
@@ -139,7 +148,7 @@ case $a in
     echo "$BUILDPATH/keygen/xilinx_keyfile_generator.sh"
     $BUILDPATH/keygen/xilinx_keyfile_generator.sh
 
-    echo "Output dummy_key.nky in $BUILDPATH/keygen"
+    echo "Output keyfile.nky in $BUILDPATH/keygen"
 
     ;;
 
@@ -284,15 +293,36 @@ case $a in
     echo "cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/"
     cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/
 
+    # Let's make a copy of the key for a local reference from the .bif file
+    cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky
+    echo "cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky"
+
+    # $SWPATH/mkboot has all the files it needs (keyfile, bitstream, FSBL, and U-Boot) so let's package it up
+    # BootGen gets confused with .bif references
+    cd $SWPATH/mkboot
+    # Verbose?
+    if [ $VERBOSE -eq 1 ]
+    then
+        bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on -debug
+        echo "bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on -debug"
+    else
+        bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on
+        echo "bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on"
+    fi
+    cd $BUILDPATH
+
+    # Leaving keys lying around is bad
+    if [ -f "$SWPATH/mkboot/keyfile.nky" ]
+    then
+        echo "Removing temporary keyfile: rm $SWPATH/mkboot/keyfile.nky"
+        rm $SWPATH/mkboot/keyfile.nky
+    fi
     echo "cp $SWPATH/petalinux/$PROJNAME/images/image.ub $BUILDPATH/boot"
     cp $SWPATH/petalinux/$PROJNAME/images/linux/image.ub $BUILDPATH/boot
 
-    echo "petalinux-package --boot --fsbl $SWPATH/mkboot/zynq_fsbl.elf --fpga $SWPATH/mkboot/zedboard_baseline_wrapper.bit --u-boot=$SWPATH/mkboot/u-boot.elf --force"
-    petalinux-package -p $SWPATH/petalinux/$PROJNAME --boot --fsbl $SWPATH/mkboot/zynq_fsbl.elf --fpga $SWPATH/mkboot/zedboard_baseline_wrapper.bit --u-boot=$SWPATH/mkboot/u-boot.elf --force
-
-    if [ -f "$BUILDPATH/BOOT.BIN" ]
+    if [ -f "$BUILDPATH/BOOT.bin" ]
     then
-        echo "mv $BUILDPATH/BOOT.BIN $BUILDPATH/boot/"
+        echo "mv $BUILDPATH/BOOT.bin $BUILDPATH/boot/"
         mv $BUILDPATH/BOOT.BIN $BUILDPATH/boot/
     fi
 

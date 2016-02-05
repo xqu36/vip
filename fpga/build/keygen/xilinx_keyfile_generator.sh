@@ -1,7 +1,7 @@
 #! /bin/bash
 
 SOURCE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-KEYNAME=dummy_key
+KEYNAME=keyfile
 GENERATE=1
 
 #Check if a keyfile already exists and ask user to regenerate a key
