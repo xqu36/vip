@@ -14,6 +14,8 @@
 TARGETS=all
 CLEAN=0
 VERBOSE=0
+SECURE=0
+BIF=boot_test
 
 BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HWPATH=$BUILDPATH/../hw
@@ -32,6 +34,7 @@ function usage() {
     echo -e "\t -sp|--swpath: Path to /sw/. [Default fpga/sw]"
     echo -e "\t -hlsp|--hlspath: Path to /hls/. [Default fpga/hw/src/hls]"
     echo -e "\t -h|--help: Display this menu."
+    echo -e "\t -s|--secure: build with secure boot functionality [defaults to non-secure]"
     echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
@@ -79,6 +82,10 @@ case $i in
     -h|--help)
     usage
     exit 1
+    ;;
+    -s|--secure)
+    SECURE=1
+    shift
     ;;
     *)
     echo "Unknown option $i, exiting"
@@ -300,14 +307,20 @@ case $a in
     # $SWPATH/mkboot has all the files it needs (keyfile, bitstream, FSBL, and U-Boot) so let's package it up
     # BootGen gets confused with .bif references
     cd $SWPATH/mkboot
+    # Is this a secure build?
+    if [ $SECURE -eq 1 ]
+    then
+        BIF=boot_secure
+        KEYLOCATION="-encrypt bbram"
+    fi
     # Verbose?
     if [ $VERBOSE -eq 1 ]
     then
-        bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on -debug
-        echo "bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on -debug"
+        bootgen $KEYLOCATION -image $SWPATH/mkboot/$BIF.bif -o $BUILDPATH/boot/BOOT.bin -w on -debug
+        echo "bootgen $KEYLOCATION -image $SWPATH/mkboot/$BIF.bif -o $BUILDPATH/boot/BOOT.bin -w on -debug"
     else
-        bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on
-        echo "bootgen -encrypt bbram -image $SWPATH/mkboot/boot.bif -o $BUILDPATH/boot/BOOT.bin -w on"
+        bootgen $KEYLOCATION -image $SWPATH/mkboot/$BIF.bif -o $BUILDPATH/boot/BOOT.bin -w on
+        echo "bootgen $KEYLOCATION -image $SWPATH/mkboot/$BIF.bif -o $BUILDPATH/boot/BOOT.bin -w on"
     fi
     cd $BUILDPATH
 
