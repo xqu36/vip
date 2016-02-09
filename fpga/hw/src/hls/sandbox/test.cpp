@@ -15,12 +15,11 @@ int main (int argc, char** argv)
     IplImage cv_src = src_rgb;
     IplImage cv_dst = dst_rgb;
 
-    hls_sandbox(&cv_src, &cv_dst);
+    //hls_sandbox(&cv_src, &cv_dst);
     imwrite(OUTPUT_IMAGE, dst_rgb);
 
-    opencv_sandbox(&cv_src, &cv_dst);
+    //opencv_sandbox(&cv_src, &cv_dst);
     imwrite(OUTPUT_IMAGE_GOLDEN, dst_rgb);
 
-    //return image_compare(OUTPUT_IMAGE, OUTPUT_IMAGE_GOLDEN);
-    return 0;
+    return image_compare(OUTPUT_IMAGE, OUTPUT_IMAGE_GOLDEN);
 }

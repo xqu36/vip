@@ -1,0 +1,1367 @@
+@I [HLS-0] Workspace /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1 opened at Wed Jan 27 13:40:18 EST 2016
+@I [HLS-100] Command 'open_solution' returned 0; elapsed 0.00661Total elapsed time: 0.677 sec.
+@I [HLS-100] Command "set_part xc7z020clg484-1 "
+@I [HLS-100] Command "add_library xilinx/zynq/zynq:xc7z020:clg484:-1 "
+@I [HLS-100] Command "get_default_platform "
+@I [HLS-100] Command 'get_default_platform' returned 0; elapsed 3.8e-05Total elapsed time: 0.681 sec.
+@I [HLS-100] Command "license_exists VIVADO_HLS "
+@I [HLS-100] Command 'license_exists' returned 1; elapsed 0.014348Total elapsed time: 0.704 sec.
+@I [HLS-100] Command "license_exists ap_opencl "
+@I [HLS-100] Command 'license_exists' returned 1; elapsed 0.014596Total elapsed time: 0.725 sec.
+@I [HLS-100] Command "license_exists AUTOESL_NI "
+@I [HLS-100] Command 'license_exists' returned 1; elapsed 0.013695Total elapsed time: 0.745 sec.
+@I [HLS-100] Command "license_exists HLS "
+@I [HLS-100] Command 'license_exists' returned 0; elapsed 1.1e-05Total elapsed time: 0.745 sec.
+@I [HLS-100] Command "open_platform DefaultPlatform "
+@I [HLS-100] Command 'open_platform' returned 0; elapsed 0.00043Total elapsed time: 0.746 sec.
+@I [HLS-100] Command "import_lib /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.lib "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/xilinx_interface.lib "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000742Total elapsed time: 0.748 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000288Total elapsed time: 0.749 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000406Total elapsed time: 0.749 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000365Total elapsed time: 0.750 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000284Total elapsed time: 0.750 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002875Total elapsed time: 0.750 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000222Total elapsed time: 0.750 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000268Total elapsed time: 0.751 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00017Total elapsed time: 0.751 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.008303Total elapsed time: 0.755 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_old.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001337Total elapsed time: 0.760 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_vivado.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000831Total elapsed time: 0.761 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.hlp "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/target_info.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000215Total elapsed time: 0.764 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/xilinx_interface.hlp "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000161Total elapsed time: 0.765 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000157Total elapsed time: 0.765 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000617Total elapsed time: 0.765 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000557Total elapsed time: 0.766 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002953Total elapsed time: 0.767 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/dsp48e1.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000165Total elapsed time: 0.767 sec.
+@I [HLS-100] Command "get_default_platform "
+@I [HLS-100] Command 'get_default_platform' returned 0; elapsed 9e-06Total elapsed time: 0.767 sec.
+@I [HLS-100] Command "config_chip_info -quiet -resource  {SLICE 13300}  {LUT 53200}     {FF 106400} {DSP48E 220}   {BRAM 280}  "
+@I [HLS-100] Command 'config_chip_info' returned 0; elapsed 3.7e-05Total elapsed time: 0.767 sec.
+@I [HLS-100] Command "config_chip_info -quiet -speed medium "
+@I [HLS-100] Command 'config_chip_info' returned 0; elapsed 9e-06Total elapsed time: 0.768 sec.
+@I [HLS-100] Command 'import_lib' returned 0; elapsed 0.023503Total elapsed time: 0.770 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001838Total elapsed time: 0.773 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000684Total elapsed time: 0.774 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.003357Total elapsed time: 0.777 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004989Total elapsed time: 0.782 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.010565Total elapsed time: 0.793 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.01585Total elapsed time: 0.793 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.011336Total elapsed time: 0.805 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.011351Total elapsed time: 0.816 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.121741Total elapsed time: 0.938 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000121Total elapsed time: 0.938 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/tps/tcl/tcllib1.11.1/struct/list.tcl "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/tps/tcl/tcllib1.11.1/cmdline/cmdline.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0006Total elapsed time: 0.952 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001356Total elapsed time: 0.952 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/tps/tcl/tcllib1.11.1/math/bignum.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000468Total elapsed time: 0.957 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.023846Total elapsed time: 0.962 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.191047Total elapsed time: 0.962 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.4e-05Total elapsed time: 0.963 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.192581Total elapsed time: 0.963 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.192774Total elapsed time: 0.963 sec.
+@I [HLS-100] Command "get_default_platform "
+@I [HLS-100] Command 'get_default_platform' returned 0; elapsed 5e-06Total elapsed time: 0.964 sec.
+@I [HLS-100] Command "config_chip_info -quiet -resource  {SLICE 13300}  {LUT 53200}     {FF 106400} {DSP48E 220}   {BRAM 280}  "
+@I [HLS-100] Command 'config_chip_info' returned 0; elapsed 1.5e-05Total elapsed time: 0.964 sec.
+@I [HLS-100] Command "config_chip_info -quiet -speed slow "
+@I [HLS-100] Command 'config_chip_info' returned 0; elapsed 3e-06Total elapsed time: 0.964 sec.
+@I [HLS-100] Command 'add_library' returned 0; elapsed 0.262713Total elapsed time: 0.964 sec.
+@I [HLS-100] Command "add_library xilinx/zynq/zynq_fpv6 "
+@I [HLS-100] Command "get_default_platform "
+@I [HLS-100] Command 'get_default_platform' returned 0; elapsed 4e-06Total elapsed time: 0.965 sec.
+@I [HLS-100] Command "license_exists VIVADO_HLS "
+@I [HLS-100] Command 'license_exists' returned 1; elapsed 0.012778Total elapsed time: 0.984 sec.
+@I [HLS-100] Command "license_exists ap_opencl "
+@I [HLS-100] Command 'license_exists' returned 1; elapsed 0.01113Total elapsed time: 1.1 sec.
+@I [HLS-100] Command "license_exists AUTOESL_NI "
+@I [HLS-100] Command 'license_exists' returned 1; elapsed 0.009975Total elapsed time: 1.18 sec.
+@I [HLS-100] Command "license_exists HLS "
+@I [HLS-100] Command 'license_exists' returned 0; elapsed 9e-06Total elapsed time: 1.18 sec.
+@I [HLS-100] Command "open_platform DefaultPlatform "
+@I [HLS-100] Command 'open_platform' returned 0; elapsed 3.4e-05Total elapsed time: 1.18 sec.
+@I [HLS-100] Command "import_lib /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6 "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv7.lib "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.003851Total elapsed time: 1.22 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv.hlp "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.hlp "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/target_info.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000187Total elapsed time: 1.30 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/xilinx_interface.hlp "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000137Total elapsed time: 1.30 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000122Total elapsed time: 1.30 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000483Total elapsed time: 1.30 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.hlp "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000419Total elapsed time: 1.31 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002325Total elapsed time: 1.32 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.003025Total elapsed time: 1.32 sec.
+@I [HLS-100] Command 'import_lib' returned 0; elapsed 0.019167Total elapsed time: 1.38 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001692Total elapsed time: 1.39 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001859Total elapsed time: 1.40 sec.
+@I [HLS-100] Command 'add_library' returned 0; elapsed 0.056493Total elapsed time: 1.40 sec.
+@I [HLS-10] Setting target device to 'xc7z020clg484-1'
+@I [HLS-100] Command 'set_part' returned 0; elapsed 0.32341Total elapsed time: 1.40 sec.
+@I [HLS-100] Command "create_clock -period 150MHz "
+@I [HLS-100] Command "config_clock -quiet -name default -period 6.66667 -unit ns -default=false "
+@I [SYN-201] Setting up clock 'default' with a period of 6.66667ns.
+@I [HLS-100] Command 'config_clock' returned 0; elapsed 0.000114Total elapsed time: 1.41 sec.
+@I [HLS-100] Command 'create_clock' returned 0; elapsed 0.001235Total elapsed time: 1.41 sec.
+@I [HLS-100] Command "config_schedule -verbose "
+@I [HLS-100] Command 'config_schedule' returned 0; elapsed 0.000714Total elapsed time: 1.42 sec.
+@I [HLS-100] Command "csim_design -mflags -j4 -O "
+@I [HLS-100] Command "source run_sim.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00484Total elapsed time: 17.374 sec.
+@I [SIM-1] CSim done with 0 errors.
+@I [HLS-100] Command 'csim_design' returned 0; elapsed 0.038539Total elapsed time: 17.375 sec.
+@I [HLS-100] Command "csynth_design "
+@I [HLS-100] Command "elaborate -effort=medium -skip_syncheck=0 -lm=0 -skip_cdt=0 -skip_transform=0 -ng=0 -g=0 -opt_fp=0 "
+@I [HLS-10] Analyzing design file 'top.cpp' ... 
+@0 [HLS-0] Analyzing design file 'top.cpp' ... 
+@I [HLS-0] Compiling one TU...
+@I [HLS-0] 
+Checking before pre-process: exec clang -fno-limit-debug-info -gcc-toolchain "/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/gcc" -hls    -D "__asm__(...)=" -fno-math-errno -c -emit-llvm -O0  -mllvm -disable-llvm-optzns -fno-threadsafe-statics  -fno-use-cxa-atexit  -fno-threadsafe-statics -fno-use-cxa-atexit   -I "/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/systemc/include" -I "/opt/Xilinx/Vivado_HLS/2014.4/include" -I "/opt/Xilinx/Vivado_HLS/2014.4/include/ap_sysc" -fexceptions "top.cpp"  -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.00.o"
+
+@I [HLS-0] Syntax Checker time: 9 seconds per iteration
+@I [HLS-0] 
+Source preprocessing: exec clang -fno-limit-debug-info -gcc-toolchain "/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/gcc" -hls -fno-exceptions  -D__llvm__  -CC -E "top.cpp"     -D "__asm__(...)=" -fno-math-errno -c -emit-llvm -O0  -mllvm -disable-llvm-optzns -fno-threadsafe-statics  -fno-use-cxa-atexit  -fno-threadsafe-statics -fno-use-cxa-atexit -DAESL_SYN -D__SYNTHESIS__ -D__HLS_SYN__ -I "/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot" -I "/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/ap_sysc" -include etc/autopilot_ssdm_op.h -D "__asm__(...)="  -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp"
+
+@I [HLS-0] GCC PP time: 0 seconds per iteration
+@I [HLS-100] Command "list_core -type functional_unit "
+@I [HLS-100] Command 'list_core' returned 0; elapsed 0.000242Total elapsed time: 26.695 sec.
+@I [HLS-0] Marker-Pragma convertor: /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp.ap-line.cpp /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp.ap-line.cpp.CXX 1
+@I [HLS-0] 
+Source processor: exec /opt/Xilinx/Vivado_HLS/2014.4/tps/lnx64/jre/bin/java -Xmx512m -classpath   "/opt/Xilinx/Vivado_HLS/2014.4/lib/classes/autopilot.sourceprocessor.jar:/opt/Xilinx/Vivado_HLS/2014.4/lib/classes/org.eclipse.cdt.core_5.3.0.xilinx_patch.jar:/opt/Xilinx/Vivado_HLS/2014.4/lib/classes/org.eclipse.core.runtime_3.7.0.v20110110.jar:/opt/Xilinx/Vivado_HLS/2014.4/lib/classes/org.eclipse.equinox.common_3.6.0.v20110523.jar:/opt/Xilinx/Vivado_HLS/2014.4/lib/classes/com.ibm.icu_4.4.2.v20110208.jar:/opt/Xilinx/Vivado_HLS/2014.4/lib/classes/jargs.jar:/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/eclipse/plugins/org.eclipse.emf.common_2.10.0.v20140514-1158.jar:/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/eclipse/plugins/org.eclipse.emf.ecore_2.10.0.v20140514-1158.jar:/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/eclipse/plugins/org.eclipse.emf.ecore.xmi_2.10.0.v20140514-1158.jar:/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/eclipse/plugins/com.autoesl.autopilot.ui.directiveFileModel_1.0.0.jar:/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/eclipse/plugins/com.autoesl.autopilot.ui.common_1.0.0.jar"  autopilot.sourceprocessor.CParser  "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp.ap-line.cpp"  -m "sandbox" -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp.ap-cdt.cpp" --ad --pc --pp --directive /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/solution1.directive --source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/top.cpp --error /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db --funcunit "AddSub AddSub_DSP AddSubnS DAddSub_fulldsp DAddSub_nodsp DDiv DExp_fulldsp DExp_meddsp DExp_nodsp DLog_fulldsp DLog_meddsp DLog_nodsp DMul_fulldsp DMul_maxdsp DMul_meddsp DMul_nodsp DRSqrt DRecip DSqrt DivnS FAddSub_fulldsp FAddSub_nodsp FDiv FExp_fulldsp FExp_meddsp FExp_nodsp FLog_fulldsp FLog_meddsp FLog_nodsp FMul_fulldsp FMul_maxdsp FMul_meddsp FMul_nodsp FRSqrt_fulldsp FRSqrt_nodsp FRecip_fulldsp FRecip_nodsp FSqrt Mul Mul2S Mul3S Mul4S Mul5S Mul6S MulnS" --ve --vetcl /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db --lp --ca --es --gf --df --pd --p2d /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db --sd --scff /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/.systemc_flag
+
+@I [HLS-0] Error:Syntax error in source:for (__decltype(__n + 0) __niter = __n;
+Error:Missing ; in source:t
+Error:Syntax error in source:)
+ *__first = __value;
+Error:Syntax error in source:for (__decltype(__n + 0) __niter = __n;
+Error:Missing ; in source:t
+Error:Syntax error in source:)
+ *__first = __tmp;
+@I [HLS-0] Marker-Pragma convertor: /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pp.0.cpp.ap-cdt.cpp /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pragma.0.cpp /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pragma.0.cpp.ap-line.CXX 0
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/pragma.status.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.1e-05Total elapsed time: 110.14 sec.
+@I [HLS-0] CDT processor time: 83 seconds per iteration
+@I [HLS-0] Pragma handling time: 0 seconds per iteration
+@I [HLS-0] 
+Source preprocessing: exec clang -fno-limit-debug-info -gcc-toolchain "/opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/gcc" -hls -fno-exceptions  -D__llvm__  -CC -E "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pragma.1.cpp"     -D "__asm__(...)=" -fno-math-errno -c -emit-llvm -O0  -mllvm -disable-llvm-optzns -fno-threadsafe-statics  -fno-use-cxa-atexit  -fno-threadsafe-statics -fno-use-cxa-atexit -DAESL_SYN -D__SYNTHESIS__ -D__HLS_SYN__ -I "/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot" -I "/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/ap_sysc" -include etc/autopilot_ssdm_op.h -D "__asm__(...)="  -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pragma.2.cpp"
+
+@I [HLS-0] exec clang -fno-limit-debug-info -gcc-toolchain /opt/Xilinx/Vivado_HLS/2014.4/lnx64/tools/gcc -hls -fno-exceptions  -D__llvm__  -w  "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.pragma.2.cpp"    -D "__asm__(...)=" -fno-math-errno -c -emit-llvm -O0  -mllvm -disable-llvm-optzns -fno-threadsafe-statics  -fno-use-cxa-atexit -DAESL_SYN -D__SYNTHESIS__ -D__HLS_SYN__ -I "/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot" -I "/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/ap_sysc" -include etc/autopilot_ssdm_op.h -g -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.g.bc"
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/ve_warning.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000103Total elapsed time: 114.876 sec.
+@I [HLS-10] Validating synthesis directives ...
+@0 [HLS-0] Validating synthesis directives ...
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/pragma.status.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 4.2e-05Total elapsed time: 114.876 sec.
+@I [HLS-0] Linking all ...
+@I [HLS-0] exec llvm-ld  "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.bc"  -disable-opt  -L/opt/Xilinx/Vivado_HLS/2014.4/lnx64/lib -lm_basic -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.pre"
+@I [HLS-0] Link time: 0 seconds per iteration
+@I [HLS-0] Linking all ...
+@I [HLS-0] exec llvm-ld  "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/top.g.bc"  -disable-opt  -L/opt/Xilinx/Vivado_HLS/2014.4/lnx64/lib -lm_basic -o "/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.pre"
+@I [HLS-0] Link time: 0 seconds per iteration
+@I [HLS-100] Command "opt_and_import_c a -opt_level=2 -skip_syncheck=0 -ng=0 "
+@I [HLS-100] Command "cleanup_all_models "
+@I [HLS-100] Command 'cleanup_all_models' returned 0; elapsed 0.000149Total elapsed time: 115.723 sec.
+@I [HLS-10] Starting code transformations ...
+@0 [HLS-0] Starting code transformations ...
+@I [HLS-0] std xform: transform -hls -share-std-xform -always-inline -promote-dbg-pointer  -interface-preproc  -scalarrepl -mem2reg -keep-read-access -instcombine -dce  -promote-dbg-pointer  -bitop-raise  -indvars -loop-simplify -xunroll  -constprop -instcombine -simplifycfg -indvars  -simplifycfg -dce -globaldce  -basicaa  -simplifycfg -mem2reg -globalopt  -global-constprop -deadargelim -instcombine -simplifycfg  -prune-eh -simplifycfg  -scalarrepl -instcombine -reassociate -licm  -simplifycfg -loop-simplify -indvars -instcombine  -simplifycfg -mem2reg -loop-simplify -indvars -instcombine  -gvn -gvn -instcombine -adce  -break-crit-edges  -simplifycfg -loop-delete  -global-array-opt -dce -dse -adce  -find-syn-modules -top sandbox  -deadargelim  -mem2reg -instcombine -dce  -presyn-prepare -auto-rom-infer  -interface-preproc  -syn-check -check-rec-only  -find-region -simplifycfg -func-extr -function-inline  -mem2reg -instcombine -dce   -gvn -globaldce -adce -adse  -constprop -instcombine -bit-constprop  -instcombine -dce -simplifycfg -bitop-raise  -simplifycfg -dce -loop-delete -reassociate  -globalopt -global-privatize -mem2reg -dce  -global-constprop -pointer-simplify -constprop -dce  -func-inst -deadargelim  -promote-dbg-pointer  -norm-name   /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.0.bc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.1.bc -f  -phase std-opt
+@I [XFORM-603] Inlining function 'hls::Mat<1920, 1080, 32>::init' into 'hls::Mat<1920, 1080, 32>::Mat.1' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:470).
+@I [XFORM-603] Inlining function 'hls::AXIGetBitFields<24, unsigned char>' into 'hls::AXIvideo2Mat<24, 1920, 1080, 32>' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:92).
+@I [XFORM-603] Inlining function 'hls::Mat<1920, 1080, 32>::write' into 'hls::Mat<1920, 1080, 32>::operator<<' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:551).
+@I [XFORM-603] Inlining function 'hls::Mat<1920, 1080, 32>::operator<<' into 'hls::AXIvideo2Mat<24, 1920, 1080, 32>' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:94).
+@I [XFORM-603] Inlining function 'hls::Mat<1920, 1080, 32>::read' into 'hls::Mat<1920, 1080, 32>::operator>>' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:545).
+@I [XFORM-603] Inlining function 'hls::Mat<1920, 1080, 32>::operator>>' into 'hls::Mat2AXIvideo<24, 1920, 1080, 32>' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:140).
+@I [XFORM-603] Inlining function 'hls::AXISetBitFields<24, unsigned char>' into 'hls::Mat2AXIvideo<24, 1920, 1080, 32>' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:143).
+@I [HLS-0] Std xform time: 0 seconds per iteration
+@I [HLS-10] Checking synthesizability ...
+@0 [HLS-0] Checking synthesizability ...
+@I [HLS-0] syn check 1/2: transform -hls -syn-check -check-rec-only -disaggr -scalarrepl -norm-name -dce  -mem2reg -instcombine -function-uniquify  -directive-preproc -function-uniquify -directive-preproc -mem2reg -dse -dce -auto-rom-infer -dce  -array-normalize -instcombine -dce  -array-seg-normalize -instcombine -dce  -array-flatten -instcombine -dce  -array-burst -dce  -deadargelim -promote-global-argument  -function-inline -dce  -doublePtrSimplify -doublePtrElim -dce  -doublePtrSimplify -promote-dbg-pointer  -dce -scalarrepl -dse -adse -instcombine  -ptrLegalization  -simplifycfg -dce -instcombine  -pointer-simplify -ptrArgReplace -dce -instcombine   -disaggr -scalarrepl -norm-name -dce  -mem2reg -instcombine -ptrLegalization   -simplifycfg -deadargelim  -instcombine -dce -inst-simplify -function-uniquify  -directive-preproc -function-uniquify -directive-preproc -mem2reg -dse -dce  -globaldce    /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.1.bc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.2.prechk.bc -f
+@I [HLS-0] Syn check 1/2 time: 0 seconds per iteration
+@I [HLS-0] syn check 2/2: transform -syn-check   /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.2.prechk.bc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.2.bc -f  -phase syn-check
+@W [SYNCHK-23] /opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_axi_io.h:49: variable-indexed range selection may cause suboptimal QoR.
+@I [SYNCHK-10] 0 error(s), 1 warning(s).
+@I [HLS-0] Syn check 2/2 time: 0 seconds per iteration
+@I [HLS-0] Compiler optimizing ...
+@I [HLS-0] Share syncheck's 1.bc for syn flow: copy /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.g.1.bc to /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.1.bc
+@I [HLS-0] presyn 1: transform -hls -tmp /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db -type-info -function-uniquify  -directive-preproc -function-uniquify -directive-preproc -mem2reg -dse -dce  -disaggr -scalarrepl -norm-name -deadargelim  -mem2reg -instcombine -dce -auto-rom-infer -dce -function-uniquify  -directive-preproc -function-uniquify -directive-preproc -mem2reg -dse -dce  -func-buffer -dce -array-normalize  -func-legal -instcombine -gvn -constprop -dce   -ptrArgReplace -mem2reg -instcombine -dce  -array-seg-normalize -deadargelim  -instcombine -dce  -pointer-simplify -dce  -port-alignment -dce  -interface-preproc  -data-pack -instcombine -dce   -basicaa -aggr-aa -aggrmodref-aa -aggr-aa -gvn -gvn  -basicaa -aggr-aa -aggrmodref-aa -aggr-aa -dse -adse -adce  -loop-simplify -indvars -instcombine  -gvn -loop-simplify -mem2reg -dce -simplifycfg  -find-region -instcombine  -auto-loop-pipeline  -inst-simplify  -interface-preproc  -indvars -auto-loop-unroll -loop-simplify -loop-bound -xunroll  -constprop -instcombine -simplifycfg -indvars  -simplifycfg -dce -globaldce  -gvn -disable-agg-range -inst-simplify  -constprop -simplifycfg -dce  -pointer-simplify -dce  -globalopt -constprop -dce  -array-promote -constprop -instcombine -dce -auto-par -instcombine -dce  -array-transform-check  -array-partition -instcombine -simplifycfg -dce  -ptrArgReplace -global-constprop -deadargelim -mem2reg  -func-legal -instcombine -dce -global-constprop -deadargelim -mem2reg  -instcombine -simplifycfg -dce  -array-reshape -instcombine -simplifycfg -dce   -mem-intrinsic-preproc -dce  -global-privatize  -mem2reg -globaldce  -promote-global-argument  -ptrArgReplace -mem2reg -instcombine -dce  -globalopt -mergereturn -simplify-global-access -mem2reg -dce  -pointer-simplify -dce  -functionattrs  -basicaa -aggr-aa -aggrmodref-aa -aggr-aa -gvn -gvn  -basicaa -aggr-aa -aggrmodref-aa -aggr-aa -dse -adse -adce  -inst-simplify -dce -norm-name  -function-inline  -func-inst -constprop -instcombine -simplifycfg -dce  -func-legal -dce   -directive-preproc -function-uniquify -directive-preproc -mem2reg -dse -dce  -loop-bound  -arraycheck -bitwidthmin -on-by-dataflow  -loop-delete -instcombine -simplifycfg -dce -loop-simplify -simplifycfg -loop-stream -instcombine -simplifycfg -dce -globaldce  -funstream-prep -function-stream -dce -globaldce  -array-streaming -instcombine -simplifycfg -dce    -group-axi-access    -simplifycfg -dce -loop-delete  -norm-name  /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.1.bc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.1.tmp.bc -f
+@I [XFORM-502] Unrolling all sub-loops inside loop 'loop_width' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:70) in function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>' for pipelining.
+@I [XFORM-502] Unrolling all sub-loops inside loop 'loop_width' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:125) in function 'hls::Mat2AXIvideo<24, 1920, 1080, 32>' for pipelining.
+@I [XFORM-501] Unrolling loop 'loop_channels' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:91) in function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>' completely.
+@I [XFORM-501] Unrolling loop 'Loop-2.1.2' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:535) in function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>' completely.
+@I [XFORM-501] Unrolling loop 'Loop-1.1.1' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:511) in function 'hls::Mat2AXIvideo<24, 1920, 1080, 32>' completely.
+@I [XFORM-501] Unrolling loop 'loop_channels' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:142) in function 'hls::Mat2AXIvideo<24, 1920, 1080, 32>' completely.
+@I [XFORM-102] Partitioning array 's.val.assign' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:452) automatically.
+@I [XFORM-102] Automatically partitioning streamed array 'out.data_stream.V' .
+@I [XFORM-102] Automatically partitioning streamed array 'src.data_stream.V' .
+@I [XFORM-101] Partitioning array 'pix.val' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:54) in dimension 1 completely.
+@I [XFORM-101] Partitioning array 'pix.val' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:115) in dimension 1 completely.
+@I [XFORM-101] Partitioning array 'scl.val' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_core.h:504) in dimension 1 completely.
+@I [XFORM-101] Partitioning array 'out.data_stream.V' in dimension 1 completely.
+@I [XFORM-101] Partitioning array 'src.data_stream.V' in dimension 1 completely.
+@W [XFORM-561] Updating loop lower bound from 0 to 1080 for loop 'loop_width' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:71:1) in function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>'.
+@W [XFORM-561] Updating loop lower bound from 0 to 1920 for loop 'loop_height' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:68:1) in function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>'.
+@W [XFORM-561] Updating loop lower bound from 0 to 1080 for loop 'loop_width' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:126:1) in function 'hls::Mat2AXIvideo<24, 1920, 1080, 32>'.
+@W [XFORM-561] Updating loop lower bound from 0 to 1920 for loop 'loop_height' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:124:1) in function 'hls::Mat2AXIvideo<24, 1920, 1080, 32>'.
+@I [XFORM-712] Applying dataflow to function 'sandbox' (top.cpp:3), detected/extracted 2 process function(s):
+	 'hls::AXIvideo2Mat<24, 1920, 1080, 32>'
+	 'Block__proc'.
+@I [HLS-0] Presyn 1 time: 0 seconds per iteration
+@I [HLS-0] presyn 2: transform -hls -keep-callgraph -scalarrepl -mem2reg  -port-alignment -dce  -indvars -loop-bound  -inst-simplify -instcombine -dce  -merge-array-access -mem2reg -dce  -clean-region -mergereturn -if-conv  -instcombine -dce -constprop  -basicaa -aggr-aa -aggrmodref-aa -aggr-aa -gvn -gvn  -basicaa -aggr-aa -aggrmodref-aa -aggr-aa -dse -adse -adce  -scalarrepl -mem2reg  -global-constprop -deadargelim -deadargelim  -instcombine -dce -simplifycfg    -ptrArgReplace -mem2reg -function-inline  -mem2reg -instcombine -dce -expr-balance  -instcombine -dce  -bitwidthmin  -directive-preproc  -inst-rectify -instcombine -dce  -functionattrs  -constprop -instcombine -bit-constprop  -simplify-global-access  -globalopt -globaldce  -inst-simplify -instcombine -elimdeaddata -dce  -loop-delete -simplifycfg   -norm-name /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.1.tmp.bc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.2.bc -f  -phase presyn
+@I [XFORM-401] Performing if-conversion on hyperblock from (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:88:13) to (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:70:50) in function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>'... converting 3 basic blocks.
+@I [XFORM-602] Inlining function 'hls::Mat2AXIvideo<24, 1920, 1080, 32>' into 'Block__proc' (top.cpp:38) automatically.
+@W [XFORM-731] Internal stream variable 'src.data_stream.V.0' is invalid: it has no data consumer.
+@W [XFORM-731] Internal stream variable 'src.data_stream.V.1' is invalid: it has no data consumer.
+@W [XFORM-731] Internal stream variable 'src.data_stream.V.2' is invalid: it has no data consumer.
+@W [XFORM-731] Internal stream variable 'out.data_stream.V.0' is invalid: it has no data producer.
+@W [XFORM-731] Internal stream variable 'out.data_stream.V.1' is invalid: it has no data producer.
+@W [XFORM-731] Internal stream variable 'out.data_stream.V.2' is invalid: it has no data producer.
+@I [HLS-0] Presyn 2 time: 0 seconds per iteration
+@I [HLS-0] build ssdm: transform -hls -function-uniquify -auto-function-inline  -loop-simplify -indvars -licm -loop-dep  -loop-bound -licm -loop-simplify -flattenloopnest  -array-flatten -gvn -instcombine -dce  -array-map -dce -func-legal  -gvn -adce -instcombine -cfgopt -simplifycfg -loop-simplify   -array-burst -promote-global-argument -dce  -axi4-lower -array-seg-normalize  -basicaa -aggrmodref-aa -globalsmodref-aa -aggr-aa -gvn -gvn  -basicaa -aggrmodref-aa -globalsmodref-aa -aggr-aa -dse -adse -adce -licm  -inst-simplify -dce  -globaldce -array-streaming -instcombine  -dce   -deadargelim -doublePtrSimplify  -doublePtrElim -dce -doublePtrSimplify -promote-dbg-pointer  -dce -scalarrepl -mem2reg -disaggr -norm-name -mem2reg  -instcombine  -dse -adse -adce -ptrLegalization -dce -auto-rom-infer -array-flatten -dce -instcombine  -loop-rot -constprop -cfgopt -simplifycfg -indvars -pointer-simplify -dce -loop-bound  -loop-simplify -loop-preproc  -constprop -gvn -mem2reg -instcombine -dce  -loop-merge -dce  -bitwidthmin  -interface-preproc -interface-gen  -directive-preproc -inst-simplify -dce  -gvn -mem2reg -instcombine -dce -adse  -loop-bound  -instcombine -cfgopt -simplifycfg -loop-simplify  -clean-region -io-protocol  -find-region -mem2reg  -loop-simplify -phi-opt -bitop-raise  -inst-simplify -inst-rectify -instcombine -adce -deadargelim  -cfgopt -simplifycfg -strip-dead-prototypes  -interface-lower -bitop-lower -intrinsic-lower  -basicaa -aggrmodref-aa -globalsmodref-aa -aggr-aa  -inst-simplify -simplifycfg   -mergereturn -inst-simplify -inst-rectify  -dce -bitop-lower  -loop-rewind -pointer-simplify -dce -cfgopt  -norm-name -legalize -read-loop-dep -dce -bitwidth   -cdfg-build  /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.2.bc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.o.3.bc -f  -phase build-ssdm
+@W [XFORM-631] Renaming function 'hls::AXIvideo2Mat<24, 1920, 1080, 32>' (/opt/Xilinx/Vivado_HLS/2014.4/common/technology/autopilot/hls/hls_video_io.h:49:46) into AXIvideo2Mat.
+@I [HLS-0] Build ssdm time: 0 seconds per iteration
+@I [HLS-0] Finish building internal data model.
+@I [HLS-100] Command 'opt_and_import_c' returned 0; elapsed 3.08182Total elapsed time: 119.378 sec.
+@I [HLS-111] Elapsed time: 5.25074 seconds; current memory usage: 135 MB.
+@I [HLS-100] Command 'elaborate' returned 0; elapsed 4.64608Total elapsed time: 119.379 sec.
+@I [HLS-100] Command "autosyn "
+@I [HLS-10] Starting hardware synthesis ...
+@0 [HLS-0] Starting hardware synthesis ...
+@I [HLS-0] Synthesizing C/C++ design ...
+@I [HLS-10] Synthesizing 'sandbox' ...
+@0 [HLS-0] Synthesizing 'sandbox' ...
+@I [HLS-100] Command "ap_set_top_model sandbox "
+@W [SYN-103] Legalizing function name 'sandbox_Block__proc' to 'sandbox_Block_proc'.
+@I [HLS-100] Command 'ap_set_top_model' returned 0; elapsed 0.000382Total elapsed time: 119.381 sec.
+@I [HLS-100] Command "get_model_list sandbox -filter all-wo-channel -topdown "
+@I [HLS-100] Command 'get_model_list' returned 0; elapsed 9.8e-05Total elapsed time: 119.381 sec.
+@I [HLS-100] Command "preproc_iomode -model sandbox "
+@I [HLS-100] Command 'preproc_iomode' returned 0; elapsed 0.001111Total elapsed time: 119.382 sec.
+@I [HLS-100] Command "preproc_iomode -model sandbox_Block__proc "
+@I [HLS-100] Command 'preproc_iomode' returned 0; elapsed 0.000137Total elapsed time: 119.382 sec.
+@I [HLS-100] Command "preproc_iomode -model sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'preproc_iomode' returned 0; elapsed 0.000195Total elapsed time: 119.383 sec.
+@I [HLS-100] Command "get_model_list sandbox -filter all-wo-channel "
+@I [HLS-100] Command 'get_model_list' returned 0; elapsed 3.8e-05Total elapsed time: 119.384 sec.
+@I [HLS-0] Model list for configure: sandbox_AXIvideo2Mat sandbox_Block__proc sandbox
+@I [HLS-0] Configuring Module : sandbox_AXIvideo2Mat ...
+@I [HLS-100] Command "set_default_model sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000342Total elapsed time: 119.384 sec.
+@I [HLS-100] Command "apply_spec_resource_limit sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'apply_spec_resource_limit' returned 0; elapsed 6.3e-05Total elapsed time: 119.385 sec.
+@I [HLS-0] Configuring Module : sandbox_Block__proc ...
+@I [HLS-100] Command "set_default_model sandbox_Block__proc "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000242Total elapsed time: 119.385 sec.
+@I [HLS-100] Command "apply_spec_resource_limit sandbox_Block__proc "
+@I [HLS-100] Command 'apply_spec_resource_limit' returned 0; elapsed 2.1e-05Total elapsed time: 119.385 sec.
+@I [HLS-0] Configuring Module : sandbox ...
+@I [HLS-100] Command "set_default_model sandbox "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000679Total elapsed time: 119.386 sec.
+@I [HLS-100] Command "apply_spec_resource_limit sandbox "
+@I [HLS-100] Command 'apply_spec_resource_limit' returned 0; elapsed 1e-05Total elapsed time: 119.386 sec.
+@I [HLS-0] Model list for preprocess: sandbox_AXIvideo2Mat sandbox_Block__proc sandbox
+@I [HLS-0] Preprocessing Module: sandbox_AXIvideo2Mat ...
+@I [HLS-100] Command "set_default_model sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000248Total elapsed time: 119.386 sec.
+@I [HLS-100] Command "cdfg_preprocess -model sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'cdfg_preprocess' returned 0; elapsed 0.003112Total elapsed time: 119.390 sec.
+@I [HLS-100] Command "rtl_gen_preprocess sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'rtl_gen_preprocess' returned 0; elapsed 0.001517Total elapsed time: 119.391 sec.
+@I [HLS-0] Preprocessing Module: sandbox_Block__proc ...
+@I [HLS-100] Command "set_default_model sandbox_Block__proc "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000247Total elapsed time: 119.392 sec.
+@I [HLS-100] Command "cdfg_preprocess -model sandbox_Block__proc "
+@I [HLS-100] Command 'cdfg_preprocess' returned 0; elapsed 0.001267Total elapsed time: 119.393 sec.
+@I [HLS-100] Command "rtl_gen_preprocess sandbox_Block__proc "
+@I [HLS-100] Command 'rtl_gen_preprocess' returned 0; elapsed 0.001246Total elapsed time: 119.394 sec.
+@I [HLS-0] Preprocessing Module: sandbox ...
+@I [HLS-100] Command "set_default_model sandbox "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000548Total elapsed time: 119.395 sec.
+@I [HLS-100] Command "cdfg_preprocess -model sandbox "
+@I [HLS-100] Command 'cdfg_preprocess' returned 0; elapsed 0.000477Total elapsed time: 119.395 sec.
+@I [HLS-100] Command "rtl_gen_preprocess sandbox "
+@I [HLS-100] Command 'rtl_gen_preprocess' returned 0; elapsed 0.001449Total elapsed time: 119.397 sec.
+@I [HLS-0] Model list for synthesis: sandbox_AXIvideo2Mat sandbox_Block__proc sandbox
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Scheduling module 'sandbox_AXIvideo2Mat' 
+@0 [HLS-0] -- Scheduling module 'sandbox_AXIvideo2Mat' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "set_default_model sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000267Total elapsed time: 119.398 sec.
+@I [HLS-100] Command "schedule -model sandbox_AXIvideo2Mat "
+@I [SCHED-11] Starting scheduling ...
+@I [SCHED-11] Generating True dependence constraints ... 
+@I [SCHED-11] Generating Auxiliary dependence constraints ... 
+@I [SCHED-11] Generating Ternary mapping constraints ... 
+@I [SCHED-11] Generating Node latency constraints ... 
+@I [SCHED-11] Generating Relative time constraints ... 
+@I [SCHED-11] Generating Protocol constraints ... 
+@I [SCHED-11] Generating Precedence constraints ... 
+@I [SCHED-11] Generating Supporting dependence constraints ... 
+@I [SCHED-11] Generating Pipeline constraints ... 
+@I [SCHED-61] Pipelining loop 'loop_wait_for_start'.
+@I [SCHED-61] Pipelining result: Target II: 1, Final II: 1, Depth: 1.
+@I [SCHED-61] Pipelining loop 'loop_width'.
+@I [SCHED-61] Pipelining result: Target II: 1, Final II: 1, Depth: 2.
+@I [SCHED-61] Pipelining loop 'loop_wait_for_eol'.
+@I [SCHED-61] Pipelining result: Target II: 1, Final II: 1, Depth: 1.
+@I [SCHED-11] Generating Fix relative node schedules ... 
+@I [SCHED-11] Generating Supporting dependence constraints ... 
+@I [SCHED-11] Generating Resource constraints ... 
+@I [SCHED-11] Generating Latency constraints ... 
+@I [SCHED-11] Generating Latency constraints ... 
+@I [SCHED-11] Generating Cycle time constraints ... 
+@I [SCHED-11] Generating Blocking node constraints ... 
+@I [SCHED-11] Generating Chaining constraints ... 
+@I [SCHED-11] Generating Operation gating constraints ... 
+@I [SCHED-11] Generating Variable bound constraints ... 
+@I [SCHED-11] Generating PHI node constraints ... 
+@I [SCHED-11] Start checking consistency (resolving sdc graph) ...
+@I [SCHED-11] Finished checking consistency.
+@I [SCHED-11] Start scheduling optimization (solving LP) ...
+@I [SCHED-11] Finished scheduling optimization.
+@I [SCHED-11] Start constructing STG ...
+@I [SCHED-11] Finished constructing STG.
+@I [SCHED-11] Finished scheduling.
+@I [HLS-100] Command 'schedule' returned 0; elapsed 0.163774Total elapsed time: 119.562 sec.
+@I [HLS-111] Elapsed time: 0.182779 seconds; current memory usage: 135 MB.
+@I [HLS-100] Command "report -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.verbose.sched.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.004774Total elapsed time: 119.567 sec.
+@I [HLS-100] Command "db_write -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.sched.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.006802Total elapsed time: 119.574 sec.
+@I [HLS-0] Finish scheduling sandbox_AXIvideo2Mat.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Exploring micro-architecture for module 'sandbox_AXIvideo2Mat' 
+@0 [HLS-0] -- Exploring micro-architecture for module 'sandbox_AXIvideo2Mat' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "set_default_model sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000124Total elapsed time: 119.575 sec.
+@I [HLS-100] Command "bind -model sandbox_AXIvideo2Mat "
+@I [BIND-110] clear=
+@I [BIND-110] debug=
+@I [BIND-110] drf=
+@I [BIND-110] effort=
+@I [BIND-110] fast_refine=
+@I [BIND-110] fu_weight=[ 0.0 -- 1.0 ]
+@I [BIND-110] global_opt=
+@I [BIND-110] gsearch=
+@I [BIND-110] help=
+@I [BIND-110] help-hidden=
+@I [BIND-110] min_mem_port=
+@I [BIND-110] min_op=
+@I [BIND-110] minreg=
+@I [BIND-110] ml=
+@I [BIND-110] model=sandbox_AXIvideo2Mat
+@I [BIND-110] no_false_path=
+@I [BIND-110] no_min_op=
+@I [BIND-110] normalize=
+@I [BIND-110] quiet=
+@I [BIND-110] refine=
+@I [BIND-110] reg_weight=[ 0.0 -- 1.0 ]
+@I [BIND-110] search=
+@I [BIND-110] tight_delay=
+@I [BIND-110] verbose=
+@I [BIND-110] wFF=
+@I [BIND-110] wFU=
+@I [BIND-110] wMUX=
+@I [BIND-110] wNET=
+@I [BIND-100] Starting micro-architecture generation ...
+@I [BIND-101] Performing variable lifetime analysis.
+@I [BIND-101] Exploring resource sharing.
+@I [BIND-101] Binding ...
+@I [BIND-100] Finished micro-architecture generation.
+@I [HLS-100] Command 'bind' returned 0; elapsed 0.006278Total elapsed time: 119.581 sec.
+@I [HLS-111] Elapsed time: 0.018895 seconds; current memory usage: 136 MB.
+@I [HLS-100] Command "report -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.verbose.bind.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.011587Total elapsed time: 119.593 sec.
+@I [HLS-100] Command "db_write -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.bind.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.00703Total elapsed time: 119.600 sec.
+@I [HLS-0] Finish binding sandbox_AXIvideo2Mat.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Scheduling module 'sandbox_Block_proc' 
+@0 [HLS-0] -- Scheduling module 'sandbox_Block_proc' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "set_default_model sandbox_Block__proc "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 9.4e-05Total elapsed time: 119.600 sec.
+@I [HLS-100] Command "schedule -model sandbox_Block__proc "
+@I [SCHED-11] Starting scheduling ...
+@I [SCHED-11] Generating True dependence constraints ... 
+@I [SCHED-11] Generating Auxiliary dependence constraints ... 
+@I [SCHED-11] Generating Ternary mapping constraints ... 
+@I [SCHED-11] Generating Node latency constraints ... 
+@I [SCHED-11] Generating Relative time constraints ... 
+@I [SCHED-11] Generating Protocol constraints ... 
+@I [SCHED-11] Generating Precedence constraints ... 
+@I [SCHED-11] Generating Supporting dependence constraints ... 
+@I [SCHED-11] Generating Pipeline constraints ... 
+@I [SCHED-61] Pipelining loop 'loop_width'.
+@I [SCHED-61] Pipelining result: Target II: 1, Final II: 1, Depth: 2.
+@I [SCHED-11] Generating Fix relative node schedules ... 
+@I [SCHED-11] Generating Supporting dependence constraints ... 
+@I [SCHED-11] Generating Resource constraints ... 
+@I [SCHED-11] Generating Latency constraints ... 
+@I [SCHED-11] Generating Latency constraints ... 
+@I [SCHED-11] Generating Cycle time constraints ... 
+@I [SCHED-11] Generating Blocking node constraints ... 
+@I [SCHED-11] Generating Chaining constraints ... 
+@I [SCHED-11] Generating Operation gating constraints ... 
+@I [SCHED-11] Generating Variable bound constraints ... 
+@I [SCHED-11] Generating PHI node constraints ... 
+@I [SCHED-11] Start checking consistency (resolving sdc graph) ...
+@I [SCHED-11] Finished checking consistency.
+@I [SCHED-11] Start scheduling optimization (solving LP) ...
+@I [SCHED-11] Finished scheduling optimization.
+@I [SCHED-11] Start constructing STG ...
+@I [SCHED-11] Finished constructing STG.
+@I [SCHED-11] Finished scheduling.
+@I [HLS-100] Command 'schedule' returned 0; elapsed 0.058612Total elapsed time: 119.659 sec.
+@I [HLS-111] Elapsed time: 0.077785 seconds; current memory usage: 136 MB.
+@I [HLS-100] Command "report -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.verbose.sched.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.001759Total elapsed time: 119.661 sec.
+@I [HLS-100] Command "db_write -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.sched.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.002348Total elapsed time: 119.664 sec.
+@I [HLS-0] Finish scheduling sandbox_Block__proc.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Exploring micro-architecture for module 'sandbox_Block_proc' 
+@0 [HLS-0] -- Exploring micro-architecture for module 'sandbox_Block_proc' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "set_default_model sandbox_Block__proc "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 8e-05Total elapsed time: 119.664 sec.
+@I [HLS-100] Command "bind -model sandbox_Block__proc "
+@I [BIND-110] clear=
+@I [BIND-110] debug=
+@I [BIND-110] drf=
+@I [BIND-110] effort=
+@I [BIND-110] fast_refine=
+@I [BIND-110] fu_weight=[ 0.0 -- 1.0 ]
+@I [BIND-110] global_opt=
+@I [BIND-110] gsearch=
+@I [BIND-110] help=
+@I [BIND-110] help-hidden=
+@I [BIND-110] min_mem_port=
+@I [BIND-110] min_op=
+@I [BIND-110] minreg=
+@I [BIND-110] ml=
+@I [BIND-110] model=sandbox_Block__proc
+@I [BIND-110] no_false_path=
+@I [BIND-110] no_min_op=
+@I [BIND-110] normalize=
+@I [BIND-110] quiet=
+@I [BIND-110] refine=
+@I [BIND-110] reg_weight=[ 0.0 -- 1.0 ]
+@I [BIND-110] search=
+@I [BIND-110] tight_delay=
+@I [BIND-110] verbose=
+@I [BIND-110] wFF=
+@I [BIND-110] wFU=
+@I [BIND-110] wMUX=
+@I [BIND-110] wNET=
+@I [BIND-100] Starting micro-architecture generation ...
+@I [BIND-101] Performing variable lifetime analysis.
+@I [BIND-101] Exploring resource sharing.
+@I [BIND-101] Binding ...
+@I [BIND-100] Finished micro-architecture generation.
+@I [HLS-100] Command 'bind' returned 0; elapsed 0.001641Total elapsed time: 119.665 sec.
+@I [HLS-111] Elapsed time: 0.006237 seconds; current memory usage: 136 MB.
+@I [HLS-100] Command "report -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.verbose.bind.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.004733Total elapsed time: 119.670 sec.
+@I [HLS-100] Command "db_write -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.bind.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.00281Total elapsed time: 119.673 sec.
+@I [HLS-0] Finish binding sandbox_Block__proc.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Scheduling module 'sandbox' 
+@0 [HLS-0] -- Scheduling module 'sandbox' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "set_default_model sandbox "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000208Total elapsed time: 119.674 sec.
+@I [HLS-100] Command "schedule -model sandbox "
+@I [SCHED-11] Starting scheduling ...
+@I [SCHED-11] Generating True dependence constraints ... 
+@I [SCHED-11] Generating Auxiliary dependence constraints ... 
+@I [SCHED-11] Generating Ternary mapping constraints ... 
+@I [SCHED-11] Generating Node latency constraints ... 
+@I [SCHED-11] Generating Relative time constraints ... 
+@I [SCHED-11] Generating Protocol constraints ... 
+@I [SCHED-11] Generating Precedence constraints ... 
+@I [SCHED-11] Generating Supporting dependence constraints ... 
+@I [SCHED-11] Generating Pipeline constraints ... 
+@I [SCHED-11] Generating Fix relative node schedules ... 
+@I [SCHED-11] Generating Supporting dependence constraints ... 
+@I [SCHED-11] Generating Resource constraints ... 
+@I [SCHED-11] Generating Latency constraints ... 
+@I [SCHED-11] Generating Latency constraints ... 
+@I [SCHED-11] Generating Cycle time constraints ... 
+@I [SCHED-11] Generating Blocking node constraints ... 
+@I [SCHED-11] Generating Chaining constraints ... 
+@I [SCHED-11] Generating Operation gating constraints ... 
+@I [SCHED-11] Generating Variable bound constraints ... 
+@I [SCHED-11] Generating PHI node constraints ... 
+@I [SCHED-11] Start checking consistency (resolving sdc graph) ...
+@I [SCHED-11] Finished checking consistency.
+@I [SCHED-11] Start scheduling optimization (solving LP) ...
+@I [SCHED-11] Finished scheduling optimization.
+@I [SCHED-11] Start constructing STG ...
+@I [SCHED-11] Finished constructing STG.
+@I [SCHED-11] Finished scheduling.
+@I [HLS-100] Command 'schedule' returned 0; elapsed 0.008392Total elapsed time: 119.682 sec.
+@I [HLS-111] Elapsed time: 0.016517 seconds; current memory usage: 136 MB.
+@I [HLS-100] Command "report -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.verbose.sched.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.002136Total elapsed time: 119.684 sec.
+@I [HLS-100] Command "db_write -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.sched.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.001603Total elapsed time: 119.686 sec.
+@I [HLS-0] Finish scheduling sandbox.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Exploring micro-architecture for module 'sandbox' 
+@0 [HLS-0] -- Exploring micro-architecture for module 'sandbox' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "set_default_model sandbox "
+@I [HLS-100] Command 'set_default_model' returned 0; elapsed 0.000199Total elapsed time: 119.686 sec.
+@I [HLS-100] Command "bind -model sandbox "
+@I [BIND-110] clear=
+@I [BIND-110] debug=
+@I [BIND-110] drf=
+@I [BIND-110] effort=
+@I [BIND-110] fast_refine=
+@I [BIND-110] fu_weight=[ 0.0 -- 1.0 ]
+@I [BIND-110] global_opt=
+@I [BIND-110] gsearch=
+@I [BIND-110] help=
+@I [BIND-110] help-hidden=
+@I [BIND-110] min_mem_port=
+@I [BIND-110] min_op=
+@I [BIND-110] minreg=
+@I [BIND-110] ml=
+@I [BIND-110] model=sandbox
+@I [BIND-110] no_false_path=
+@I [BIND-110] no_min_op=
+@I [BIND-110] normalize=
+@I [BIND-110] quiet=
+@I [BIND-110] refine=
+@I [BIND-110] reg_weight=[ 0.0 -- 1.0 ]
+@I [BIND-110] search=
+@I [BIND-110] tight_delay=
+@I [BIND-110] verbose=
+@I [BIND-110] wFF=
+@I [BIND-110] wFU=
+@I [BIND-110] wMUX=
+@I [BIND-110] wNET=
+@I [BIND-100] Starting micro-architecture generation ...
+@I [BIND-101] Performing variable lifetime analysis.
+@I [BIND-101] Exploring resource sharing.
+@I [BIND-101] Binding ...
+@I [BIND-100] Finished micro-architecture generation.
+@I [HLS-100] Command 'bind' returned 0; elapsed 0.006029Total elapsed time: 119.692 sec.
+@I [HLS-111] Elapsed time: 0.010331 seconds; current memory usage: 136 MB.
+@I [HLS-100] Command "report -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.verbose.bind.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.010046Total elapsed time: 119.703 sec.
+@I [HLS-100] Command "db_write -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.bind.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.001911Total elapsed time: 119.705 sec.
+@I [HLS-0] Finish binding sandbox.
+@I [HLS-100] Command "get_model_list sandbox -filter all-wo-channel "
+@I [HLS-100] Command 'get_model_list' returned 0; elapsed 1.4e-05Total elapsed time: 119.705 sec.
+@I [HLS-0] Preprocessing for RTLGen ...
+@I [HLS-100] Command "rtl_gen_preprocess sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'rtl_gen_preprocess' returned 0; elapsed 0.00037Total elapsed time: 119.705 sec.
+@I [HLS-100] Command "rtl_gen_preprocess sandbox_Block__proc "
+@I [HLS-100] Command 'rtl_gen_preprocess' returned 0; elapsed 0.000346Total elapsed time: 119.705 sec.
+@I [HLS-100] Command "rtl_gen_preprocess sandbox "
+@I [HLS-100] Command 'rtl_gen_preprocess' returned 0; elapsed 0.000407Total elapsed time: 119.706 sec.
+@I [HLS-0] Model list for RTL generation: sandbox_AXIvideo2Mat sandbox_Block__proc sandbox
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Generating RTL for module 'sandbox_AXIvideo2Mat' 
+@0 [HLS-0] -- Generating RTL for module 'sandbox_AXIvideo2Mat' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "create_rtl_model sandbox_AXIvideo2Mat -vendor xilinx -mg_file /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@W [RTGEN-101] Setting dangling out port 'sandbox_AXIvideo2Mat/img_data_stream_0_V_write' to 0.
+@W [RTGEN-101] Setting dangling out port 'sandbox_AXIvideo2Mat/img_data_stream_1_V_write' to 0.
+@W [RTGEN-101] Setting dangling out port 'sandbox_AXIvideo2Mat/img_data_stream_2_V_write' to 0.
+@I [RTGEN-100] Finished creating RTL model for 'sandbox_AXIvideo2Mat'.
+@I [HLS-100] Command 'create_rtl_model' returned 0; elapsed 0.018683Total elapsed time: 119.725 sec.
+@I [HLS-111] Elapsed time: 0.032762 seconds; current memory usage: 137 MB.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000452Total elapsed time: 119.726 sec.
+@I [HLS-100] Command "gen_rtl sandbox_AXIvideo2Mat -style xilinx -tracefl mytrace -tracefmt vcd -traceopt all -f -lang sc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/systemc/sandbox_AXIvideo2Mat -synmodules sandbox_AXIvideo2Mat sandbox_Block__proc sandbox "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.001405Total elapsed time: 119.728 sec.
+@I [HLS-100] Command "gen_rtl sandbox_AXIvideo2Mat -style xilinx -f -lang vhdl -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/vhdl/sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.00111Total elapsed time: 119.729 sec.
+@I [HLS-100] Command "gen_rtl sandbox_AXIvideo2Mat -style xilinx -f -lang vlog -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/verilog/sandbox_AXIvideo2Mat "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.00125Total elapsed time: 119.730 sec.
+@I [HLS-100] Command "gen_tb_info sandbox_AXIvideo2Mat -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat -p /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db "
+@I [HLS-100] Command 'gen_tb_info' returned 0; elapsed 0.000273Total elapsed time: 119.731 sec.
+@I [HLS-100] Command "report -model sandbox_AXIvideo2Mat -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/report/sandbox_AXIvideo2Mat_csynth.rpt -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.006496Total elapsed time: 119.737 sec.
+@I [HLS-100] Command "report -model sandbox_AXIvideo2Mat -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/report/sandbox_AXIvideo2Mat_csynth.xml -f -x "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.004584Total elapsed time: 119.742 sec.
+@I [HLS-100] Command "report -model sandbox_AXIvideo2Mat -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.verbose.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.014456Total elapsed time: 119.757 sec.
+@I [HLS-100] Command "db_write -model sandbox_AXIvideo2Mat -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.010087Total elapsed time: 119.767 sec.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Generating RTL for module 'sandbox_Block_proc' 
+@0 [HLS-0] -- Generating RTL for module 'sandbox_Block_proc' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "create_rtl_model sandbox_Block__proc -vendor xilinx -mg_file /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [RTGEN-100] Finished creating RTL model for 'sandbox_Block_proc'.
+@I [HLS-100] Command 'create_rtl_model' returned 0; elapsed 0.00788Total elapsed time: 119.787 sec.
+@I [HLS-111] Elapsed time: 0.061118 seconds; current memory usage: 138 MB.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000418Total elapsed time: 119.787 sec.
+@I [HLS-100] Command "gen_rtl sandbox_Block__proc -style xilinx -tracefl mytrace -tracefmt vcd -traceopt all -f -lang sc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/systemc/sandbox_Block_proc -synmodules sandbox_AXIvideo2Mat sandbox_Block__proc sandbox "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.000676Total elapsed time: 119.788 sec.
+@I [HLS-100] Command "gen_rtl sandbox_Block__proc -style xilinx -f -lang vhdl -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/vhdl/sandbox_Block_proc "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.000508Total elapsed time: 119.789 sec.
+@I [HLS-100] Command "gen_rtl sandbox_Block__proc -style xilinx -f -lang vlog -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/verilog/sandbox_Block_proc "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.000567Total elapsed time: 119.789 sec.
+@I [HLS-100] Command "gen_tb_info sandbox_Block__proc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc -p /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db "
+@I [HLS-100] Command 'gen_tb_info' returned 0; elapsed 0.000156Total elapsed time: 119.789 sec.
+@I [HLS-100] Command "report -model sandbox_Block__proc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/report/sandbox_Block_proc_csynth.rpt -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.002899Total elapsed time: 119.792 sec.
+@I [HLS-100] Command "report -model sandbox_Block__proc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/report/sandbox_Block_proc_csynth.xml -f -x "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.001718Total elapsed time: 119.794 sec.
+@I [HLS-100] Command "report -model sandbox_Block__proc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.verbose.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.006509Total elapsed time: 119.801 sec.
+@I [HLS-100] Command "db_write -model sandbox_Block__proc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.00426Total elapsed time: 119.805 sec.
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-10] -- Generating RTL for module 'sandbox' 
+@0 [HLS-0] -- Generating RTL for module 'sandbox' 
+@I [HLS-10] ----------------------------------------------------------------
+@0 [HLS-0] ----------------------------------------------------------------
+@I [HLS-100] Command "create_rtl_model sandbox -vendor xilinx -mg_file /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_data_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_keep_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_strb_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_user_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_last_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_id_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/INPUT_STREAM_V_dest_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_data_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_keep_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_strb_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_user_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_last_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_id_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/OUTPUT_STREAM_V_dest_V' to 'axis'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/rows' to 's_axilite & ap_none'.
+@I [RTGEN-500] Setting interface mode on port 'sandbox/cols' to 's_axilite & ap_none'.
+@I [RTGEN-500] Setting interface mode on function 'sandbox' to 's_axilite & ap_ctrl_hs'.
+@I [RTGEN-100] Finished creating RTL model for 'sandbox'.
+@I [HLS-100] Command 'create_rtl_model' returned 0; elapsed 0.002389Total elapsed time: 119.813 sec.
+@I [HLS-111] Elapsed time: 0.026297 seconds; current memory usage: 139 MB.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000402Total elapsed time: 119.814 sec.
+@I [HLS-100] Command "gen_rtl sandbox -istop -style xilinx -tracefl mytrace -tracefmt vcd -traceopt all -f -lang sc -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/systemc/sandbox -synmodules sandbox_AXIvideo2Mat sandbox_Block__proc sandbox "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.000516Total elapsed time: 119.814 sec.
+@I [HLS-100] Command "gen_rtl sandbox -istop -style xilinx -f -lang vhdl -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/vhdl/sandbox "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.001648Total elapsed time: 119.816 sec.
+@I [HLS-100] Command "gen_rtl sandbox -istop -style xilinx -f -lang vlog -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/verilog/sandbox "
+@I [HLS-100] Command 'gen_rtl' returned 0; elapsed 0.001277Total elapsed time: 119.817 sec.
+@I [HLS-100] Command "export_constraint_db -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.constraint.tcl -f -tool general "
+@I [HLS-100] Command 'export_constraint_db' returned 0; elapsed 7.6e-05Total elapsed time: 119.817 sec.
+@I [HLS-100] Command "report -model sandbox -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.design.xml -verbose -f -dv "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.01419Total elapsed time: 119.832 sec.
+@I [HLS-100] Command "gen_tb_info sandbox -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox -p /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db "
+@I [HLS-100] Command 'gen_tb_info' returned 0; elapsed 0.000554Total elapsed time: 119.832 sec.
+@I [HLS-100] Command "report -model sandbox -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/report/sandbox_csynth.rpt -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.002463Total elapsed time: 119.835 sec.
+@I [HLS-100] Command "report -model sandbox -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/syn/report/sandbox_csynth.xml -f -x "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.001417Total elapsed time: 119.836 sec.
+@I [HLS-100] Command "report -model sandbox -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.verbose.rpt -verbose -f "
+@I [HLS-100] Command 'report' returned 0; elapsed 0.011764Total elapsed time: 119.848 sec.
+@I [HLS-100] Command "db_write -model sandbox -o /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.adb -f "
+@I [HLS-100] Command 'db_write' returned 0; elapsed 0.002874Total elapsed time: 119.851 sec.
+@I [HLS-100] Command "sc_get_clocks sandbox "
+@I [HLS-100] Command 'sc_get_clocks' returned 0; elapsed 8e-06Total elapsed time: 119.854 sec.
+@I [HLS-100] Command "sc_get_portdomain sandbox "
+@I [HLS-100] Command 'sc_get_portdomain' returned 0; elapsed 3e-06Total elapsed time: 119.854 sec.
+@I [HLS-0] Model list for RTL component generation: sandbox_AXIvideo2Mat sandbox_Block__proc sandbox
+@I [HLS-0] Handling components in module [sandbox_AXIvideo2Mat] ... 
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000178Total elapsed time: 119.855 sec.
+@I [HLS-0] Handling components in module [sandbox_Block_proc] ... 
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000123Total elapsed time: 119.855 sec.
+@I [HLS-0] Handling components in module [sandbox] ... 
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [HLS-0] Found component FIFO_sandbox_result_channel.
+@I [HLS-0] Append model FIFO_sandbox_result_channel
+@I [HLS-0] Found component sandbox_CONTROL_BUS_s_axi.
+@I [HLS-0] Append model sandbox_CONTROL_BUS_s_axi
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000286Total elapsed time: 119.856 sec.
+@I [HLS-0] Append model sandbox_AXIvideo2Mat
+@I [HLS-0] Append model sandbox_Block_proc
+@I [HLS-0] Append model sandbox
+@I [HLS-0] Generating RTL model list ...
+@I [HLS-0] All models in this session: FIFO_sandbox_result_channel sandbox_CONTROL_BUS_s_axi sandbox_AXIvideo2Mat sandbox_Block_proc sandbox
+@I [HLS-0] To file: write model FIFO_sandbox_result_channel
+@I [HLS-0] To file: write model sandbox_CONTROL_BUS_s_axi
+@I [HLS-0] To file: write model sandbox_AXIvideo2Mat
+@I [HLS-0] To file: write model sandbox_Block_proc
+@I [HLS-0] To file: write model sandbox
+@I [HLS-0] Finished generating RTL model list.
+
+
+@I [HLS-0] RTL Generation done.
+@I [HLS-0] CAS Generation done.
+@I [HLS-0] CBC Generation done.
+@I [HLS-100] Command "export_ssdm /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/a.export.ll "
+@I [HLS-100] Command 'export_ssdm' returned 0; elapsed 0.000301Total elapsed time: 119.856 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000113Total elapsed time: 119.858 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000394Total elapsed time: 119.859 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000747Total elapsed time: 119.859 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0002Total elapsed time: 119.860 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000526Total elapsed time: 119.860 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.1e-05Total elapsed time: 119.860 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.4e-05Total elapsed time: 119.860 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001097Total elapsed time: 119.862 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00033Total elapsed time: 119.862 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001485Total elapsed time: 119.864 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001966Total elapsed time: 119.866 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004395Total elapsed time: 119.870 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.006479Total elapsed time: 119.870 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005386Total elapsed time: 119.876 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005254Total elapsed time: 119.881 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.076761Total elapsed time: 119.958 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000169Total elapsed time: 119.958 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.017504Total elapsed time: 119.976 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.114954Total elapsed time: 119.976 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 8.1e-05Total elapsed time: 119.977 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.116264Total elapsed time: 119.977 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.116351Total elapsed time: 119.977 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001021Total elapsed time: 119.978 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001116Total elapsed time: 119.978 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000109Total elapsed time: 119.979 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.8e-05Total elapsed time: 119.979 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.5e-05Total elapsed time: 119.979 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000148Total elapsed time: 119.980 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000119Total elapsed time: 119.980 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [RTMG-285] Implementing FIFO 'FIFO_sandbox_result_channel' using Shift Registers.
+@I [HLS-100] Command "source ./CONTROL_BUS.slave.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.6e-05Total elapsed time: 119.992 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.015157Total elapsed time: 119.995 sec.
+@I [HLS-10] Finished generating all RTL models.
+@0 [HLS-0] Finished generating all RTL models.
+@I [WSYSC-301] Generating RTL SystemC for 'sandbox'.
+@I [WVHDL-304] Generating RTL VHDL for 'sandbox'.
+@I [WVLOG-307] Generating RTL Verilog for 'sandbox'.
+@I [HLS-100] Command 'autosyn' returned 0; elapsed 0.615624Total elapsed time: 119.996 sec.
+@I [HLS-100] Command 'csynth_design' returned 0; elapsed 5.26196Total elapsed time: 119.996 sec.
+@I [HLS-100] Command "export_design "
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000103Total elapsed time: 120.0 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000326Total elapsed time: 120.1 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000661Total elapsed time: 120.1 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000192Total elapsed time: 120.1 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000522Total elapsed time: 120.2 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.7e-05Total elapsed time: 120.2 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.7e-05Total elapsed time: 120.2 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000574Total elapsed time: 120.3 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000275Total elapsed time: 120.3 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00123Total elapsed time: 120.5 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001945Total elapsed time: 120.7 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.003789Total elapsed time: 120.10 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005844Total elapsed time: 120.10 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004654Total elapsed time: 120.15 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004793Total elapsed time: 120.20 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.063929Total elapsed time: 120.84 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.6e-05Total elapsed time: 120.84 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.015479Total elapsed time: 120.100 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.09728Total elapsed time: 120.100 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.4e-05Total elapsed time: 120.101 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.098246Total elapsed time: 120.101 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.098321Total elapsed time: 120.101 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000825Total elapsed time: 120.102 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000905Total elapsed time: 120.102 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000111Total elapsed time: 120.102 sec.
+@I [IMPL-8] Exporting RTL as an IP in IP-XACT.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000117Total elapsed time: 120.103 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000104Total elapsed time: 120.104 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000316Total elapsed time: 120.105 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000635Total elapsed time: 120.105 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000181Total elapsed time: 120.105 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000474Total elapsed time: 120.106 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.2e-05Total elapsed time: 120.106 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.4e-05Total elapsed time: 120.106 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000536Total elapsed time: 120.107 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000269Total elapsed time: 120.107 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001204Total elapsed time: 120.108 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00168Total elapsed time: 120.110 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0036Total elapsed time: 120.114 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005401Total elapsed time: 120.114 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004471Total elapsed time: 120.118 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004716Total elapsed time: 120.123 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.061695Total elapsed time: 120.185 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.2e-05Total elapsed time: 120.185 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.015363Total elapsed time: 120.200 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.094134Total elapsed time: 120.200 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.5e-05Total elapsed time: 120.201 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.095088Total elapsed time: 120.201 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.095162Total elapsed time: 120.201 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000826Total elapsed time: 120.202 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000905Total elapsed time: 120.202 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.9e-05Total elapsed time: 120.202 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000144Total elapsed time: 120.203 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000115Total elapsed time: 120.203 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000185Total elapsed time: 120.203 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.7e-05Total elapsed time: 120.205 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000138Total elapsed time: 120.205 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000114Total elapsed time: 120.205 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000403Total elapsed time: 120.206 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000386Total elapsed time: 120.207 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.tbgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000142Total elapsed time: 120.207 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.tbgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000146Total elapsed time: 120.208 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.037492Total elapsed time: 120.243 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.7e-05Total elapsed time: 120.247 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00014Total elapsed time: 120.247 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000116Total elapsed time: 120.247 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000185Total elapsed time: 120.248 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.6e-05Total elapsed time: 120.265 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.constraint.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.4e-05Total elapsed time: 120.266 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000371Total elapsed time: 120.272 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000376Total elapsed time: 120.272 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.tbgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000135Total elapsed time: 120.273 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.tbgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00013Total elapsed time: 120.273 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000384Total elapsed time: 120.313 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.rtl_wrap.cfg.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000385Total elapsed time: 120.313 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.tbgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000142Total elapsed time: 120.314 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.tbgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000138Total elapsed time: 120.314 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.6e-05Total elapsed time: 120.352 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.7e-05Total elapsed time: 120.359 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.constraint.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 4.6e-05Total elapsed time: 120.359 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.constraint.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 4.3e-05Total elapsed time: 120.359 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000334Total elapsed time: 120.361 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000666Total elapsed time: 120.361 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000187Total elapsed time: 120.361 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000496Total elapsed time: 120.362 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.5e-05Total elapsed time: 120.362 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.4e-05Total elapsed time: 120.362 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000547Total elapsed time: 120.363 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000274Total elapsed time: 120.363 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001323Total elapsed time: 120.364 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00173Total elapsed time: 120.366 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004041Total elapsed time: 120.370 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005882Total elapsed time: 120.370 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004455Total elapsed time: 120.375 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005046Total elapsed time: 120.380 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.063562Total elapsed time: 120.444 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.5e-05Total elapsed time: 120.444 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.015512Total elapsed time: 120.459 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0971Total elapsed time: 120.459 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.9e-05Total elapsed time: 120.460 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.098065Total elapsed time: 120.460 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.098142Total elapsed time: 120.460 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000823Total elapsed time: 120.461 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000901Total elapsed time: 120.461 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000486Total elapsed time: 125.379 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001385Total elapsed time: 125.384 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002976Total elapsed time: 125.385 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000746Total elapsed time: 125.386 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001866Total elapsed time: 125.388 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000188Total elapsed time: 125.389 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000323Total elapsed time: 125.389 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002257Total elapsed time: 125.392 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000964Total elapsed time: 125.393 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004639Total elapsed time: 125.398 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005484Total elapsed time: 125.404 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.011209Total elapsed time: 125.415 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.017054Total elapsed time: 125.415 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.013038Total elapsed time: 125.429 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.011999Total elapsed time: 125.441 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.119301Total elapsed time: 125.560 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000128Total elapsed time: 125.561 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.022952Total elapsed time: 125.584 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.193366Total elapsed time: 125.584 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 8.6e-05Total elapsed time: 125.585 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.195015Total elapsed time: 125.585 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.195218Total elapsed time: 125.585 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001207Total elapsed time: 125.586 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001314Total elapsed time: 125.586 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000158Total elapsed time: 125.586 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000136Total elapsed time: 125.588 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000144Total elapsed time: 125.589 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000436Total elapsed time: 125.590 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000879Total elapsed time: 125.590 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000258Total elapsed time: 125.591 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000677Total elapsed time: 125.591 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.5e-05Total elapsed time: 125.591 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000133Total elapsed time: 125.592 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000723Total elapsed time: 125.593 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000376Total elapsed time: 125.593 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001671Total elapsed time: 125.595 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002252Total elapsed time: 125.597 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0048Total elapsed time: 125.602 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.007198Total elapsed time: 125.602 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00589Total elapsed time: 125.608 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.006037Total elapsed time: 125.614 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.072949Total elapsed time: 125.687 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 8.7e-05Total elapsed time: 125.688 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.01629Total elapsed time: 125.704 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.111717Total elapsed time: 125.704 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 6.4e-05Total elapsed time: 125.705 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.112736Total elapsed time: 125.705 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.112831Total elapsed time: 125.705 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000834Total elapsed time: 125.706 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000913Total elapsed time: 125.706 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000101Total elapsed time: 125.706 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000145Total elapsed time: 125.706 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00012Total elapsed time: 125.706 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000196Total elapsed time: 125.707 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.9e-05Total elapsed time: 125.718 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.constraint.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 4.7e-05Total elapsed time: 125.719 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000314Total elapsed time: 125.720 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00064Total elapsed time: 125.720 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000181Total elapsed time: 125.720 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000485Total elapsed time: 125.721 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.3e-05Total elapsed time: 125.721 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.4e-05Total elapsed time: 125.721 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000527Total elapsed time: 125.722 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000296Total elapsed time: 125.722 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001241Total elapsed time: 125.723 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001668Total elapsed time: 125.725 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.003625Total elapsed time: 125.729 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005401Total elapsed time: 125.729 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004485Total elapsed time: 125.733 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004714Total elapsed time: 125.738 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.06249Total elapsed time: 125.801 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.5e-05Total elapsed time: 125.801 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.015401Total elapsed time: 125.816 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.095055Total elapsed time: 125.816 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.8e-05Total elapsed time: 125.817 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.096022Total elapsed time: 125.817 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.096097Total elapsed time: 125.817 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000863Total elapsed time: 125.818 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000942Total elapsed time: 125.818 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00013Total elapsed time: 125.830 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00064Total elapsed time: 130.537 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001387Total elapsed time: 130.542 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002975Total elapsed time: 130.543 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000745Total elapsed time: 130.544 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001902Total elapsed time: 130.546 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000182Total elapsed time: 130.547 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000298Total elapsed time: 130.547 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002355Total elapsed time: 130.550 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000951Total elapsed time: 130.551 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004499Total elapsed time: 130.556 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005367Total elapsed time: 130.562 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.010978Total elapsed time: 130.573 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.016724Total elapsed time: 130.573 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.012804Total elapsed time: 130.586 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.011863Total elapsed time: 130.598 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.117873Total elapsed time: 130.716 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000128Total elapsed time: 130.716 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.02297Total elapsed time: 130.739 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.191157Total elapsed time: 130.739 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 8.6e-05Total elapsed time: 130.740 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.192783Total elapsed time: 130.741 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.192974Total elapsed time: 130.741 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001194Total elapsed time: 130.742 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001301Total elapsed time: 130.742 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000159Total elapsed time: 130.742 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000137Total elapsed time: 130.743 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000144Total elapsed time: 130.745 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000429Total elapsed time: 130.745 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000877Total elapsed time: 130.746 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000257Total elapsed time: 130.746 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000677Total elapsed time: 130.747 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.3e-05Total elapsed time: 130.747 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00013Total elapsed time: 130.747 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000724Total elapsed time: 130.748 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00038Total elapsed time: 130.749 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001687Total elapsed time: 130.750 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.002221Total elapsed time: 130.753 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004865Total elapsed time: 130.758 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.007231Total elapsed time: 130.758 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005937Total elapsed time: 130.764 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.006075Total elapsed time: 130.770 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.073489Total elapsed time: 130.844 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 8.9e-05Total elapsed time: 130.844 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.016321Total elapsed time: 130.860 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.112442Total elapsed time: 130.860 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 6.2e-05Total elapsed time: 130.861 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.11346Total elapsed time: 130.861 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.113555Total elapsed time: 130.861 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000844Total elapsed time: 130.862 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000924Total elapsed time: 130.862 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000103Total elapsed time: 130.862 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_AXIvideo2Mat.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000146Total elapsed time: 130.862 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox_Block_proc.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00012Total elapsed time: 130.863 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.compgen.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000194Total elapsed time: 130.863 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0001Total elapsed time: 130.875 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/sandbox.constraint.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 4.8e-05Total elapsed time: 130.875 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/common.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/APCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000312Total elapsed time: 130.876 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000636Total elapsed time: 130.876 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000181Total elapsed time: 130.876 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/op_simcore.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000484Total elapsed time: 130.877 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/generic/autopilot/interface.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 5.2e-05Total elapsed time: 130.877 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.4e-05Total elapsed time: 130.877 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/virtex.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/plb46.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000547Total elapsed time: 130.878 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/fsl.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000291Total elapsed time: 130.878 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/axi4.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.001221Total elapsed time: 130.880 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/nativeAXI4.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/saxilite.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00167Total elapsed time: 130.881 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/maxi.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.003635Total elapsed time: 130.885 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.005413Total elapsed time: 130.885 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/scripts/xilinxcoregen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004502Total elapsed time: 130.890 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/interface/XilEDKCoreGen.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.004741Total elapsed time: 130.894 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfft.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.061871Total elapsed time: 130.956 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/util.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 9.5e-05Total elapsed time: 130.957 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/ip/xfir.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.015352Total elapsed time: 130.972 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.094441Total elapsed time: 130.972 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/dsp48.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 7.4e-05Total elapsed time: 130.973 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.0954Total elapsed time: 130.973 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.095473Total elapsed time: 130.973 sec.
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/zynq/zynq_fpv6.gen "
+@I [HLS-100] Command "source /opt/Xilinx/Vivado_HLS/2014.4/common/technology/xilinx/common/xilinx_fpv6.gen "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000828Total elapsed time: 130.974 sec.
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.000906Total elapsed time: 130.974 sec.
+@I [HLS-100] Command "source /home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/.autopilot/db/global.setting.tcl "
+@I [HLS-100] Command 'ap_source' returned 0; elapsed 0.00014Total elapsed time: 130.983 sec.
+@I [HLS-100] Command 'export_design' returned 0; elapsed 1.37795Total elapsed time: 135.693 sec.
+@I [HLS-100] Command "cleanup_all "
+@I [HLS-100] Command 'cleanup_all' returned 0; elapsed 0.035319Total elapsed time: 135.730 sec.
