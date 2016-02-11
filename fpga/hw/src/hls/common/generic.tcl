@@ -89,7 +89,7 @@ config_schedule -verbose
 
 # Set flags
 # jdanner3 - skipping csim
-set csim_flag 0
+set csim_flag 1
 if { [info exists ::env(csim_flag)] } {
     set csim_flag $::env(csim_flag)
 }

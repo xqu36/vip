@@ -288,7 +288,8 @@ case $a in
     cp $SWPATH/petalinux/$PROJNAME/images/linux/image.ub $BUILDPATH/boot
 
     echo "petalinux-package --boot --fsbl $SWPATH/mkboot/zynq_fsbl.elf --fpga $SWPATH/mkboot/zedboard_baseline_wrapper.bit --u-boot=$SWPATH/mkboot/u-boot.elf --force"
-    petalinux-package -p $SWPATH/petalinux/$PROJNAME --boot --fsbl $SWPATH/mkboot/zynq_fsbl.elf --fpga $SWPATH/mkboot/zedboard_baseline_wrapper.bit --u-boot=$SWPATH/mkboot/u-boot.elf --force
+    #petalinux-package -p $SWPATH/petalinux/$PROJNAME --boot --fsbl $SWPATH/mkboot/zynq_fsbl.elf --fpga $SWPATH/mkboot/zedboard_baseline_wrapper.bit --u-boot=$SWPATH/mkboot/u-boot.elf --force
+    petalinux-package -p $SWPATH/petalinux/$PROJNAME --boot --fsbl $SWPATH/mkboot/zynq_fsbl.elf --fpga $SWPATH/mkboot/zedboard_baseline_wrapper.bit --u-boot=$SWPATH/petalinux/$PROJNAME/images/linux/u-boot.elf --force
 
     if [ -f "$BUILDPATH/BOOT.BIN" ]
     then
