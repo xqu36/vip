@@ -69,6 +69,7 @@ static struct video_pipeline *video_setup;
 
 int vlib_init()
 {
+	printf("[video] vlib_init\n");
 	int ret;
 
 	/* Allocate video_setup struct and zero out memory */
@@ -79,9 +80,9 @@ int vlib_init()
 	video_setup->colorspace = COLOR_SPACE;
 
 	/* Detect and configure HLS subdev */
-	ret = v4l2_hls_init(&video_setup->subdev, XLNX_HLS_SOBEL_MODEL_NAME);
-	if (!ret)
-		v4l2_sobel_init(video_setup->subdev.fd);
+	//ret = v4l2_hls_init(&video_setup->subdev, XLNX_HLS_SOBEL_MODEL_NAME);
+	//if (!ret)
+		//v4l2_sobel_init(video_setup->subdev.fd);
 	/* Initialize sw sobel */
 	opencv_sobel_init();
 

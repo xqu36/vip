@@ -107,6 +107,10 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 	dev->fd = open(dev->devname, O_RDWR);
 	ASSERT(dev->fd < 0, "failed to open %s: %s\n", dev->devname, ERRSTR);
 
+#ifdef DEBUG_MODE
+	printf("[v4l2_helper] Opened %s\n", dev->devname);
+#endif
+
 	memset(&caps, 0, sizeof caps);
 	ret = ioctl(dev->fd, VIDIOC_QUERYCAP, &caps);
 	ASSERT(ret, "VIDIOC_QUERYCAP failed: %s\n", ERRSTR);
@@ -117,24 +121,28 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 	ASSERT(ret < 0, "VIDIOC_G_FMT failed: %s\n", ERRSTR);
 
 #ifdef DEBUG_MODE
-	printf("G_FMT(start): width = %u, height = %u, bytes per line = %u, "
-		   "4cc = %.4s, color space = %u\n", fmt.fmt.pix.width,
+	printf("[v4l2_helper] G_FMT(start): width = %u, height = %u, bytes per line = %u,"
+			"4cc = %.4s, color space = %u\n", fmt.fmt.pix.width,
 		   fmt.fmt.pix.height, fmt.fmt.pix.bytesperline,
 		   (char*) &fmt.fmt.pix.pixelformat, fmt.fmt.pix.colorspace);
 #endif
 
+#ifdef DEBUG_MODE
 	// this is where the driver is set based on FMT, which is based on dev->format
 	// change dev->format, change what gets pushed to the driver -- @jdanner3
-	printf("At this point, start should == final\n");
+	//printf("[v4l2_helper] Attempting to S_FMT\n");
+#endif
+/*
 	fmt.fmt.pix = dev->format;
 	ret = ioctl(dev->fd, VIDIOC_S_FMT, &fmt);
 	ASSERT(ret < 0, "VIDIOC_S_FMT failed: %s\n", ERRSTR);
+*/
 
 	ret = ioctl(dev->fd, VIDIOC_G_FMT, &fmt);
 	ASSERT(ret < 0, "VIDIOC_G_FMT failed: %s\n", ERRSTR);
 
 #ifdef DEBUG_MODE
-	printf("G_FMT(final): width = %u, height = %u, bytes per line = %u, "
+	printf("[v4l2_helper] G_FMT(final): width = %u, height = %u, bytes per line = %u, "
 		   "4cc = %.4s, color space = %u\n", fmt.fmt.pix.width,
 		   fmt.fmt.pix.height, fmt.fmt.pix.bytesperline,
 		   (char*)&fmt.fmt.pix.pixelformat, fmt.fmt.pix.colorspace);
@@ -149,17 +157,17 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 		}
 		name[4] = '\0';
 
-		printf("Requested pixel format '%s' is not supported by device '%s'\n",
+		printf("[v4l2_helper] Requested pixel format '%s' is not supported by device '%s'\n",
 				name, dev->devname);
 		return VLIB_ERROR;
 	}
 
 	// check if resolution is supported
-	printf("fmt.fmt.width/height: %dx%d\n", fmt.fmt.pix.width, fmt.fmt.pix.height);
-	printf("dev->width/height: %dx%d\n", dev->format.width, dev->format.height);
+	printf("[v4l2_helper] fmt.fmt.width/height: %dx%d\n", fmt.fmt.pix.width, fmt.fmt.pix.height);
+	printf("[v4l2_helper] dev->width/height: %dx%d\n", dev->format.width, dev->format.height);
 	if (fmt.fmt.pix.width != dev->format.width ||
 		fmt.fmt.pix.height != dev->format.height) {
-		printf("Requested resolution '%dx%d' is not supported by device '%s'\n",
+		printf("[v4l2_helper] Requested resolution '%dx%d' is not supported by device '%s'\n",
 				dev->format.width, dev->format.height, dev->devname);
 		return VLIB_ERROR;
 	}
@@ -168,7 +176,7 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 	// added @jdanner3
 	//fmt.fmt.pix.bytesperline = dev->format.bytesperline;
 	if (fmt.fmt.pix.bytesperline != dev->format.bytesperline) {
-		printf("Requested stride '%d' is not supported by device '%s' (fmt)%d != (dev)%d\n",
+		printf("[v4l2_helper] Requested stride '%d' is not supported by device '%s' (fmt)%d != (dev)%d\n",
 				dev->format.bytesperline, dev->devname, fmt.fmt.pix.bytesperline, 
 				dev->format.bytesperline);
 		return VLIB_ERROR;
@@ -234,6 +242,7 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 
 int v4l2_hls_model(struct v4l2_hls_subdev *subdev, char *model)
 {
+	printf("v4l2_hls_model started.\n");
 	struct v4l2_queryctrl query;
 	struct v4l2_ext_controls ctrls;
 	struct v4l2_ext_control ctrl;
@@ -265,6 +274,7 @@ int v4l2_hls_model(struct v4l2_hls_subdev *subdev, char *model)
 
 int v4l2_hls_init(struct v4l2_hls_subdev *subdev, const char *model_name)
 {
+	printf("v4l2_hls_init started.\n");
 	char hls_model[DEV_NAME_LEN];
 	get_entity_devname(MEDIA_NODE_1, MEDIA_HLS_ENTITY, subdev->name);
 

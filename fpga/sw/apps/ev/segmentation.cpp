@@ -40,6 +40,14 @@ int main() {
     // take in new current frame from capture
     capture >> frame;
 
+    if(frame.empty()) {
+        // Looks like we've hit the end of our feed! Restart
+        cout << "Frame is empty, restarting..." << endl;
+        capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
+        cout << "Done!" << endl;
+        continue;
+    }
+
     cvtColor(frame, frame_bw, CV_BGR2GRAY);
 
 

@@ -68,11 +68,12 @@ static struct m2m_sw_stream m2m_sw_stream_handle;
 
 int init_m2m_sw_pipeline(struct video_pipeline *s, filter_func func)
 {
+	printf("[m2m_sw_pipeline] init_m2m_sw_pipeline started.\n");
 	int ret = 0;
  	memset(&m2m_sw_stream_handle, 0, sizeof (struct m2m_sw_stream));
 
 	/* Configure media pipelines */
-	set_media_control(s, MEDIA_NODE_1);
+	//set_media_control(s, MEDIA_NODE_1);
 
 	/* Set v4l2 device name */
 	ret = v4l2_parse_node(s->vid_dev, m2m_sw_stream_handle.video_in.devname);
@@ -87,6 +88,15 @@ int init_m2m_sw_pipeline(struct video_pipeline *s, filter_func func)
 	m2m_sw_stream_handle.video_in.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	m2m_sw_stream_handle.video_in.mem_type = V4L2_MEMORY_MMAP;	/* @jdanner3 -- does this need to be DMAMEM? */
 	m2m_sw_stream_handle.video_in.setup_ptr = s;
+
+#ifdef DEBUG_MODE
+	printf("[m2m_sw_pipeline] width = %u, height = %u, bytes per line = %u, 4cc = %.4s, color space = %u\n",
+			   m2m_sw_stream_handle.video_in.format.width,
+			   m2m_sw_stream_handle.video_in.format.height,
+			   m2m_sw_stream_handle.video_in.format.bytesperline,
+			   (char*) &m2m_sw_stream_handle.video_in.format.pixelformat,
+			   m2m_sw_stream_handle.video_in.format.colorspace);
+#endif
 
 	/* Set processing function */
 	m2m_sw_stream_handle.func = func;
@@ -104,13 +114,17 @@ raw/processed video frames.
 
 void *process_m2m_sw_event_loop(void *ptr)
 {
-	printf("Starting SW pipeline~\n");
+	printf("[m2m_sw_pipeline] sw pipeline started.\n");
 
 	int ret=0,i=0;
 
 	/* Initialize video input pipeline */
 	ret = v4l2_init(&m2m_sw_stream_handle.video_in, BUFFER_CNT);
 	ASSERT(ret < 0, "v4l2_init failed\n");
+
+#ifdef DEBUG_MODE
+	printf("[m2m_sw_pipeline] v4l2_init succeeded.\n");
+#endif
 
 	/* push cleanup handler */
 	pthread_cleanup_push(uninit_m2m_sw_pipeline, ptr);
@@ -128,6 +142,10 @@ void *process_m2m_sw_event_loop(void *ptr)
 
 		m2m_sw_stream_handle.video_in.vid_buf[i].v4l2_buff_length=buffer.length;
 
+
+#ifdef DEBUG_MODE
+		printf("[m2m_sw_pipeline] mmap to userspace\n");
+#endif
 		/* remember for munmap() */
 		/* TODO: THIS is the user space mapping */
 		m2m_sw_stream_handle.video_in.vid_buf[i].v4l2_buff = mmap(NULL,
@@ -150,6 +168,9 @@ void *process_m2m_sw_event_loop(void *ptr)
 	}
 
 	/* Start streaming */
+#ifdef DEBUG_MODE
+	printf("[m2m_sw_pipeline] turn v4l2 device on\n");
+#endif
 	ret = v4l2_device_on(& m2m_sw_stream_handle.video_in);
 	ASSERT (ret < 0, "v4l2_device_on [video_in] failed %d \n",ret);
 

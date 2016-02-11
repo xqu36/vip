@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
 
 	/* Initialize video library */
 	vlib_init();
-	vlib_set_active_height(VRES_1080P);
-	vlib_set_active_width(HRES_1080P);
+	vlib_set_active_height(HRES);
+	vlib_set_active_width(WRES);
 
 	/* Start default src/mode */
 	vlib_change_mode(src, func, mode);

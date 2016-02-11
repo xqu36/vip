@@ -69,14 +69,12 @@ extern "C"
 #include "filter.h"
 
 /* Default setup THIS MIGHT CHANGE @jdanner3*/
-#define OUTPUT_PIX_FMT v4l2_fourcc('B','G','R','3')
-#define INPUT_PIX_FMT  v4l2_fourcc('B','G','R','3')
+#define OUTPUT_PIX_FMT v4l2_fourcc('M','J','P','G')
+#define INPUT_PIX_FMT  v4l2_fourcc('M','J','P','G')
 #define COLOR_SPACE  V4L2_COLORSPACE_SRGB
 #define BYTES_PER_PIXEL 3
-#define HRES_1080P 1920
-#define VRES_1080P 1080
-#define HRES_720P 1280
-#define VRES_720P 720
+#define WRES 640
+#define HRES 480
 
 #define UVC
 #define DEBUG_MODE
