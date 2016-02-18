@@ -13,8 +13,8 @@ $(OBJDIR)/%.o: %.cpp
 .PHONY: all
 all: $(TARGETS)
 
-segmentation: $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o
-	$(CC) $(CFLAGS) -o segmentation $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(LIBS) $(LIBDIR)
+segmentation: $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(OBJDIR)/utils.o
+	$(CC) $(CFLAGS) -o segmentation $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(OBJDIR)/utils.o $(LIBS) $(LIBDIR)
 
 xwalkdetect: $(OBJDIR)/xwalkdetect.o
 	$(CC) $(CFLAGS) -o xwalkdetect $(OBJDIR)/xwalkdetect.o $(LIBS) $(LIBDIR)
