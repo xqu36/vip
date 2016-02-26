@@ -13,6 +13,7 @@
 	aliases {
 		serial0 = &uart1;
 		ethernet0 = &gem0;
+		spi0 = &qspi;
 	};
 	chosen {
 		bootargs = "console=ttyPS0,115200 earlyprintk";
@@ -24,7 +25,7 @@
 };
 
 &gem0 {
-	local-mac-address = [00 0a 35 00 1a 91];
+	local-mac-address = [00 0a 35 00 1e 53];
 };
 
 &qspi {
