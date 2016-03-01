@@ -1,0 +1,154 @@
+
+
+================================================================
+== Vivado HLS Report for 'sandbox_Block_proc'
+================================================================
+* Date:           Wed Jan 27 13:42:17 2016
+
+* Version:        2014.4 (Build 1071461 on Tue Nov 18 16:42:57 PM 2014)
+* Project:        prj
+* Solution:       solution1
+* Product family: zynq
+* Target device:  xc7z020clg484-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing (ns): 
+    * Summary: 
+    +---------+-------+----------+------------+
+    |  Clock  | Target| Estimated| Uncertainty|
+    +---------+-------+----------+------------+
+    |default  |   6.67|      2.11|        0.83|
+    +---------+-------+----------+------------+
+
++ Latency (clock cycles): 
+    * Summary: 
+    +---------+---------+---------+---------+---------+
+    |      Latency      |      Interval     | Pipeline|
+    |   min   |   max   |   min   |   max   |   Type  |
+    +---------+---------+---------+---------+---------+
+    |  2079361|  2079361|  2079361|  2079361|   none  |
+    +---------+---------+---------+---------+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +---------------+---------+---------+----------+-----------+-----------+------+----------+
+        |               |      Latency      | Iteration|  Initiation Interval  | Trip |          |
+        |   Loop Name   |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +---------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- loop_height  |  2079360|  2079360|      1083|          -|          -|  1920|    no    |
+        | + loop_width  |     1080|     1080|         2|          1|          1|  1080|    yes   |
+        +---------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-------+--------+-------+
+|       Name      | BRAM_18K| DSP48E|   FF   |  LUT  |
++-----------------+---------+-------+--------+-------+
+|Expression       |        -|      -|       0|     63|
+|FIFO             |        -|      -|       -|      -|
+|Instance         |        -|      -|       -|      -|
+|Memory           |        -|      -|       -|      -|
+|Multiplexer      |        -|      -|       -|     24|
+|Register         |        -|      -|      44|      -|
++-----------------+---------+-------+--------+-------+
+|Total            |        0|      0|      44|     87|
++-----------------+---------+-------+--------+-------+
+|Available        |      280|    220|  106400|  53200|
++-----------------+---------+-------+--------+-------+
+|Utilization (%)  |        0|      0|   ~0   |   ~0  |
++-----------------+---------+-------+--------+-------+
+
++ Detail: 
+    * Instance: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-----------------------+----------+-------+---+----+------------+------------+
+    |     Variable Name     | Operation| DSP48E| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-----------------------+----------+-------+---+----+------------+------------+
+    |i_V_fu_192_p2          |     +    |      0|  0|  11|          11|           1|
+    |j_V_fu_204_p2          |     +    |      0|  0|  11|          11|           1|
+    |axi_last_V_fu_210_p2   |   icmp   |      0|  0|  13|          11|          11|
+    |exitcond3_i_fu_186_p2  |   icmp   |      0|  0|  13|          11|           9|
+    |exitcond4_i_fu_198_p2  |   icmp   |      0|  0|  13|          11|          11|
+    |ap_sig_bdd_122         |    or    |      0|  0|   1|           1|           1|
+    |ap_sig_bdd_86          |    or    |      0|  0|   1|           1|           1|
+    +-----------------------+----------+-------+---+----+------------+------------+
+    |Total                  |          |      0|  0|  63|          57|          35|
+    +-----------------------+----------+-------+---+----+------------+------------+
+
+    * Multiplexer: 
+    +---------------------------------+----+-----------+-----+-----------+
+    |               Name              | LUT| Input Size| Bits| Total Bits|
+    +---------------------------------+----+-----------+-----+-----------+
+    |ap_NS_fsm                        |   1|          5|    1|          5|
+    |ap_sig_ioackin_video_out_TREADY  |   1|          2|    1|          2|
+    |p_3_i_reg_169                    |  11|          2|   11|         22|
+    |p_i_reg_158                      |  11|          2|   11|         22|
+    +---------------------------------+----+-----------+-----+-----------+
+    |Total                            |  24|         11|   24|         51|
+    +---------------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +---------------------------------+----+----+-----+-----------+
+    |               Name              | FF | LUT| Bits| Const Bits|
+    +---------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                        |   4|   0|    4|          0|
+    |ap_done_reg                      |   1|   0|    1|          0|
+    |ap_reg_ioackin_video_out_TREADY  |   1|   0|    1|          0|
+    |ap_reg_ppiten_pp0_it0            |   1|   0|    1|          0|
+    |ap_reg_ppiten_pp0_it1            |   1|   0|    1|          0|
+    |axi_last_V_reg_276               |   1|   0|    1|          0|
+    |exitcond4_i_reg_267              |   1|   0|    1|          0|
+    |i_V_reg_262                      |  11|   0|   11|          0|
+    |p_3_i_reg_169                    |  11|   0|   11|          0|
+    |p_i_reg_158                      |  11|   0|   11|          0|
+    |tmp_user_V_fu_92                 |   1|   0|    1|          0|
+    +---------------------------------+----+----+-----+-----------+
+    |Total                            |  44|   0|   44|          0|
+    +---------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++------------------+-----+-----+------------+---------------------+--------------+
+|     RTL Ports    | Dir | Bits|  Protocol  |    Source Object    |    C Type    |
++------------------+-----+-----+------------+---------------------+--------------+
+|ap_clk            |  in |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|ap_rst            |  in |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|ap_start          |  in |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|ap_done           | out |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|ap_continue       |  in |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|ap_idle           | out |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|ap_ready          | out |    1| ap_ctrl_hs | sandbox_Block__proc | return value |
+|result            |  in |   32|   ap_none  |        result       |    pointer   |
+|video_out_TDATA   | out |   24|    axis    |  video_out_V_data_V |    pointer   |
+|video_out_TVALID  | out |    1|    axis    |  video_out_V_dest_V |    pointer   |
+|video_out_TREADY  |  in |    1|    axis    |  video_out_V_dest_V |    pointer   |
+|video_out_TDEST   | out |    1|    axis    |  video_out_V_dest_V |    pointer   |
+|video_out_TKEEP   | out |    3|    axis    |  video_out_V_keep_V |    pointer   |
+|video_out_TSTRB   | out |    3|    axis    |  video_out_V_strb_V |    pointer   |
+|video_out_TUSER   | out |    1|    axis    |  video_out_V_user_V |    pointer   |
+|video_out_TLAST   | out |    1|    axis    |  video_out_V_last_V |    pointer   |
+|video_out_TID     | out |    1|    axis    |   video_out_V_id_V  |    pointer   |
++------------------+-----+-----+------------+---------------------+--------------+
+
