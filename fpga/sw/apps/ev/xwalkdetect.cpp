@@ -25,12 +25,13 @@ int main() {
 
   /* IN */
 
-  string infile = "/home/ableemer/vip/fpga/sw/apps/ev/hemphill_low_snapshot.JPG";
+  string infile = "/home/ableemer/vip/fpga/sw/apps/ev/klaus_high_snapshot.JPG";
 
   VideoCapture capture(infile);
 
   Mat frame, frame_r, frame_g, frame_b, avgframe, frame_bw, blur_frame, out_blur_frame, avg_background, out_avg_background, frame_diff, out_frame_diff, bk_frame, out_bk_frame;
-  Mat out_frame_r, out_frame_g, out_frame_b, frame_road;
+  Mat out_frame_r, out_frame_g, out_frame_b, frame_road, frame_road_bw;
+  Mat road_bw_otsu, road_bw_adapt_gauss, road_bw_adapt;
   capture >> frame;
   //frame = imread(infile, 1);
 
@@ -65,10 +66,10 @@ int main() {
     }
   }
 
-  cout << r << " " << c << endl;
-  cout << frame_r.rows << " " << frame_r.cols << endl;
-  cout << frame_g.rows << " " << frame_g.cols << endl;
-  cout << frame_b.rows << " " << frame_b.cols << endl;
+  //cout << r << " " << c << endl;
+  //cout << frame_r.rows << " " << frame_r.cols << endl;
+  //cout << frame_g.rows << " " << frame_g.cols << endl;
+  //cout << frame_b.rows << " " << frame_b.cols << endl;
 
   rgbSplit[0]=frame_r;
   rgbSplit[1]=frame_g;
@@ -127,7 +128,14 @@ int main() {
 
     merge(rgbSplit, 3, frame_road);
 
-    imwrite("/home/ableemer/vip/fpga/sw/apps/ev/hemphill_low_roadDetect.JPG", frame_road);
+    //cvtColor(frame, frame_road_bw, CV_BGR2GRAY);
+
+    //threshold(frame_road_bw, road_bw_otsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+
+    //threshold(frame_road_bw, frame_road_bw, 80, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+    //adaptiveThreshold(frame_road_bw, road_bw_adapt_gauss, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY, 11, 2);
+
+    //imwrite("/home/ableemer/vip/fpga/sw/apps/ev/hemphill_low_roadDetect.JPG", frame_road);
 
 
 
@@ -142,6 +150,9 @@ int main() {
     imshow("frame_b", out_frame_b);
 */
     imshow("frame_road", frame_road);
+    //imshow("frame_road_bw", frame_road_bw);
+    //imshow("road_bw_adapt_gauss", road_bw_adapt_gauss);
+    //imshow("road_bw_otsu", road_bw_otsu);
 
     /* Show black and white, threshed and blurred frames.
     imshow("frame_bw", frame_bw);
