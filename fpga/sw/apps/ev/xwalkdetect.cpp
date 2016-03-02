@@ -15,8 +15,6 @@
 #include <string>
 #include <vector>
 
-#include "sample_algorithm.hpp"
-
 
 using namespace cv;
 using namespace std;

@@ -8,6 +8,7 @@
 #include "segmentation.hpp"
 #include "vidstab.hpp"
 #include "utils.hpp"
+#include "ccomp.hpp"
 
 using namespace cv;
 using namespace std;
@@ -46,6 +47,9 @@ int main() {
   MOG.set("nmixtures", NMIXTURES);
 
   Mat sE = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+
+  // set up vector of ConnectedComponents
+  vector<ConnectedComponent> vec_cc;
 
   // processing loop
   for(;;) {
@@ -90,6 +94,17 @@ int main() {
     dilate(foregroundMask, foregroundMask, sE, Point(-1, -1), 1);
     //erode(foregroundMask, foregroundMask, sE, Point(-1, -1), 1);
 
+    // find CCs in foregroundMask
+    findCC(foregroundMask, vec_cc);
+
+    // iterate through the found CCs
+    for(int i=0; i<vec_cc.size(); i++) {
+        int bb_area = vec_cc[i].getBoundingBoxArea(); 
+        if(bb_area < MIN_AREA) continue;
+
+        Rect r = vec_cc[i].getBoundingBox();
+        rectangle(foregroundMask, r, Scalar(255,0,0));
+    }
 
     vstats.updateFPS();
     vstats.displayStats();
