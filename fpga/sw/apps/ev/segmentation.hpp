@@ -22,6 +22,8 @@
 #define DETECTSHADOWS 1
 #define NMIXTURES 5
 
+#define MIN_AREA 10000
+
 #define STABILIZE 1
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
