@@ -143,9 +143,9 @@ int main() {
     imwrite("/home/ableemer/vip/fpga/sw/apps/ev/morpho_thresh.JPG", out_bk_frame);
     imwrite("/home/ableemer/vip/fpga/sw/apps/ev/gauss_thresh.JPG", out_blur_frame);
     */
-/*
+    kmeans(frame, 8, frame, criteria.epsilon, 10, null);
     imshow("frame", frame);
-    imshow("frame_r", out_frame_r);
+/*    imshow("frame_r", out_frame_r);
     imshow("frame_g", out_frame_g);
     imshow("frame_b", out_frame_b);
 */
