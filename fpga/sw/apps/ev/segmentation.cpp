@@ -46,7 +46,7 @@ int main() {
   MOG.set("detectShadows", DETECTSHADOWS);
   MOG.set("nmixtures", NMIXTURES);
 
-  Mat sE = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+  Mat sE = getStructuringElement(MORPH_ELLIPSE, Size(3, 3));
 
   // set up vector of ConnectedComponents
   vector<ConnectedComponent> vec_cc;
@@ -70,8 +70,9 @@ int main() {
     }
     mframe.setTo(Scalar(0,0,0));
 
-    //medianBlur(frame, frame, 3);
-    GaussianBlur(frame, frame, Size(9,9), 0, 0);
+    //medianBlur(frame, frame, 7);
+    GaussianBlur(frame, frame, Size(5, 5), 0, 0);
+    //blur(frame, frame, Size(7,7));
 
     /* PROCESSING */
 
@@ -88,11 +89,13 @@ int main() {
     MOG(frame, foregroundMask);
     frame.copyTo(mframe, foregroundMask);
 
+    // remove detected shadows
+    // TODO: There is a more elegant way surely @jdanner3
+    threshold(foregroundMask, foregroundMask, 128, 255, THRESH_TOZERO);
+
     //erode and dilate
-    //dilate(foregroundMask, foregroundMask, sE, Point(-1, -1), 1);
     erode(foregroundMask, foregroundMask, sE, Point(-1, -1), 1);
     dilate(foregroundMask, foregroundMask, sE, Point(-1, -1), 1);
-    //erode(foregroundMask, foregroundMask, sE, Point(-1, -1), 1);
 
     // find CCs in foregroundMask
     findCC(foregroundMask, vec_cc);
@@ -103,15 +106,28 @@ int main() {
         if(bb_area < MIN_AREA) continue;
 
         Rect r = vec_cc[i].getBoundingBox();
-        rectangle(foregroundMask, r, Scalar(255,0,0));
+        rectangle(frame, r, Scalar(255,0,0));
+
+        /*
+         * example for Megan
+         **/
+
+        Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
+        objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
+
+        /* 
+         * Here is where you would add up all the rows/cols to find centroids
+         * I would recommend only scanning the rows/cols bounded by the bounding 
+         * box. Should shave off a good amount of time
+         **/
     }
 
     vstats.updateFPS();
     vstats.displayStats();
 
     /* OUT */
-    //imshow("frame", frame);
-    imshow("foreground", foregroundMask);
+    imshow("frame", frame);
+    //imshow("foreground", foregroundMask);
     //imshow("foreground", mframe);
     
     if(waitKey(30) >= 0) break;

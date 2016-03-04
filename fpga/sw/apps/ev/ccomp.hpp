@@ -1,6 +1,6 @@
 //connected_components.h
-#ifndef CONNECTED_COMPONENTS_H_
-#define CONNECTED_COMPONENTS_H_
+#ifndef CONNECTED_COMPONENTS_H
+#define CONNECTED_COMPONENTS_H
 #include <opencv2/core/core.hpp>
 #include <memory>
 
@@ -27,12 +27,16 @@ public:
   ConnectedComponent();
   ConnectedComponent(int x, int y);
   ~ConnectedComponent();
+
   void addPixel(int x, int y);
   int getBoundingBoxArea(void) const;
   cv::Rect getBoundingBox(void) const;
+  int getBoundingBoxWidth(void) const;
+  int getBoundingBoxHeight(void) const;
   int getPixelCount(void) const;
   std::shared_ptr< const std::vector<cv::Point2i> > getPixels(void) const;
+  cv::Mat getMask(int rows, int cols);
 };
 
 void findCC(const cv::Mat& src, std::vector<ConnectedComponent>& cc);
-#endif //CONNECTED_COMPONENTS_H_
+#endif //CONNECTED_COMPONENTS_H

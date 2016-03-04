@@ -110,12 +110,32 @@ int ConnectedComponent::getBoundingBoxArea(void) const {
   return (m_bb.width*m_bb.height);
 }
 
+int ConnectedComponent::getBoundingBoxWidth(void) const {
+  return m_bb.width;
+}
+
+int ConnectedComponent::getBoundingBoxHeight(void) const {
+  return m_bb.height;
+}
+
 cv::Rect ConnectedComponent::getBoundingBox(void) const {
   return m_bb;
 }
 
 std::shared_ptr< const std::vector<cv::Point2i> > ConnectedComponent::getPixels(void) const {
   return m_pixels;
+}
+
+cv::Mat ConnectedComponent::getMask(int rows, int cols){
+    cv::Mat mask = cv::Mat::zeros(rows, cols, CV_8UC1);
+
+    /* TODO: Watch out for memory leaks @jdanner3 */
+    vector< cv::Point2i >::iterator it = m_pixels->begin();
+    while(it != m_pixels->end()) {
+        mask.at<unsigned char>(*it) = 0xff;
+        *it++;
+    }
+    return mask;
 }
 
 
