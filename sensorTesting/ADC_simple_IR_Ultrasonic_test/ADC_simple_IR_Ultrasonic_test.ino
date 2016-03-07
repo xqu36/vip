@@ -45,7 +45,7 @@ void setup(void)
       i--;
     }
     //average = (average*(i-1) + ads.readADC_SingleEnded(0))/i;
-    average += ads.readADC_SingleEnded(0);
+    average += IRval;
     delay(500);
   }
   average = average/i;
