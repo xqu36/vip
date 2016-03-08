@@ -20,11 +20,11 @@
 #define INFILE "img/klaus_high.mp4"
 
 #define DETECTSHADOWS 1
-#define NMIXTURES 5
+#define NMIXTURES 3
 
-#define MIN_AREA 10000
+#define MIN_AREA 8000
 
-#define STABILIZE 1
+#define STABILIZE 0
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
 
