@@ -34,7 +34,7 @@ while True:
 	drawnow(makeGraph)                      #update live graph
 	plt.pause(.00001)
 	count=count+1
-	if (count>100):        ssh 
+	if (count>100):         
 		distA.pop(0)
 
 logfile.close()
