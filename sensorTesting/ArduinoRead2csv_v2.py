@@ -14,7 +14,7 @@ with open(filename + '.csv', 'w') as f:
 	while True:
 		sleep(1)
 		if arduinoString is not None:
-			row = [time(time),1,"ultrasonic",arduinoString]
+			row = [time.time(),1,"ultrasonic",arduinoString]
 			w.writerow(row)
 	print "CSV file is ready"
 
