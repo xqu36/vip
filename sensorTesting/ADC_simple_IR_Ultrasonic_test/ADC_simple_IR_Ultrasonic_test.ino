@@ -4,11 +4,12 @@
 
 Adafruit_ADS1115 ads;  /* Use this for the 16-bit version */
 /*Adafruit_ADS1015 ads;    /* Use thi for the 12-bit version */
-int averageIR;
-int averageUS;
+long windowIRAve = 0;
+long windowUSAve = 0;
 int windowIR[30];
 int windowUltra[30];
-int i;
+int i = 0;
+int index = 0;
 int IRval;
 int UltraVal;
 void setup(void) 
@@ -52,12 +53,12 @@ void setup(void)
    //}
    //delay(50);
   }*/
-  //average = average/i;
+  /*averageIR = ads.readADC_SingleEnded(0);
+  averageUS = ads.readADC_SingleEnded(1);
   Serial.print("IR average is: ");
   Serial.println(averageIR/i);
   Serial.print("US average is: ");
-  Serial.println(averageUS/i);
-  i = 0;
+  Serial.println(averageUS/i);*/
 }
 
 void loop(void) 
@@ -65,24 +66,47 @@ void loop(void)
   int16_t adc0,adc1;//, adc2, adc3;
 
   adc0 = ads.readADC_SingleEnded(0);
-  windowIR[i] = adc0;
+  windowIR[index] = adc0;
+  windowIRAve = 0;
+  for (int j = 0;((j <10)||(j<i)); j++) {
+    windowIRAve += windowIR[j];
+  }
+  windowIRAve = windowIRAve/10;
+  Serial.print("IR: ");
+  adc0 = abs(adc0 - windowIRAve);
+  Serial.println(adc0);
+  
   adc1 = adc1*10;
   adc1 = ads.readADC_SingleEnded(1);
-  windowUltra[i] = adc1;
-  //adc2 = ads.readADC_SingleEnded(2);
-  //adc3 = ads.readADC_SingleEnded(3);
-  //Serial.println(i);
-  Serial.print("IR");
-  averageIR = ((averageIR*(9)) + adc0)/10;
-  Serial.println(averageIR);
-  averageUS = ((averageUS*(9)) + adc1)/10;
-  Serial.print("US");
-  Serial.println(averageUS);
-  //Serial.print("AIN1: "); Serial.println(adc1);
-  //Serial.print("AIN2: "); Serial.println(adc2);
-  //Serial.print("AIN3: "); Serial.println(adc3);
+  windowUltra[index] = adc1;
+  windowUSAve = 0;
+  for (int j = 0; ((j <10)||(j<i)); j++) {
+    windowUSAve += windowUltra[j];
+  }
+  windowUSAve = windowUSAve/10;
+  adc1 = abs(windowUSAve - adc1);
+  Serial.print("US: ");
+  Serial.println(adc1);
+
+  /*if (averageIR < 0) {
+    Serial.println("crap");
+  } else {
+    Serial.print("IR: ");
+    Serial.println(averageIR); 
+  }*/
+
+  /*averageUS = (averageUS*i + adc1)/(i+1);
+  if (averageUS < 0) {
+    Serial.print("crap");
+  } else { 
+    Serial.print("US: ");
+    Serial.println(adc1);
+  }*/
+  Serial.print("IR average: "); Serial.println(windowIRAve);
+  Serial.print("US average: "); Serial.println(windowUSAve);
   
   delay(500);
-  i = (i+1)%30;
+  i++;
+  index = (index+1)%10;
 }
 
