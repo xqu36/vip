@@ -20,21 +20,59 @@ MODULE_DESCRIPTION
 
 #define DRIVER_NAME "strfifo"
 
+#define FIFO_RESET_VALUE 0xA5
+
+	 
+#define ISR 0x00 
+#define IER 0x04 
+#define TDFR 0x08 
+#define TDFV 0x0C
+#define TDFD 0x10
+#define TLR 0x14
+#define RDFR 0x18
+#define RDFO 0x1C
+#define RDFD 0x20
+#define RLR 0x24 
+#define SRR 0x28
+#define TDR 0x2C
+#define RDR 0x30
+#define TIDR 0x34
+#define TxUSER 0x38
+
+
+
 /* Simple example of how to receive command line parameters to your module.
    Delete if you don't need them */
+/*
 unsigned myint = 0xdeadbeef;
 char *mystr = "default";
 
 module_param(myint, int, S_IRUGO);
 module_param(mystr, charp, S_IRUGO);
+*/
 
 struct strfifo_local {
 	int irq;
 	unsigned long mem_start;
 	unsigned long mem_end;
-	void __iomem *base_addr;
+
+	void __iomem *C_BASEADDR;
 };
 
+/*INITIALIZATION FUNCTIONS*/
+
+/*FIFO Reset. Usable from either end of the streaming fifo. Will reset entire core, including
+external outputs s2mm_prmry_reset_out_n, mm2s_prmry_reset_out_n, and mm2s_cntrl_reset_out_n. Resets
+when register SSR is written with FIFO_RESET_VALUE.*/
+
+static void fifo_core_reset(void)
+{
+	writel(FIFO_RESET_VALUE, strfifo->C_BASEADDR+SRR);
+}
+
+
+
+_
 static irqreturn_t strfifo_irq(int irq, void *lp)
 {
 	printk("strfifo interrupt\n");
@@ -143,8 +181,8 @@ MODULE_DEVICE_TABLE(of, strfifo_of_match);
 
 static struct platform_driver strfifo_driver = {
 	.driver = {
-		.name = DRIVER_NAME,
-		.owner = THIS_MODULE,
+		.name = strfifo,
+		.owner = GaTech Emb Sys VIP,
 		.of_match_table	= strfifo_of_match,
 	},
 	.probe		= strfifo_probe,
