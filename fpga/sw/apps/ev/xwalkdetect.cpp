@@ -29,7 +29,7 @@ int main() {
 
   Mat frame, frame_r, frame_g, frame_b, avgframe, frame_bw, blur_frame, out_blur_frame, avg_background, out_avg_background, frame_diff, out_frame_diff, bk_frame, out_bk_frame;
   Mat out_frame_r, out_frame_g, out_frame_b, frame_road, frame_road_bw;
-  Mat road_bw_otsu, road_bw_adapt_gauss, road_bw_adapt;
+  Mat road_bw_otsu, road_bw_adapt_gauss, road_bw_adapt, centers;
   capture >> frame;
   //frame = imread(infile, 1);
 
@@ -37,7 +37,9 @@ int main() {
 
   //Split frame into red, green and blue images.
   Mat rgbSplit[3];
+  //Mat rgbSplit2[3];
   split(frame, rgbSplit);
+  //rgbSplit2 = rgbSplit;
   threshold(rgbSplit[0], frame_r, 50, 255, THRESH_TOZERO);
   threshold(frame_r, frame_r, 120, 255, THRESH_TOZERO_INV);
   threshold(rgbSplit[1], frame_g, 60, 255, THRESH_TOZERO);
@@ -72,12 +74,13 @@ int main() {
   rgbSplit[0]=frame_r;
   rgbSplit[1]=frame_g;
   rgbSplit[2]=frame_b;
-  cout << "threshed";
+
+  merge(rgbSplit, 3, frame);
 
   /* PROCESSING */
-    /* Create black and white frame
-    cvtColor(frame, frame_bw, CV_BGR2GRAY);
-    */
+    // Create black and white frame
+    //cvtColor(frame, frame_bw, CV_BGR2GRAY);
+    
 
     /* Thresh black and white image, morpho that image, blur black
         and white image, thresh that image to compare the two.
@@ -85,18 +88,21 @@ int main() {
     //frame_bw.convertTo(frame_bw, CV_32F);
     //absdiff(avg_background, frame_bw, frame_diff);
     threshold(frame_bw, bk_frame, 60, 255, THRESH_BINARY);
+    */
     
-  //for(int j = 0; j < 10; j++){
-    for(int i = 0; i < 10; i++){
-          dilate(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
-          //erode(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
+  for(int j = 0; j < 5; j++){
+    for(int i = 0; i < 2; i++){
+          //dilate(frame, frame, Mat(), Point(-1,-1), 2,1,1);
+          erode(frame, frame, Mat(), Point(-1,-1), 2,1,1);
     }
-    for(int i = 0; i < 10; i++){
-          //dilate(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
-          erode(bk_frame, bk_frame, Mat(), Point(-1,-1), 2,1,1);
+    for(int i = 0; i < 2; i++){
+          dilate(frame, frame, Mat(), Point(-1,-1), 2,1,1);
+          //erode(frame, frame, Mat(), Point(-1,-1), 2,1,1);
     }
-  //}
-
+  }
+  imshow("morpho", frame);
+  imwrite("/home/ableemer/vip/fpga/sw/apps/ev/klaus_high_roadDetect.JPG", frame);
+/*
     for(int i = 1; i < 10; i+=2){
       GaussianBlur(frame_bw, blur_frame, Size(i,i), 0, 0);
     }
@@ -120,12 +126,12 @@ int main() {
     bk_frame.convertTo(out_bk_frame, CV_8U);
     blur_frame.convertTo(out_blur_frame, CV_8U);
     */
-    frame_r.convertTo(out_frame_r, CV_8U);
+    /*frame_r.convertTo(out_frame_r, CV_8U);
     frame_g.convertTo(out_frame_g, CV_8U);
     frame_b.convertTo(out_frame_b, CV_8U);
 
     merge(rgbSplit, 3, frame_road);
-
+*/
     //cvtColor(frame, frame_road_bw, CV_BGR2GRAY);
 
     //threshold(frame_road_bw, road_bw_otsu, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
@@ -135,19 +141,81 @@ int main() {
 
     //imwrite("/home/ableemer/vip/fpga/sw/apps/ev/hemphill_low_roadDetect.JPG", frame_road);
 
+    Mat frame2 = frame;
+    vector<Mat> channels;
+    split(frame2, channels);
+    equalizeHist(channels[0], channels[0]);
+    merge(channels, frame2);
+
+    frame2.convertTo(frame2, -1, 1.5, 0);
+    imshow("contrast", frame2);
+
+    cvtColor(frame2, frame2, CV_YCrCb2BGR);
+
+    //equalizeHist(dst, dst);
+
+    Mat samples(frame2.rows * frame2.cols, 3, CV_32F);
+    for( int y = 0; y < frame2.rows; y++ )
+      for( int x = 0; x < frame2.cols; x++ )
+        for( int z = 0; z < 3; z++)
+          samples.at<float>(y + x*frame2.rows, z) = frame2.at<Vec3b>(y,x)[z];
+
+
+    int clusterCount = 3;
+    Mat labels;
+    int attempts = 5;
+    kmeans(samples, clusterCount, labels, TermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, 10000, 0.0001), attempts, KMEANS_PP_CENTERS, centers );
+
+
+    Mat new_image( frame2.size(), frame2.type() );
+    for( int y = 0; y < frame2.rows; y++ )
+      for( int x = 0; x < frame2.cols; x++ )
+      { 
+        int cluster_idx = labels.at<int>(y + x*frame2.rows,0);
+        new_image.at<Vec3b>(y,x)[0] = centers.at<float>(cluster_idx, 0);
+        new_image.at<Vec3b>(y,x)[1] = centers.at<float>(cluster_idx, 1);
+        new_image.at<Vec3b>(y,x)[2] = centers.at<float>(cluster_idx, 2);
+      }
+
 
 
     /* Save morpho/threshed image and blurred image
     imwrite("/home/ableemer/vip/fpga/sw/apps/ev/morpho_thresh.JPG", out_bk_frame);
     imwrite("/home/ableemer/vip/fpga/sw/apps/ev/gauss_thresh.JPG", out_blur_frame);
     */
-    kmeans(frame, 8, frame, criteria.epsilon, 10, null);
-    imshow("frame", frame);
+    /*Mat label, center, res;
+    //rgbSplit2.convertTo(rgbSplit2, CV_32F);
+    Mat frame2 = frame.reshape((-1,3));
+    frame2.convertTo(frame2, CV_32F);
+    kmeans(frame2, 3, label, TermCriteria(TermCriteria::EPS + TermCriteria::COUNT, 10, 1.0), 3, KMEANS_RANDOM_CENTERS, center);
+    cout << "label " << label.rows << " " << label.cols << endl;
+    cout << "center " << center.rows << " " << center.cols << endl;
+    //center.convertTo(center, CV_8U);
+    cout << center << endl;
+    cout << "center type " << center.type() << endl;
+    Mat ret(frame2.size(), frame2.type());
+    cout << "frame2 " << frame2.rows << " " << frame2.cols << endl;
+    for(int y = 0; y < frame2.rows; y++)
+      for(int x = 0; x < frame2.cols; x++)
+      {
+        //cout << "iteration start" << endl;
+        int cluster_idx = x + frame2.cols*label.at<int>(y, 0);
+        //cout << cluster_idx << " " << center.at<float>(0, cluster_idx) << " " << (uint8_t) round(center.at<float>(0, cluster_idx)) << endl;
+        //cout << "cluster_idx " << cluster_idx << " " << center.at<float>(0, cluster_idx) << " " << center.at<float>(1, cluster_idx) << " " << center.at<float>(2, cluster_idx) << endl;
+        //cout << "row " << y << " col " << x << " cluster_idx " << cluster_idx << endl;
+        ret.at<Vec3b>(y,x)[0] = center.at<float>(0, cluster_idx);
+        ret.at<Vec3b>(y,x)[1] = center.at<float>(1, cluster_idx);
+        ret.at<Vec3b>(y,x)[2] = center.at<float>(2, cluster_idx);
+        //cout << "iteration end" << endl;
+      }
+    //ret.convertTo(ret, CV_8U);*/  
+    imshow("kmeans", new_image);
+    imwrite("/home/ableemer/vip/fpga/sw/apps/ev/klausHigh_splitKmeans.JPG", new_image);
 /*    imshow("frame_r", out_frame_r);
     imshow("frame_g", out_frame_g);
     imshow("frame_b", out_frame_b);
 */
-    imshow("frame_road", frame_road);
+    //imshow("frame_road", frame_road);
     //imshow("frame_road_bw", frame_road_bw);
     //imshow("road_bw_adapt_gauss", road_bw_adapt_gauss);
     //imshow("road_bw_otsu", road_bw_otsu);
