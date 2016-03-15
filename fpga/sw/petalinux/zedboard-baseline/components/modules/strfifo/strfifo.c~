@@ -20,7 +20,7 @@ MODULE_DESCRIPTION
 
 #define DRIVER_NAME "strfifo"
 
-#define FIFO_RESET_VALUE 0xA5
+#define FIFO_RESET_MASK 0xA5
 
 	 
 #define ISR 0x00 
@@ -78,6 +78,37 @@ static irqreturn_t strfifo_irq(int irq, void *lp)
 	printk("strfifo interrupt\n");
 	return IRQ_HANDLED;
 }
+
+/******************/
+/* File Operation */
+/******************/
+
+static struct file_operations fops = {
+	.open = strfifo_open,
+	.read = strfifo_read,
+	.release = strfifo_release,
+	//.unlocked_ioctl = strfifo_ioctl,
+};
+
+static int strfifo_open(struct inode *inodep, struct file *filep){
+	//
+   	return 0;
+}
+
+static ssize_t strfifo_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
+	int retval;
+	// return the data size in the buffer
+	return retval;
+}
+static int strfifo_release(struct inode *inodep, struct file *filep){
+   	// from axi_fifo.c
+	// not sure what "filep->private_data" does yet. 
+	filep->private_data = NULL;
+	return 0;
+}
+/******************/
+/* File Operation */
+/******************/
 
 static int strfifo_probe(struct platform_device *pdev)
 {
@@ -205,6 +236,7 @@ static void __exit strfifo_exit(void)
 	printk(KERN_ALERT "Goodbye module world.\n");
 }
 
+/* Comment for Git */
 module_init(strfifo_init);
 module_exit(strfifo_exit);
 
