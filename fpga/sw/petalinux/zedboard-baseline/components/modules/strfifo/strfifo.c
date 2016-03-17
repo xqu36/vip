@@ -205,6 +205,7 @@ static void __exit strfifo_exit(void)
 	printk(KERN_ALERT "Goodbye module world.\n");
 }
 
+/* Comment for Git */
 module_init(strfifo_init);
 module_exit(strfifo_exit);
 
