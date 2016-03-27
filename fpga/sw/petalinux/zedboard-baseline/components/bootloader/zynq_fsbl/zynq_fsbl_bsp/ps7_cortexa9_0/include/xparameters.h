@@ -52,6 +52,7 @@
 #define XPAR_AXI_DMA_0_MM2S_BURST_SIZE 16
 #define XPAR_AXI_DMA_0_S2MM_BURST_SIZE 16
 #define XPAR_AXI_DMA_0_MICRO_DMA 0
+#define XPAR_AXI_DMA_0_ADDR_WIDTH 32
 
 
 /******************************************************************/
@@ -73,6 +74,7 @@
 #define XPAR_AXIDMA_0_MM2S_BURST_SIZE 16
 #define XPAR_AXIDMA_0_S2MM_BURST_SIZE 16
 #define XPAR_AXIDMA_0_MICRO_DMA 0
+#define XPAR_AXIDMA_0_c_addr_width 32
 
 
 /******************************************************************/
@@ -92,8 +94,8 @@
 #define XPAR_AXI_BRAM_CTRL_0_ECC_ONOFF_REGISTER 0
 #define XPAR_AXI_BRAM_CTRL_0_ECC_ONOFF_RESET_VALUE 0
 #define XPAR_AXI_BRAM_CTRL_0_WRITE_ACCESS 0
-#define XPAR_AXI_BRAM_CTRL_0_BASEADDR 0x00000000
-#define XPAR_AXI_BRAM_CTRL_0_HIGHADDR 0x00000000
+#define XPAR_AXI_BRAM_CTRL_0_S_AXI_BASEADDR 0x40000000
+#define XPAR_AXI_BRAM_CTRL_0_S_AXI_HIGHADDR 0x40001FFF
 #define XPAR_AXI_BRAM_CTRL_0_S_AXI_CTRL_BASEADDR 0xFFFFFFFF 
 #define XPAR_AXI_BRAM_CTRL_0_S_AXI_CTRL_HIGHADDR 0xFFFFFFFF 
 
@@ -112,8 +114,16 @@
 #define XPAR_BRAM_0_ECC_ONOFF_REGISTER 0
 #define XPAR_BRAM_0_ECC_ONOFF_RESET_VALUE 0
 #define XPAR_BRAM_0_WRITE_ACCESS 0
-#define XPAR_BRAM_0_BASEADDR 0x00000000
-#define XPAR_BRAM_0_HIGHADDR 0x00000000
+#define XPAR_BRAM_0_BASEADDR 0x40000000
+#define XPAR_BRAM_0_HIGHADDR 0x40001FFF
+
+
+/******************************************************************/
+
+
+/* Definitions for peripheral PS7_DDR_0 */
+#define XPAR_PS7_DDR_0_S_AXI_BASEADDR 0x00100000
+#define XPAR_PS7_DDR_0_S_AXI_HIGHADDR 0x1FFFFFFF
 
 
 /******************************************************************/
@@ -219,16 +229,6 @@
 /* Definitions for peripheral PS7_AFI_3 */
 #define XPAR_PS7_AFI_3_S_AXI_BASEADDR 0xF800B000
 #define XPAR_PS7_AFI_3_S_AXI_HIGHADDR 0xF800BFFF
-
-
-/* Definitions for peripheral PS7_CORESIGHT_COMP_0 */
-#define XPAR_PS7_CORESIGHT_COMP_0_S_AXI_BASEADDR 0xF8800000
-#define XPAR_PS7_CORESIGHT_COMP_0_S_AXI_HIGHADDR 0xF88FFFFF
-
-
-/* Definitions for peripheral PS7_DDR_0 */
-#define XPAR_PS7_DDR_0_S_AXI_BASEADDR 0x00100000
-#define XPAR_PS7_DDR_0_S_AXI_HIGHADDR 0x1FFFFFFF
 
 
 /* Definitions for peripheral PS7_DDRC_0 */
@@ -406,8 +406,6 @@
 
 /******************************************************************/
 
-
-/***Definitions for Core_nIRQ/nFIQ interrupts ****/
 /* Definitions for Fabric interrupts connected to ps7_scugic_0 */
 #define XPAR_FABRIC_AXI_DMA_0_MM2S_INTROUT_INTR 61
 #define XPAR_FABRIC_AXI_DMA_0_S2MM_INTROUT_INTR 62
@@ -485,6 +483,8 @@
 #define XPAR_PS7_SD_0_BASEADDR 0xE0100000
 #define XPAR_PS7_SD_0_HIGHADDR 0xE0100FFF
 #define XPAR_PS7_SD_0_SDIO_CLK_FREQ_HZ 50000000
+#define XPAR_PS7_SD_0_HAS_CD 1
+#define XPAR_PS7_SD_0_HAS_WP 1
 
 
 /******************************************************************/
@@ -494,6 +494,8 @@
 #define XPAR_XSDPS_0_BASEADDR 0xE0100000
 #define XPAR_XSDPS_0_HIGHADDR 0xE0100FFF
 #define XPAR_XSDPS_0_SDIO_CLK_FREQ_HZ 50000000
+#define XPAR_XSDPS_0_HAS_CD 1
+#define XPAR_XSDPS_0_HAS_WP 1
 
 
 /******************************************************************/
