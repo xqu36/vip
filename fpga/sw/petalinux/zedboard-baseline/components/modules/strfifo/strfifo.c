@@ -125,23 +125,23 @@ static int strfifo_release(struct inode *inodep, struct file *filep){
 
 static int get_irq_status(void)
 {
-	return readl(strfifo->regs+ISR);
+	return readl(strfifo->C_BASEADDR+ISR);
 }
 
 static int get_ier_status(void)
 {
-	return readl(strfifo->regs+IER);
+	return readl(strfifo->C_BASEADDR+IER);
 }
 
 // Change IER values to enable/disable different interrupts
 static void set_irq_status(uint32_t mask)
 {
-	writel(mask, strfifo->regs+IER);
+	writel(mask, strfifo->C_BASEADDR+IER);
 }
 
 static void reset_irq_reg(void)
 {
-	writel(0xffffffff, strfifo->regs+ISR);
+	writel(0xffffffff, strfifo->C_BASEADDR+ISR);
 }
 
 
@@ -157,22 +157,22 @@ static irqreturn_t strfifo_irq(int irq, void *lp)
 
 static int get_tx_fifo_vacancy(void)
 {
-	return (int)(readl(strfifo->regs+TDFV)&TDFV_MASK);
+	return (int)(readl(strfifo->C_BASEADDR+TDFV)&TDFV_MASK);
 }
 
 static void set_tx_tdest_address(uint32_t addr)
 {
-	writel(addr, strfifo->regs+TDR);
+	writel(addr, strfifo->C_BASEADDR+TDR);
 }
 
 static void set_tx_fifo(uint32_t value)
 {
-	writel(value, strfifo->regs+TDFD);
+	writel(value, strfifo->C_BASEADDR+TDFD);
 }
 
 static void set_tx_len(uint32_t nwords)
 {
-	writel(nwords*4, strfifo->regs+TLR); // Turn words into bytes
+	writel(nwords*4, strfifo->C_BASEADDR+TLR); // Turn words into bytes
 }
 
 static int fill_tx_fifo(int *buffer, int xfer_len)
@@ -207,27 +207,27 @@ static int fill_tx_fifo(int *buffer, int xfer_len)
 
 static int get_rx_fifo_occupancy(void)
 {
-	return readl(strfifo->regs+RDFO);
+	return readl(strfifo->C_BASEADDR+RDFO);
 }
 
 static void set_rx_len(uint32_t nwords)
 {
-	writel(nwords*4, strfifo->regs+RLR);
+	writel(nwords*4, strfifo->C_BASEADDR+RLR);
 }
 
 static void set_rx_tdest_address(uint32_t addr)
 {
-	writel(addr, strfifo->regs+RDR);
+	writel(addr, strfifo->C_BASEADDR+RDR);
 }
 
 static void reset_rx_fifo(void)
 {
-	writel(RESET_FIFO_MASK, strfifo->regs+RDFR);
+	writel(RESET_FIFO_MASK, strfifo->C_BASEADDR+RDFR);
 }
 
 static int get_rx_fifo(void)
 {
-	return readl(strfifo->regs+RDFD);
+	return readl(strfifo->C_BASEADDR+RDFD);
 }
 
 // for file operation
@@ -240,7 +240,7 @@ static void read_rx_fifo(int *rxbuffer, int len_)
 
 
 
-
+// Default by Xilinx
 
 static int strfifo_probe(struct platform_device *pdev)
 {

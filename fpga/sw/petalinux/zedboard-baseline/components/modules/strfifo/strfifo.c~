@@ -99,7 +99,9 @@ static struct file_operations fops = {
 };
 
 static int strfifo_open(struct inode *inodep, struct file *filep){
-	//
+	
+	filep->private_data = (struct device*)sdev;
+	axi_fifo = sdev;
    	return 0;
 }
 
@@ -109,9 +111,9 @@ static ssize_t strfifo_read(struct file *filep, char *buffer, size_t len, loff_t
 	return retval;
 }
 static int strfifo_release(struct inode *inodep, struct file *filep){
-   	// from axi_fifo.c
-	// not sure what "filep->private_data" does yet. 
+	
 	filep->private_data = NULL;
+
 	return 0;
 }
 /************************/
@@ -228,6 +230,7 @@ static int get_rx_fifo(void)
 	return readl(strfifo->regs+RDFD);
 }
 
+// for file operation
 static void read_rx_fifo(int *rxbuffer, int len_)
 {
 	int k = 0;
