@@ -17,14 +17,14 @@
 #include <iostream>
 #include <string>
 
-#define INFILE "img/klaus_high.mp4"
+#define INFILE "img/klaus_low_320x240.mp4"
 
 #define DETECTSHADOWS 1
 #define NMIXTURES 3
 
-#define MIN_AREA 8000
+#define MIN_AREA 250
 
-#define STABILIZE 0
+#define STABILIZE 1
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
 
