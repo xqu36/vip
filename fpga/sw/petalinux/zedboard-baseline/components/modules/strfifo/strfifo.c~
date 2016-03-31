@@ -20,9 +20,14 @@ MODULE_DESCRIPTION
 
 #define DRIVER_NAME "strfifo"
 
-#define FIFO_RESET_VALUE 0xA5
+// RESET_FIFO_MASK is used for resetting the entire FIFO, RDFR and TDFR
+// RDFR and TDFR cannot be reset by any other values
+#define RESET_FIFO_MASK 0xA5
 
-	 
+// The mask for Transmit Data Vacancy (16th - 0th bit)
+#define TDFV_MASK 0xfff
+
+// Register Addresses 
 #define ISR 0x00 
 #define IER 0x04 
 #define TDFR 0x08 
@@ -52,12 +57,22 @@ module_param(mystr, charp, S_IRUGO);
 */
 
 struct strfifo_local {
-	int irq;
+	void __iomem *C_BASEADDR;
+	struct device *dev;
+	int *txbuffer, *rxbuffer;
+
+	//int32_t irq_mask;
+	int32_t fifo_depth;
+	int32_t tdest;
+
+	//int irq;
+
 	unsigned long mem_start;
 	unsigned long mem_end;
-
-	void __iomem *C_BASEADDR;
 };
+// Initializing strfifo struct
+static struct strfifo_local *strfifo;
+
 
 /*INITIALIZATION FUNCTIONS*/
 
@@ -67,17 +82,165 @@ when register SSR is written with FIFO_RESET_VALUE.*/
 
 static void fifo_core_reset(void)
 {
-	writel(FIFO_RESET_VALUE, strfifo->C_BASEADDR+SRR);
+	writel(RESET_FIFO_MASK, strfifo->C_BASEADDR+SRR);
 }
 
 
 
-_
+/******************/
+/* File Operation */
+/******************/
+
+static struct file_operations fops = {
+	.open = strfifo_open,
+	.read = strfifo_read,
+	.release = strfifo_release,
+	//.unlocked_ioctl = strfifo_ioctl,
+};
+
+static int strfifo_open(struct inode *inodep, struct file *filep){
+	
+	filep->private_data = (struct device*)sdev;
+	axi_fifo = sdev;
+   	return 0;
+}
+
+static ssize_t strfifo_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
+	int retval;
+	// return the data size in the buffer
+	return retval;
+}
+static int strfifo_release(struct inode *inodep, struct file *filep){
+	
+	filep->private_data = NULL;
+
+	return 0;
+}
+/************************/
+/* File Operation (End) */
+/************************/
+
+
+/* IRQ Functions*/
+
+static int get_irq_status(void)
+{
+	return readl(strfifo->regs+ISR);
+}
+
+static int get_ier_status(void)
+{
+	return readl(strfifo->regs+IER);
+}
+
+// Change IER values to enable/disable different interrupts
+static void set_irq_status(uint32_t mask)
+{
+	writel(mask, strfifo->regs+IER);
+}
+
+static void reset_irq_reg(void)
+{
+	writel(0xffffffff, strfifo->regs+ISR);
+}
+
+
+// strfifo_irq was here in default.
 static irqreturn_t strfifo_irq(int irq, void *lp)
 {
 	printk("strfifo interrupt\n");
 	return IRQ_HANDLED;
 }
+
+
+/* TX FUNCTIONS */
+
+static int get_tx_fifo_vacancy(void)
+{
+	return (int)(readl(strfifo->regs+TDFV)&TDFV_MASK);
+}
+
+static void set_tx_tdest_address(uint32_t addr)
+{
+	writel(addr, strfifo->regs+TDR);
+}
+
+static void set_tx_fifo(uint32_t value)
+{
+	writel(value, strfifo->regs+TDFD);
+}
+
+static void set_tx_len(uint32_t nwords)
+{
+	writel(nwords*4, strfifo->regs+TLR); // Turn words into bytes
+}
+
+static int fill_tx_fifo(int *buffer, int xfer_len)
+{
+	int nR1, nR2, k = 0;
+	// nR1 = number of available storage locations before filling
+	nR1 = get_tx_fifo_vacancy();
+
+	for(k = 0; k < xfer_len; k++)
+		set_tx_fifo(buffer[k]); //write FPGA
+	// nR2 = number of available storage locations after filling
+	nR2 = get_tx_fifo_vacancy();
+
+	
+
+	/* Original Code
+	if((nR2-nR1) != xfer_len)
+		return -1;
+	else 
+		return 0x00; */
+
+	
+	// nR1 - nR2 = number of locations successfully written
+	if ((nR1-nR2) != xfer_len)
+		return -1;
+	else
+		return 0;
+				
+}
+
+/* RX FUNCTIONS */
+
+static int get_rx_fifo_occupancy(void)
+{
+	return readl(strfifo->regs+RDFO);
+}
+
+static void set_rx_len(uint32_t nwords)
+{
+	writel(nwords*4, strfifo->regs+RLR);
+}
+
+static void set_rx_tdest_address(uint32_t addr)
+{
+	writel(addr, strfifo->regs+RDR);
+}
+
+static void reset_rx_fifo(void)
+{
+	writel(RESET_FIFO_MASK, strfifo->regs+RDFR);
+}
+
+static int get_rx_fifo(void)
+{
+	return readl(strfifo->regs+RDFD);
+}
+
+// for file operation
+static void read_rx_fifo(int *rxbuffer, int len_)
+{
+	int k = 0;
+	for(k = 0; k < len_; k++)
+		rxbuffer[k] = get_rx_fifo();	
+}
+
+
+
+
 
 static int strfifo_probe(struct platform_device *pdev)
 {
