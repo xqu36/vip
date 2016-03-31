@@ -29,9 +29,9 @@ timezone_eastern = timezone('US/Eastern')
 sensor_id = 3
 
 #Initialize filtering variables
-windowIR[30];
-windowUS[30];
-i = 0;
+windowIR[10]
+windowUS[10]
+i = 0
 
 
 # User Configuration
@@ -55,7 +55,7 @@ if connectedADC:
 
 print "STATUS: Starting sensor read/report loop"
 
-def movingAvg (values,window):
+def movingAvg(values,window):
 	weights = np.repeat(1.0,window)/window
 	smas = np.convolve(values,weights,'valid')
 	return smas
@@ -64,23 +64,25 @@ while True:
 	if connectedADC:
 		if connectedIR:
 			try:
-				for i in range (0,10)
+				for i in range (0,10):
 					infared = sensorADC.readADCSingleEnded(channelIR, gain, sps) # volts
-			        windowIR(i)=infrared
-			movingAvg(windowIR,10)
-
+			       		windowIR[i] = infrared
+	
 			except:
 				print "ERROR: ADC - Infrared"
 				infared = "NULL"
 		if connectedUS:
 			try:
-				for i in range (0,10)
+				for i in range (0,10):
 					ultrasonic = sensorADC.readADCSingleEnded(channelUS, gain, sps) # volts
-			        windowUS(i)= ultrasonic
-			movingAvg(windowUS,10)
+			        windowUS[i] =  ultrasonic
+
 			except:
 				print "ERROR: ADC - Ultrasonic"
 				ultrasonic = "NULL"
+
+        IRAvg = movingAvg(windowIR,10)
+        USAvg = movingAvg(windoUS,10)
 
 	timestamp = datetime.datetime.now(timezone_eastern)
 
@@ -92,9 +94,9 @@ while True:
 	if connectedADC:
 		tempStr = "ADS sensors:"
 		if connectedIR:
-			tempStr += "\nIR: %s" % infared
+			tempStr += "\nIR: %s" % IRAvg
 		if connectedUS:
-			tempStr += "\nUS: %s" % ultrasonic
+			tempStr += "\nUS: %s" % USAvg
 		tempStr += "\n"
 		print tempStr
 		f.write(tempStr)
@@ -103,3 +105,4 @@ while True:
 	f.write(tempStr)
 	f.close()
 	time.sleep(interval)
+
