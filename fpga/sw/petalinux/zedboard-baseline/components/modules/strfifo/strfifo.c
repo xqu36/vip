@@ -61,10 +61,13 @@ struct strfifo_local {
 	void __iomem *C_BASEADDR;
 	struct device *dev;
 	int *txbuffer, *rxbuffer;
-	int32_t irq_mask;
+
+	//int32_t irq_mask;
 	int32_t fifo_depth;
 	int32_t tdest;
-	int irq;
+
+	//int irq;
+
 	unsigned long mem_start;
 	unsigned long mem_end;
 };
@@ -151,9 +154,8 @@ static irqreturn_t strfifo_irq(int irq, void *lp)
 	return IRQ_HANDLED;
 }
 
-/*****************/
+
 /* TX FUNCTIONS */
-/***************/
 
 static int get_tx_fifo_vacancy(void)
 {
@@ -203,9 +205,8 @@ static int fill_tx_fifo(int *buffer, int xfer_len)
 				
 }
 
-/*****************/
 /* RX FUNCTIONS */
-/***************/
+
 static int get_rx_fifo_occupancy(void)
 {
 	return readl(strfifo->C_BASEADDR+RDFO);
@@ -248,7 +249,6 @@ static int strfifo_probe(struct platform_device *pdev)
 	struct resource *r_irq; /* Interrupt resources */
 	struct resource *r_mem; /* IO mem resources */
 	struct device *dev = &pdev->dev;
-	//Setting lp as pointer to strfifo_local
 	struct strfifo_local *lp = NULL;
 
 	int rc = 0;
@@ -282,8 +282,8 @@ static int strfifo_probe(struct platform_device *pdev)
 		goto error1;
 	}
 
-	lp->C_BASEADDR = ioremap(lp->mem_start, lp->mem_end - lp->mem_start + 1);
-	if (!lp->C_BASEADDR) {
+	lp->base_addr = ioremap(lp->mem_start, lp->mem_end - lp->mem_start + 1);
+	if (!lp->base_addr) {
 		dev_err(dev, "strfifo: Could not allocate iomem\n");
 		rc = -EIO;
 		goto error2;
@@ -295,7 +295,7 @@ static int strfifo_probe(struct platform_device *pdev)
 		dev_info(dev, "no IRQ found\n");
 		dev_info(dev, "strfifo at 0x%08x mapped to 0x%08x\n",
 			(unsigned int __force)lp->mem_start,
-			(unsigned int __force)lp->C_BASEADDR);
+			(unsigned int __force)lp->base_addr);
 		return 0;
 	}
 	lp->irq = r_irq->start;
@@ -309,7 +309,7 @@ static int strfifo_probe(struct platform_device *pdev)
 
 	dev_info(dev,"strfifo at 0x%08x mapped to 0x%08x, irq=%d\n",
 		(unsigned int __force)lp->mem_start,
-		(unsigned int __force)lp->C_BASEADDR,
+		(unsigned int __force)lp->base_addr,
 		lp->irq);
 	return 0;
 error3:
@@ -335,7 +335,7 @@ static int strfifo_remove(struct platform_device *pdev)
 
 #ifdef CONFIG_OF
 static struct of_device_id strfifo_of_match[] = {
-	{ .compatible = "xlnx,strfifo", },
+	{ .compatible = "vendor,strfifo", },
 	{ /* end of list */ },
 };
 MODULE_DEVICE_TABLE(of, strfifo_of_match);
@@ -422,4 +422,3 @@ static void __exit strfifo_exit(void)
 
 module_init(strfifo_init);
 module_exit(strfifo_exit);
-
