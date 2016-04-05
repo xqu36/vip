@@ -3,3 +3,14 @@
 / {
 };
 
+&gem0 {
+phy-handle = <&phy0>;
+phy-mode="rgmii-id";
+ps7_ethernet_0_mdio: mdio {
+phy0: phy@0 {
+compatible = "marvell,88e1510";
+device_type = "ethernet-phy";
+reg = <0>;
+};
+};
+};
