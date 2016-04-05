@@ -1,8 +1,0 @@
-   Compiling ../../../../hls_sandbox.cpp in release mode
-   Compiling ../../../../opencv_sandbox.cpp in release mode
-   Compiling ../../../../test.cpp in release mode
-   Compiling ../../../../top.cpp in release mode
-   Generating csim.exe
-rows = 1080, cols = 1920, channels = 3, depth = 0
-Test Passed!
-@I [SIM-1] CSim done with 0 errors.

@@ -1,5 +1,0 @@
-FIFO_sandbox_result_channel
-sandbox_CONTROL_BUS_s_axi
-sandbox_AXIvideo2Mat_16_640_480_16_s
-sandbox_Block_proc
-sandbox
