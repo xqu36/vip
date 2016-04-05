@@ -9,6 +9,7 @@
 #include "vidstab.hpp"
 #include "utils.hpp"
 #include "ccomp.hpp"
+#include "pclass.hpp"
 
 using namespace cv;
 using namespace std;
@@ -56,6 +57,8 @@ int main() {
   // set up vector of ConnectedComponents
   vector<ConnectedComponent> vec_cc;
 
+  PathClassifier pclass(vstats.getHeight(), vstats.getWidth());
+
   // processing loop
   for(;;) {
 
@@ -82,7 +85,6 @@ int main() {
     /* PROCESSING */
 
     // remove camera jitter 
-    // TODO: HEAVY FPS HIT
     if(STABILIZE) frame = estimateMotion(&frame,  &prev_gradient);
     if(RIGID_STABILIZE) {
       Mat M = estimateRigidTransform(prev_frame, frame, 0);
@@ -120,31 +122,24 @@ int main() {
 
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
-    //findCC(foregroundMask, vec_cc);
-    //findCC(lrTexMask, vec_cc);
 
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
-        int bb_area = vec_cc[i].getBoundingBoxArea(); 
-        int cc_pix = vec_cc[i].getPixelCount();
-        if(cc_pix < 200) continue;
-        //if(bb_area < MIN_AREA) continue;
+      int classification;
+      classification = pclass.classify(vec_cc[i]);
 
-        Rect r = vec_cc[i].getBoundingBox();
-        rectangle(frame, r, Scalar(255,0,0));
-
-        /*
-         * example for Megan
-         **/
-
-        Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
-        objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
-
-        /* 
-         * Here is where you would add up all the rows/cols to find centroids
-         * I would recommend only scanning the rows/cols bounded by the bounding 
-         * box. Should shave off a good amount of time
-         **/
+      Rect r = vec_cc[i].getBoundingBox();
+      switch(classification) {
+        case TYPE_CAR:
+          rectangle(frame, r, Scalar(0,0,255));
+          break;
+        case TYPE_PED:
+          rectangle(frame, r, Scalar(255,0,0));
+          break;
+        case 2:
+          rectangle(frame, r, Scalar(0,255,0));
+          break;
+      }
     }
 
     vstats.updateFPS();
@@ -152,12 +147,7 @@ int main() {
 
     /* OUT */
     imshow("frame", frame);
-    //imshow("foreground", foregroundMask);
-    //imshow("lrTexMask", lrTexMask);
-    //imshow("chrMask", chrMask);
     imshow("foreground_ed3", foregroundMask_ed3);
-    //imshow("distance", dist);
-    //imshow("foreground", mframe);
     
     if(waitKey(30) >= 0) break;
   }

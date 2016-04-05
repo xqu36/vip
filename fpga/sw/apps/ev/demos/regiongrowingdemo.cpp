@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "RegionGrowing.hpp"
+#include "rgrow.hpp"
 
 using namespace cv;
 using namespace std;
