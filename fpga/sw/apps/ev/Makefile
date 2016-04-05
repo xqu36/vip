@@ -4,6 +4,8 @@ LIBS=`pkg-config --libs opencv`
 LIBDIR=-L/usr/local/include
 OBJDIR=.obj
 
+SOURCES=segmentation.cpp vidstab.cpp utils.cpp ccomp.cpp
+
 TARGETS=segmentation xwalkdetect
 
 $(OBJDIR)/%.o: %.cpp
