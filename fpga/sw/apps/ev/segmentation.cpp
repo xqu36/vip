@@ -180,6 +180,7 @@ int main() {
 
         //display circle based on the maxCol and maxRow points
         circle(frame, Point(maxCol, maxRow), 5, Scalar(0,255,0));
+        circle(frame, Point((r.x + (r.width/2)), (r.y + (r.height/2))), 5, Scalar(0,0,255));
       */
 
     }
