@@ -140,6 +140,48 @@ int main() {
           rectangle(frame, r, Scalar(0,255,0));
           break;
       }
+      /*
+         int maxRow;
+        int maxCol;
+
+        //find max pixel per row
+        int maxPixelPerRow = 0;
+        for(int k = 0; k<objmask.rows; k++){
+
+          int numofPixPerRow = 0;
+
+          for(int j = 0; j<objmask.cols; j++){
+              
+              if(objmask.at<unsigned char>(k,j) == 0xff){
+                numofPixPerRow++;
+              }
+          }
+          if(numofPixPerRow > maxPixelPerRow){
+            maxPixelPerRow = numofPixPerRow;
+            maxRow = k;
+          }
+        }
+
+        //find max pixel for col
+        int maxPixelPerCol = 0;
+        for(int m= 0; m<objmask.cols; m++){
+          int numofPixPerCol = 0;
+          for(int n=0; n<objmask.rows; n++){
+            if(objmask.at<unsigned char>(n,m) == 0xff){
+              numofPixPerCol++;
+            }
+          }
+          if(numofPixPerCol > maxPixelPerCol){
+            maxPixelPerCol = numofPixPerCol;
+            maxCol = m;
+          }
+        }
+
+
+        //display circle based on the maxCol and maxRow points
+        circle(frame, Point(maxCol, maxRow), 5, Scalar(0,255,0));
+      */
+
     }
 
     vstats.updateFPS();
