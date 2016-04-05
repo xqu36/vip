@@ -389,7 +389,7 @@
 				<spirit:parameter>
 					<spirit:name>TDATA_NUM_BYTES</spirit:name>
 					<spirit:value spirit:resolve="immediate"
-							spirit:id="BUSIFPARAM_VALUE.VIDEO_IN.TDATA_NUM_BYTES">3</spirit:value>
+							spirit:id="BUSIFPARAM_VALUE.VIDEO_IN.TDATA_NUM_BYTES">2</spirit:value>
 				</spirit:parameter>
 				<spirit:parameter>
 					<spirit:name>TDEST_WIDTH</spirit:name>
@@ -409,7 +409,7 @@
 				<spirit:parameter>
 					<spirit:name>LAYERED_METADATA</spirit:name>
 					<spirit:value spirit:resolve="generated"
-							spirit:id="BUSIFPARAM_VALUE.VIDEO_IN.LAYERED_METADATA">xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 24} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}}}</spirit:value>
+							spirit:id="BUSIFPARAM_VALUE.VIDEO_IN.LAYERED_METADATA">xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 16} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}}}</spirit:value>
 				</spirit:parameter>
 			</spirit:parameters>
 		</spirit:busInterface>
@@ -508,7 +508,7 @@
 				<spirit:parameter>
 					<spirit:name>TDATA_NUM_BYTES</spirit:name>
 					<spirit:value spirit:resolve="immediate"
-							spirit:id="BUSIFPARAM_VALUE.VIDEO_OUT.TDATA_NUM_BYTES">3</spirit:value>
+							spirit:id="BUSIFPARAM_VALUE.VIDEO_OUT.TDATA_NUM_BYTES">2</spirit:value>
 				</spirit:parameter>
 				<spirit:parameter>
 					<spirit:name>TDEST_WIDTH</spirit:name>
@@ -528,7 +528,7 @@
 				<spirit:parameter>
 					<spirit:name>LAYERED_METADATA</spirit:name>
 					<spirit:value spirit:resolve="generated"
-							spirit:id="BUSIFPARAM_VALUE.VIDEO_OUT.LAYERED_METADATA">xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 24} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}}}</spirit:value>
+							spirit:id="BUSIFPARAM_VALUE.VIDEO_OUT.LAYERED_METADATA">xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 16} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 1} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}}}</spirit:value>
 				</spirit:parameter>
 			</spirit:parameters>
 		</spirit:busInterface>
@@ -1161,7 +1161,7 @@
 				<spirit:wire>
 					<spirit:direction>in</spirit:direction>
 					<spirit:vector>
-						<spirit:left>23</spirit:left>
+						<spirit:left>15</spirit:left>
 						<spirit:right>0</spirit:right>
 					</spirit:vector>
 					<spirit:wireTypeDefs>
@@ -1183,7 +1183,7 @@
 				<spirit:wire>
 					<spirit:direction>in</spirit:direction>
 					<spirit:vector>
-						<spirit:left>2</spirit:left>
+						<spirit:left>1</spirit:left>
 						<spirit:right>0</spirit:right>
 					</spirit:vector>
 					<spirit:wireTypeDefs>
@@ -1194,7 +1194,7 @@
 						</spirit:wireTypeDef>
 					</spirit:wireTypeDefs>
 					<spirit:driver>
-						<spirit:defaultValue>7</spirit:defaultValue>
+						<spirit:defaultValue>3</spirit:defaultValue>
 					</spirit:driver>
 				</spirit:wire>
 				<spirit:vendorExtensions>
@@ -1208,7 +1208,7 @@
 				<spirit:wire>
 					<spirit:direction>in</spirit:direction>
 					<spirit:vector>
-						<spirit:left>2</spirit:left>
+						<spirit:left>1</spirit:left>
 						<spirit:right>0</spirit:right>
 					</spirit:vector>
 					<spirit:wireTypeDefs>
@@ -1219,7 +1219,7 @@
 						</spirit:wireTypeDef>
 					</spirit:wireTypeDefs>
 					<spirit:driver>
-						<spirit:defaultValue>7</spirit:defaultValue>
+						<spirit:defaultValue>3</spirit:defaultValue>
 					</spirit:driver>
 				</spirit:wire>
 				<spirit:vendorExtensions>
@@ -1359,7 +1359,7 @@
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:vector>
-						<spirit:left>23</spirit:left>
+						<spirit:left>15</spirit:left>
 						<spirit:right>0</spirit:right>
 					</spirit:vector>
 					<spirit:wireTypeDefs>
@@ -1381,7 +1381,7 @@
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:vector>
-						<spirit:left>2</spirit:left>
+						<spirit:left>1</spirit:left>
 						<spirit:right>0</spirit:right>
 					</spirit:vector>
 					<spirit:wireTypeDefs>
@@ -1403,7 +1403,7 @@
 				<spirit:wire>
 					<spirit:direction>out</spirit:direction>
 					<spirit:vector>
-						<spirit:left>2</spirit:left>
+						<spirit:left>1</spirit:left>
 						<spirit:right>0</spirit:right>
 					</spirit:vector>
 					<spirit:wireTypeDefs>
@@ -1540,7 +1540,7 @@
 				<spirit:fileType>verilogSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
-				<spirit:name>hdl/verilog/sandbox_AXIvideo2Mat.v</spirit:name>
+				<spirit:name>hdl/verilog/sandbox_AXIvideo2Mat_16_640_480_16_s.v</spirit:name>
 				<spirit:fileType>verilogSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
@@ -1563,7 +1563,7 @@
 				<spirit:fileType>verilogSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
-				<spirit:name>hdl/verilog/sandbox_AXIvideo2Mat.v</spirit:name>
+				<spirit:name>hdl/verilog/sandbox_AXIvideo2Mat_16_640_480_16_s.v</spirit:name>
 				<spirit:fileType>verilogSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
@@ -1601,13 +1601,13 @@
 				<spirit:fileType>vhdlSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
-				<spirit:name>hdl/vhdl/sandbox_Block_proc.vhd</spirit:name>
+				<spirit:name>hdl/vhdl/sandbox_AXIvideo2Mat_16_640_480_16_s.vhd</spirit:name>
 				<spirit:fileType>vhdlSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
-				<spirit:name>hdl/vhdl/sandbox_AXIvideo2Mat.vhd</spirit:name>
+				<spirit:name>hdl/vhdl/sandbox_Block_proc.vhd</spirit:name>
 				<spirit:fileType>vhdlSource</spirit:fileType>
-				<spirit:userFileType>CHECKSUM_dac60030</spirit:userFileType>
+				<spirit:userFileType>CHECKSUM_73a065ea</spirit:userFileType>
 			</spirit:file>
 		</spirit:fileSet>
 		<spirit:fileSet>
@@ -1625,11 +1625,11 @@
 				<spirit:fileType>vhdlSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
-				<spirit:name>hdl/vhdl/sandbox_Block_proc.vhd</spirit:name>
+				<spirit:name>hdl/vhdl/sandbox_AXIvideo2Mat_16_640_480_16_s.vhd</spirit:name>
 				<spirit:fileType>vhdlSource</spirit:fileType>
 			</spirit:file>
 			<spirit:file>
-				<spirit:name>hdl/vhdl/sandbox_AXIvideo2Mat.vhd</spirit:name>
+				<spirit:name>hdl/vhdl/sandbox_Block_proc.vhd</spirit:name>
 				<spirit:fileType>vhdlSource</spirit:fileType>
 			</spirit:file>
 		</spirit:fileSet>
@@ -1727,7 +1727,7 @@
 			<spirit:name>clk_period</spirit:name>
 			<spirit:value spirit:resolve="immediate"
 					spirit:id="PARAM_VALUE.clk_period"
-					spirit:order="2">6.666670</spirit:value>
+					spirit:order="2">6.666667</spirit:value>
 		</spirit:parameter>
 		<spirit:parameter>
 			<spirit:name>machine</spirit:name>
@@ -1745,7 +1745,7 @@
 			<spirit:name>latency</spirit:name>
 			<spirit:value spirit:resolve="immediate"
 					spirit:id="PARAM_VALUE.latency"
-					spirit:order="5">2081283</spirit:value>
+					spirit:order="5">309763</spirit:value>
 		</spirit:parameter>
 		<spirit:parameter>
 			<spirit:name>II</spirit:name>
@@ -1763,8 +1763,8 @@
 				<xilinx:taxonomy>/VIVADO_HLS_IP</xilinx:taxonomy>
 			</xilinx:taxonomies>
 			<xilinx:displayName>Sandbox</xilinx:displayName>
-			<xilinx:coreRevision>1601271342</xilinx:coreRevision>
-			<xilinx:coreCreationDateTime>2016-01-27T18:42:22Z</xilinx:coreCreationDateTime>
+			<xilinx:coreRevision>1603251344</xilinx:coreRevision>
+			<xilinx:coreCreationDateTime>2016-03-25T17:44:17Z</xilinx:coreCreationDateTime>
 		</xilinx:coreExtensions>
 		<xilinx:packagingInfo>
 			<xilinx:xilinxVersion>2014.4</xilinx:xilinxVersion>

@@ -5,14 +5,14 @@
 <ModuleName>sandbox</ModuleName>
 <InstancesList>
 <Instance>
-<InstName>grp_sandbox_AXIvideo2Mat_fu_97</InstName>
-<ModuleName>sandbox_AXIvideo2Mat</ModuleName>
-<ID>97</ID>
+<InstName>grp_sandbox_AXIvideo2Mat_16_640_480_16_s_fu_89</InstName>
+<ModuleName>sandbox_AXIvideo2Mat_16_640_480_16_s</ModuleName>
+<ID>89</ID>
 </Instance>
 <Instance>
-<InstName>grp_sandbox_Block_proc_fu_119</InstName>
+<InstName>grp_sandbox_Block_proc_fu_110</InstName>
 <ModuleName>sandbox_Block_proc</ModuleName>
-<ID>119</ID>
+<ID>110</ID>
 </Instance>
 </InstancesList>
 </TopModule>
@@ -20,7 +20,7 @@
 
 <ModuleInformation>
 <Module>
-<Name>sandbox_AXIvideo2Mat</Name>
+<Name>sandbox_AXIvideo2Mat_16_640_480_16_s</Name>
 <PerformanceEstimates>
 <SummaryOfTimingAnalysis>
 <TargetClockPeriod>6.67</TargetClockPeriod>
@@ -28,10 +28,10 @@
 <EstimatedClockPeriod>5.68</EstimatedClockPeriod>
 </SummaryOfTimingAnalysis>
 <SummaryOfOverallLatency>
-<Best-caseLatency>2081283</Best-caseLatency>
-<Average-caseLatency>2081283</Average-caseLatency>
-<Worst-caseLatency>2081283</Worst-caseLatency>
-<PipelineInitiationInterval>2081283</PipelineInitiationInterval>
+<Best-caseLatency>309763</Best-caseLatency>
+<Average-caseLatency>309763</Average-caseLatency>
+<Worst-caseLatency>309763</Worst-caseLatency>
+<PipelineInitiationInterval>309763</PipelineInitiationInterval>
 <PipelineType>none</PipelineType>
 </SummaryOfOverallLatency>
 <SummaryOfLoopLatency>
@@ -44,14 +44,14 @@
 </loop_wait_for_start>
 <loop_height>
 <Name>loop_height</Name>
-<TripCount>1920</TripCount>
-<Latency>2081280</Latency>
-<IterationLatency>1084</IterationLatency>
-<PipelineDepth>1084</PipelineDepth>
+<TripCount>640</TripCount>
+<Latency>309760</Latency>
+<IterationLatency>484</IterationLatency>
+<PipelineDepth>484</PipelineDepth>
 <loop_width>
 <Name>loop_width</Name>
-<TripCount>1080</TripCount>
-<Latency>1080</Latency>
+<TripCount>480</TripCount>
+<Latency>480</Latency>
 <PipelineII>1</PipelineII>
 <PipelineDepth>2</PipelineDepth>
 </loop_width>
@@ -67,8 +67,8 @@
 </PerformanceEstimates>
 <AreaEstimates>
 <Resources>
-<FF>325</FF>
-<LUT>455</LUT>
+<FF>273</FF>
+<LUT>391</LUT>
 <BRAM_18K>0</BRAM_18K>
 <DSP48E>0</DSP48E>
 <SLICE>0</SLICE>
@@ -77,7 +77,7 @@
 <InterfaceSummary>
 <RtlPorts>
 <name>ap_clk</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -88,7 +88,7 @@
 </RtlPorts>
 <RtlPorts>
 <name>ap_rst</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -99,7 +99,7 @@
 </RtlPorts>
 <RtlPorts>
 <name>ap_start</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -110,7 +110,7 @@
 </RtlPorts>
 <RtlPorts>
 <name>ap_done</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -121,7 +121,7 @@
 </RtlPorts>
 <RtlPorts>
 <name>ap_continue</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -132,7 +132,7 @@
 </RtlPorts>
 <RtlPorts>
 <name>ap_idle</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -143,7 +143,7 @@
 </RtlPorts>
 <RtlPorts>
 <name>ap_ready</name>
-<Object>sandbox_AXIvideo2Mat</Object>
+<Object>sandbox_AXIvideo2Mat&lt;16, 640, 480, 16&gt;</Object>
 <Type>return value</Type>
 <Scope></Scope>
 <IOProtocol>ap_ctrl_hs</IOProtocol>
@@ -182,7 +182,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>in</Dir>
-<Bits>24</Bits>
+<Bits>16</Bits>
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
@@ -226,7 +226,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>in</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
@@ -237,7 +237,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>in</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
@@ -361,50 +361,6 @@
 <Bits>1</Bits>
 <Attribute>control</Attribute>
 </RtlPorts>
-<RtlPorts>
-<name>img_data_stream_2_V_din</name>
-<Object>img_data_stream_2_V</Object>
-<Type>pointer</Type>
-<Scope></Scope>
-<IOProtocol>ap_fifo</IOProtocol>
-<IOConfig></IOConfig>
-<Dir>out</Dir>
-<Bits>8</Bits>
-<Attribute>data</Attribute>
-</RtlPorts>
-<RtlPorts>
-<name>img_data_stream_2_V_full_n</name>
-<Object>img_data_stream_2_V</Object>
-<Type>pointer</Type>
-<Scope></Scope>
-<IOProtocol>ap_fifo</IOProtocol>
-<IOConfig></IOConfig>
-<Dir>in</Dir>
-<Bits>1</Bits>
-<Attribute>control</Attribute>
-</RtlPorts>
-<RtlPorts>
-<name>img_data_stream_2_V_write</name>
-<Object>img_data_stream_2_V</Object>
-<Type>pointer</Type>
-<Scope></Scope>
-<IOProtocol>ap_fifo</IOProtocol>
-<IOConfig></IOConfig>
-<Dir>out</Dir>
-<Bits>1</Bits>
-<Attribute>control</Attribute>
-</RtlPorts>
-<RtlPorts>
-<name>img_data_stream_2_V_ap_vld</name>
-<Object>img_data_stream_2_V</Object>
-<Type>pointer</Type>
-<Scope></Scope>
-<IOProtocol>ap_fifo</IOProtocol>
-<IOConfig></IOConfig>
-<Dir>out</Dir>
-<Bits>1</Bits>
-<Attribute>control</Attribute>
-</RtlPorts>
 </InterfaceSummary>
 </Module>
 <Module>
@@ -413,26 +369,26 @@
 <SummaryOfTimingAnalysis>
 <TargetClockPeriod>6.67</TargetClockPeriod>
 <ClockUncertainty>0.83</ClockUncertainty>
-<EstimatedClockPeriod>2.11</EstimatedClockPeriod>
+<EstimatedClockPeriod>2.07</EstimatedClockPeriod>
 </SummaryOfTimingAnalysis>
 <SummaryOfOverallLatency>
-<Best-caseLatency>2079361</Best-caseLatency>
-<Average-caseLatency>2079361</Average-caseLatency>
-<Worst-caseLatency>2079361</Worst-caseLatency>
-<PipelineInitiationInterval>2079361</PipelineInitiationInterval>
+<Best-caseLatency>309121</Best-caseLatency>
+<Average-caseLatency>309121</Average-caseLatency>
+<Worst-caseLatency>309121</Worst-caseLatency>
+<PipelineInitiationInterval>309121</PipelineInitiationInterval>
 <PipelineType>none</PipelineType>
 </SummaryOfOverallLatency>
 <SummaryOfLoopLatency>
 <loop_height>
 <Name>loop_height</Name>
-<TripCount>1920</TripCount>
-<Latency>2079360</Latency>
-<IterationLatency>1083</IterationLatency>
-<PipelineDepth>1083</PipelineDepth>
+<TripCount>640</TripCount>
+<Latency>309120</Latency>
+<IterationLatency>483</IterationLatency>
+<PipelineDepth>483</PipelineDepth>
 <loop_width>
 <Name>loop_width</Name>
-<TripCount>1080</TripCount>
-<Latency>1080</Latency>
+<TripCount>480</TripCount>
+<Latency>480</Latency>
 <PipelineII>1</PipelineII>
 <PipelineDepth>2</PipelineDepth>
 </loop_width>
@@ -441,8 +397,8 @@
 </PerformanceEstimates>
 <AreaEstimates>
 <Resources>
-<FF>44</FF>
-<LUT>87</LUT>
+<FF>40</FF>
+<LUT>71</LUT>
 <BRAM_18K>0</BRAM_18K>
 <DSP48E>0</DSP48E>
 <SLICE>0</SLICE>
@@ -545,7 +501,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>out</Dir>
-<Bits>24</Bits>
+<Bits>16</Bits>
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
@@ -589,7 +545,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>out</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
@@ -600,7 +556,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>out</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 </RtlPorts>
 <RtlPorts>
@@ -647,19 +603,19 @@
 <EstimatedClockPeriod>5.68</EstimatedClockPeriod>
 </SummaryOfTimingAnalysis>
 <SummaryOfOverallLatency>
-<Best-caseLatency>2081283</Best-caseLatency>
-<Average-caseLatency>2081283</Average-caseLatency>
-<Worst-caseLatency>2081283</Worst-caseLatency>
-<DataflowPipelineThroughput>2081284</DataflowPipelineThroughput>
-<PipelineInitiationInterval>2081284</PipelineInitiationInterval>
+<Best-caseLatency>309763</Best-caseLatency>
+<Average-caseLatency>309763</Average-caseLatency>
+<Worst-caseLatency>309763</Worst-caseLatency>
+<DataflowPipelineThroughput>309764</DataflowPipelineThroughput>
+<PipelineInitiationInterval>309764</PipelineInitiationInterval>
 <PipelineType>dataflow</PipelineType>
 </SummaryOfOverallLatency>
 </PerformanceEstimates>
 <AreaEstimates>
 <Resources>
 <BRAM_18K>0</BRAM_18K>
-<FF>489</FF>
-<LUT>754</LUT>
+<FF>433</FF>
+<LUT>674</LUT>
 <DSP48E>0</DSP48E>
 <SLICE>0</SLICE>
 </Resources>
@@ -927,7 +883,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>in</Dir>
-<Bits>24</Bits>
+<Bits>16</Bits>
 <Attribute>data</Attribute>
 <CType>int</CType>
 </RtlPorts>
@@ -939,7 +895,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>in</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 <CType>int</CType>
 </RtlPorts>
@@ -951,7 +907,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>in</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 <CType>int</CType>
 </RtlPorts>
@@ -1035,7 +991,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>out</Dir>
-<Bits>24</Bits>
+<Bits>16</Bits>
 <Attribute>data</Attribute>
 <CType>int</CType>
 </RtlPorts>
@@ -1047,7 +1003,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>out</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 <CType>int</CType>
 </RtlPorts>
@@ -1059,7 +1015,7 @@
 <IOProtocol>axis</IOProtocol>
 <IOConfig></IOConfig>
 <Dir>out</Dir>
-<Bits>3</Bits>
+<Bits>2</Bits>
 <Attribute>data</Attribute>
 <CType>int</CType>
 </RtlPorts>

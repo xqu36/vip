@@ -3,7 +3,7 @@ set clock_constraint { \
     module sandbox \
     port ap_clk \
     period 6.66667 \
-    uncertainty 0.833334 \
+    uncertainty 0.833333 \
 }
 
 set all_path {}

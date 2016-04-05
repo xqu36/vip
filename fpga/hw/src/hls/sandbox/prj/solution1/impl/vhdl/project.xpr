@@ -6,7 +6,7 @@
 <Project Version="7" Minor="2" Path="/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/impl/vhdl/project.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
-    <Option Name="Id" Val="6514d771bc3841f0b617f7dfccbf1bef"/>
+    <Option Name="Id" Val="96fd01f6b6f14f48b03aaeac715c919d"/>
     <Option Name="Part" Val="xc7z020clg484-1"/>
     <Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
     <Option Name="TargetLanguage" Val="VHDL"/>
@@ -35,13 +35,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/sandbox_Block_proc.vhd">
+      <File Path="$PPRDIR/sandbox_AXIvideo2Mat_16_640_480_16_s.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/sandbox_AXIvideo2Mat.vhd">
+      <File Path="$PPRDIR/sandbox_Block_proc.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>

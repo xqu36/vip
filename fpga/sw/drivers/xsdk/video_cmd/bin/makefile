@@ -32,7 +32,7 @@ all: video_cmd
 video_cmd: $(OBJS)  $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM Linux gcc linker'
-	arm-xilinx-linux-gnueabi-g++ -L"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/video_lib/lib" -L"/opt/Xilinx/SDK/2014.4/data/embeddedsw/ThirdParty/opencv/lib" -L"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/filter_lib/lib" -L"../../../pre-built/lib" -o "video_cmd" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-xilinx-linux-gnueabi-g++ -L"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/video_lib/lib" -L"/opt/Xilinx/SDK/2015.1/data/embeddedsw/ThirdParty/opencv/lib" -L"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/filter_lib/lib" -L"../../../pre-built/lib" -o "video_cmd" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

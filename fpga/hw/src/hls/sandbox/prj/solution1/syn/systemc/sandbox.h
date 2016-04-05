@@ -11,7 +11,7 @@
 #include "systemc.h"
 #include "AESL_pkg.h"
 
-#include "sandbox_AXIvideo2Mat.h"
+#include "sandbox_AXIvideo2Mat_16_640_480_16_s.h"
 #include "sandbox_Block_proc.h"
 #include "FIFO_sandbox_result_channel.h"
 #include "sandbox_CONTROL_BUS_s_axi.h"
@@ -42,16 +42,16 @@ struct sandbox : public sc_module {
     sc_in_clk ap_clk;
     sc_in< sc_logic > ap_rst_n;
     sc_out< sc_logic > interrupt;
-    sc_in< sc_lv<24> > video_in_TDATA;
-    sc_in< sc_lv<3> > video_in_TKEEP;
-    sc_in< sc_lv<3> > video_in_TSTRB;
+    sc_in< sc_lv<16> > video_in_TDATA;
+    sc_in< sc_lv<2> > video_in_TKEEP;
+    sc_in< sc_lv<2> > video_in_TSTRB;
     sc_in< sc_lv<1> > video_in_TUSER;
     sc_in< sc_lv<1> > video_in_TLAST;
     sc_in< sc_lv<1> > video_in_TID;
     sc_in< sc_lv<1> > video_in_TDEST;
-    sc_out< sc_lv<24> > video_out_TDATA;
-    sc_out< sc_lv<3> > video_out_TKEEP;
-    sc_out< sc_lv<3> > video_out_TSTRB;
+    sc_out< sc_lv<16> > video_out_TDATA;
+    sc_out< sc_lv<2> > video_out_TKEEP;
+    sc_out< sc_lv<2> > video_out_TSTRB;
     sc_out< sc_lv<1> > video_out_TUSER;
     sc_out< sc_lv<1> > video_out_TLAST;
     sc_out< sc_lv<1> > video_out_TID;
@@ -73,7 +73,7 @@ struct sandbox : public sc_module {
     ofstream mHdltvinHandle;
     ofstream mHdltvoutHandle;
     sandbox_CONTROL_BUS_s_axi<C_S_AXI_CONTROL_BUS_ADDR_WIDTH,C_S_AXI_CONTROL_BUS_DATA_WIDTH>* sandbox_CONTROL_BUS_s_axi_U;
-    sandbox_AXIvideo2Mat* sandbox_AXIvideo2Mat_U0;
+    sandbox_AXIvideo2Mat_16_640_480_16_s* sandbox_AXIvideo2Mat_16_640_480_16_U0;
     sandbox_Block_proc* sandbox_Block_proc_U0;
     FIFO_sandbox_result_channel* result_channel_U;
     sc_signal< sc_logic > ap_rst_n_inv;
@@ -84,35 +84,31 @@ struct sandbox : public sc_module {
     sc_signal< sc_logic > ap_ready;
     sc_signal< sc_logic > ap_done;
     sc_signal< sc_logic > ap_idle;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_ap_start;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_ap_done;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_ap_continue;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_ap_idle;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_ap_ready;
-    sc_signal< sc_lv<32> > sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2_ap_vld;
-    sc_signal< sc_lv<24> > sandbox_AXIvideo2Mat_U0_video_in_TDATA;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_video_in_TVALID;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_video_in_TREADY;
-    sc_signal< sc_lv<3> > sandbox_AXIvideo2Mat_U0_video_in_TKEEP;
-    sc_signal< sc_lv<3> > sandbox_AXIvideo2Mat_U0_video_in_TSTRB;
-    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_U0_video_in_TUSER;
-    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_U0_video_in_TLAST;
-    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_U0_video_in_TID;
-    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_U0_video_in_TDEST;
-    sc_signal< sc_lv<8> > sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_din;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_full_n;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_write;
-    sc_signal< sc_lv<8> > sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_din;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_full_n;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_write;
-    sc_signal< sc_lv<8> > sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_din;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_full_n;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_write;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_ap_vld;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_ap_vld;
-    sc_signal< sc_logic > sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_ap_vld;
-    sc_signal< sc_logic > ap_chn_write_sandbox_AXIvideo2Mat_U0_result_channel;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_start;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_done;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_continue;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_idle;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_ready;
+    sc_signal< sc_lv<32> > sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2_ap_vld;
+    sc_signal< sc_lv<16> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDATA;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TVALID;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TREADY;
+    sc_signal< sc_lv<2> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TKEEP;
+    sc_signal< sc_lv<2> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TSTRB;
+    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TUSER;
+    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TLAST;
+    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TID;
+    sc_signal< sc_lv<1> > sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDEST;
+    sc_signal< sc_lv<8> > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_din;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_full_n;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_write;
+    sc_signal< sc_lv<8> > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_din;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_full_n;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_write;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_ap_vld;
+    sc_signal< sc_logic > sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_ap_vld;
+    sc_signal< sc_logic > ap_chn_write_sandbox_AXIvideo2Mat_16_640_480_16_U0_result_channel;
     sc_signal< sc_logic > result_channel_full_n;
     sc_signal< sc_logic > sandbox_Block_proc_U0_ap_start;
     sc_signal< sc_logic > sandbox_Block_proc_U0_ap_done;
@@ -120,11 +116,11 @@ struct sandbox : public sc_module {
     sc_signal< sc_logic > sandbox_Block_proc_U0_ap_idle;
     sc_signal< sc_logic > sandbox_Block_proc_U0_ap_ready;
     sc_signal< sc_lv<32> > sandbox_Block_proc_U0_result;
-    sc_signal< sc_lv<24> > sandbox_Block_proc_U0_video_out_TDATA;
+    sc_signal< sc_lv<16> > sandbox_Block_proc_U0_video_out_TDATA;
     sc_signal< sc_logic > sandbox_Block_proc_U0_video_out_TVALID;
     sc_signal< sc_logic > sandbox_Block_proc_U0_video_out_TREADY;
-    sc_signal< sc_lv<3> > sandbox_Block_proc_U0_video_out_TKEEP;
-    sc_signal< sc_lv<3> > sandbox_Block_proc_U0_video_out_TSTRB;
+    sc_signal< sc_lv<2> > sandbox_Block_proc_U0_video_out_TKEEP;
+    sc_signal< sc_lv<2> > sandbox_Block_proc_U0_video_out_TSTRB;
     sc_signal< sc_lv<1> > sandbox_Block_proc_U0_video_out_TUSER;
     sc_signal< sc_lv<1> > sandbox_Block_proc_U0_video_out_TLAST;
     sc_signal< sc_lv<1> > sandbox_Block_proc_U0_video_out_TID;
@@ -136,7 +132,7 @@ struct sandbox : public sc_module {
     sc_signal< sc_lv<32> > result_channel_dout;
     sc_signal< sc_logic > result_channel_empty_n;
     sc_signal< sc_logic > result_channel_read;
-    sc_signal< sc_logic > ap_reg_procdone_sandbox_AXIvideo2Mat_U0;
+    sc_signal< sc_logic > ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0;
     sc_signal< sc_logic > ap_sig_hs_done;
     sc_signal< sc_logic > ap_reg_procdone_sandbox_Block_proc_U0;
     sc_signal< sc_logic > ap_CS;
@@ -145,14 +141,14 @@ struct sandbox : public sc_module {
     static const int C_WSTRB_WIDTH;
     static const int C_ADDR_WIDTH;
     static const sc_logic ap_const_logic_1;
-    static const sc_lv<24> ap_const_lv24_0;
-    static const sc_lv<3> ap_const_lv3_0;
+    static const sc_lv<16> ap_const_lv16_0;
+    static const sc_lv<2> ap_const_lv2_0;
     static const sc_lv<1> ap_const_lv1_0;
     static const bool ap_true;
     static const sc_logic ap_const_logic_0;
     // Thread declarations
     void thread_ap_clk_no_reset_();
-    void thread_ap_chn_write_sandbox_AXIvideo2Mat_U0_result_channel();
+    void thread_ap_chn_write_sandbox_AXIvideo2Mat_16_640_480_16_U0_result_channel();
     void thread_ap_done();
     void thread_ap_idle();
     void thread_ap_ready();
@@ -164,19 +160,18 @@ struct sandbox : public sc_module {
     void thread_result_channel_din();
     void thread_result_channel_read();
     void thread_result_channel_write();
-    void thread_sandbox_AXIvideo2Mat_U0_ap_continue();
-    void thread_sandbox_AXIvideo2Mat_U0_ap_start();
-    void thread_sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_full_n();
-    void thread_sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_full_n();
-    void thread_sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_full_n();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TDATA();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TDEST();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TID();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TKEEP();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TLAST();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TSTRB();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TUSER();
-    void thread_sandbox_AXIvideo2Mat_U0_video_in_TVALID();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_continue();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_start();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_full_n();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_full_n();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDATA();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDEST();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TID();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TKEEP();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TLAST();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TSTRB();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TUSER();
+    void thread_sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TVALID();
     void thread_sandbox_Block_proc_U0_ap_continue();
     void thread_sandbox_Block_proc_U0_ap_start();
     void thread_sandbox_Block_proc_U0_result();

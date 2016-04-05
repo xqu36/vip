@@ -64,6 +64,9 @@
 #include "v4l2_helper.h"
 #include "filter.h"
 
+#include "opencv/cv.h"
+#include "opencv2/highgui/highgui_c.h"
+
 static struct m2m_sw_stream m2m_sw_stream_handle;
 
 int init_m2m_sw_pipeline(struct video_pipeline *s, filter_func func)
@@ -86,7 +89,7 @@ int init_m2m_sw_pipeline(struct video_pipeline *s, filter_func func)
 	m2m_sw_stream_handle.video_in.format.bytesperline = s->stride;
 	m2m_sw_stream_handle.video_in.format.colorspace = s->colorspace;
 	m2m_sw_stream_handle.video_in.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	m2m_sw_stream_handle.video_in.mem_type = V4L2_MEMORY_MMAP;	/* @jdanner3 -- does this need to be DMAMEM? */
+	m2m_sw_stream_handle.video_in.mem_type = V4L2_MEMORY_MMAP;
 	m2m_sw_stream_handle.video_in.setup_ptr = s;
 
 #ifdef DEBUG_MODE
@@ -175,7 +178,7 @@ void *process_m2m_sw_event_loop(void *ptr)
 	ASSERT (ret < 0, "v4l2_device_on [video_in] failed %d \n",ret);
 
 #ifdef DEBUG_MODE
-		printf("vlib :: Video Capture Pipeline :: started !!");
+		printf("vlib :: Video Capture Pipeline :: started !!\n");
 #endif
 
 	/* Set current buffer index */
@@ -196,25 +199,67 @@ void *process_m2m_sw_event_loop(void *ptr)
 		if (fds[0].revents & POLLIN) {
 			if ( tpg_s2m_count != VDMA_SKIP_FRM_INDEX ){
 				/* getting buffer FROM mmap memory */
-				b = v4l2_dequeue_buffer(&m2m_sw_stream_handle.video_in,
-						m2m_sw_stream_handle.video_in.vid_buf);
+				printf("DQBUF...");
+				fflush(stdout);
+					b = v4l2_dequeue_buffer(&m2m_sw_stream_handle.video_in,
+							m2m_sw_stream_handle.video_in.vid_buf);
+				printf("done!\n");
 
-				unsigned char* ptr = b->v4l2_buff;
+				printf("ptr = b->v4l2_buff...");
+				fflush(stdout);
+					unsigned char* ptr = b->v4l2_buff;
+				printf("done!\n");
 
-				/*
-				 * DO THY PROCESSING HERE
-				 */
-				printf("Attempting to save grayscale image in /home/*.bmp/...\n");
-				opencv_func(ptr, ptr, m2m_sw_stream_handle.video_in.format.height,
-							m2m_sw_stream_handle.video_in.format.width,
-							m2m_sw_stream_handle.video_in.format.bytesperline/2,
-							m2m_sw_stream_handle.func);
+			   	// constructing OpenCV interface
+				printf("cvCreateImageHeader...");
+				fflush(stdout);
+					IplImage* src_dma = cvCreateImageHeader(cvSize(m2m_sw_stream_handle.video_in.format.width,
+														 m2m_sw_stream_handle.video_in.format.height),
+														IPL_DEPTH_8U, 2);
+				printf("done!\n");
 
-				v4l2_queue_buffer(&m2m_sw_stream_handle.video_in,b) ;
+				printf("src_dma->imageData = (char *)ptr...");
+				fflush(stdout);
+					src_dma->imageData = (char *)ptr;
+					src_dma->widthStep = m2m_sw_stream_handle.video_in.format.bytesperline;
+				printf("done!\n");
+
+				printf("cvSplit & cvMerge...");
+				fflush(stdout);
+					IplImage* saveimg = cvCreateImage(cvGetSize(src_dma), src_dma->depth, 3);
+					IplImage* c1 = cvCreateImage(cvGetSize(saveimg), saveimg->depth, 1);
+					IplImage* c2 = cvCreateImage(cvGetSize(saveimg), saveimg->depth, 1);
+					cvSplit(src_dma, c1, c2, NULL, NULL);
+					cvMerge(c1, NULL, NULL, NULL, saveimg);
+				printf("done!\n");
+
+				printf("cvSaveImage...");
+				fflush(stdout);
+					ret = cvSaveImage("/home/c1.bmp", saveimg, 0);
+				printf("done!\n");
+
+				printf("cvReleaseImage...");
+				fflush(stdout);
+					cvReleaseImage(&src_dma);
+					cvReleaseImage(&saveimg);
+					cvReleaseImage(&c1);
+					cvReleaseImage(&c2);
+				printf("done!\n");
+
+				if(tpg_s2m_count >= 30) {
+					printf("Count is past 30, exiting...\n");
+					break;
+				}
+
+				printf("QBUF...");
+				fflush(stdout);
+					v4l2_queue_buffer(&m2m_sw_stream_handle.video_in,b) ;
+				printf("done!\n");
 			}
 			tpg_s2m_count++;
 		}
 	}
+	printf("Cleaning up!\n");
 
 	/* push cleanup handler */
 	pthread_cleanup_pop(1);

@@ -14,8 +14,8 @@ void sandbox(AXI_STREAM& video_in, AXI_STREAM& video_out, int rows, int cols)
 //#pragma HLS INTERFACE ap_stable port=rows
 //#pragma HLS INTERFACE ap_stable port=cols
 
-    hls::Mat<MAX_WIDTH, MAX_HEIGHT, HLS_8UC3> src;
-    hls::Mat<MAX_WIDTH, MAX_HEIGHT, HLS_8UC3> out;
+    hls::Mat<MAX_WIDTH, MAX_HEIGHT, HLS_8UC2> src;
+    hls::Mat<MAX_WIDTH, MAX_HEIGHT, HLS_8UC2> out;
 
     int result;
 

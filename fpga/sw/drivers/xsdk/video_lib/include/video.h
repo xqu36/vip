@@ -69,15 +69,20 @@ extern "C"
 #include "filter.h"
 
 /* Default setup THIS MIGHT CHANGE @jdanner3*/
-#define OUTPUT_PIX_FMT v4l2_fourcc('M','J','P','G')
-#define INPUT_PIX_FMT  v4l2_fourcc('M','J','P','G')
+//#define OUTPUT_PIX_FMT v4l2_fourcc('M','J','P','G')
+//#define INPUT_PIX_FMT  v4l2_fourcc('M','J','P','G')
+//#define COLOR_SPACE  V4L2_COLORSPACE_SRGB
+//#define BYTES_PER_PIXEL 3
+#define OUTPUT_PIX_FMT v4l2_fourcc('Y','U','Y','V')
+#define INPUT_PIX_FMT  v4l2_fourcc('Y','U','Y','V')
 #define COLOR_SPACE  V4L2_COLORSPACE_SRGB
-#define BYTES_PER_PIXEL 3
+#define BYTES_PER_PIXEL 2
 #define WRES 640
 #define HRES 480
 
 #define UVC
 #define DEBUG_MODE
+#define V4L2
 
 /* Common interface  for video library*/
 

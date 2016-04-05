@@ -1,6 +1,6 @@
 
 set TopModule "sandbox"
-set ClockPeriod "6.666670"
+set ClockPeriod "6.666667"
 set ClockList {ap_clk}
 set multiClockList {}
 set PortClockMap {}
@@ -39,9 +39,9 @@ set SCTraceFileFormat "vcd"
 set SCTraceOption "all"
 set TargetInfo "xc7z020:clg484:-1"
 set SourceFiles {sc {} c ../../top.cpp}
-set SourceFlags {sc {} c {{ }}}
+set SourceFlags {sc {} c {{}}}
 set DirectiveFile {/home/jdanner3/VIP/repos/vip/fpga/hw/src/hls/sandbox/prj/solution1/solution1.directive}
-set TBFiles {verilog {../../../common/images/test_1080p.bmp ../../hls_sandbox.cpp ../../opencv_sandbox.cpp ../../test.cpp} bc {../../../common/images/test_1080p.bmp ../../hls_sandbox.cpp ../../opencv_sandbox.cpp ../../test.cpp} sc {../../../common/images/test_1080p.bmp ../../hls_sandbox.cpp ../../opencv_sandbox.cpp ../../test.cpp} vhdl {../../../common/images/test_1080p.bmp ../../hls_sandbox.cpp ../../opencv_sandbox.cpp ../../test.cpp} c {} cas {../../../common/images/test_1080p.bmp ../../hls_sandbox.cpp ../../opencv_sandbox.cpp ../../test.cpp}}
+set TBFiles {verilog {../../test.cpp ../../opencv_sandbox.cpp ../../hls_sandbox.cpp ../../../common/images/test_1080p.bmp} bc {../../test.cpp ../../opencv_sandbox.cpp ../../hls_sandbox.cpp ../../../common/images/test_1080p.bmp} sc {../../test.cpp ../../opencv_sandbox.cpp ../../hls_sandbox.cpp ../../../common/images/test_1080p.bmp} vhdl {../../test.cpp ../../opencv_sandbox.cpp ../../hls_sandbox.cpp ../../../common/images/test_1080p.bmp} c {} cas {../../test.cpp ../../opencv_sandbox.cpp ../../hls_sandbox.cpp ../../../common/images/test_1080p.bmp}}
 set SpecLanguage "C"
 set TVInFiles {bc {} c {} sc {} cas {} vhdl {} verilog {}}
 set TVOutFiles {bc {} c {} sc {} cas {} vhdl {} verilog {}}

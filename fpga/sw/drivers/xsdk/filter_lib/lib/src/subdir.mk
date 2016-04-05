@@ -27,14 +27,14 @@ CPP_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: ARM Linux g++ compiler'
-	arm-xilinx-linux-gnueabi-g++ -Wall -O3 -I"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/filter_lib/include" -I"../../../pre-built/include" -I"/opt/Xilinx/SDK/2014.4/data/embeddedsw/ThirdParty/opencv/include" -c -fmessage-length=0 -MT"$@" -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	arm-xilinx-linux-gnueabi-g++ -Wall -O3 -I"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/filter_lib/include" -I"../../../pre-built/include" -I"/opt/Xilinx/SDK/2015.1/data/embeddedsw/ThirdParty/opencv/include" -c -fmessage-length=0 -MT"$@" -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: ARM Linux g++ compiler'
-	arm-xilinx-linux-gnueabi-g++ -Wall -O3 -I"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/filter_lib/include" -I"../../../pre-built/include" -I"/opt/Xilinx/SDK/2014.4/data/embeddedsw/ThirdParty/opencv/include" -c -fmessage-length=0 -MT"$@" -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	arm-xilinx-linux-gnueabi-g++ -Wall -O3 -I"/home/jdanner3/VIP/repos/vip/fpga/sw/drivers/xsdk/filter_lib/include" -I"../../../pre-built/include" -I"/opt/Xilinx/SDK/2015.1/data/embeddedsw/ThirdParty/opencv/include" -c -fmessage-length=0 -MT"$@" -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

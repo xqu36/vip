@@ -84,10 +84,10 @@
 #include "video.h"
 
 /* Media Pipeline configuration */
-#define MEDIA_HLS_ENTITY "43c10000.hls"
-#define MEDIA_HLS_FMT "\"43c10000.hls\":%d [fmt:UYVY/%dx%d]"
+#define MEDIA_HLS_ENTITY "43c10000.sandbox"
+#define MEDIA_HLS_FMT "\"43c10000.sandbox\":%d [fmt:UYVY/%dx%d]"
 
-#define XLNX_SOBEL_IN_CARD_NAME "video_m2m input 1"			// TODO: @jdanner3 MAKE DEVICE TREE EDITS
+#define XLNX_SOBEL_IN_CARD_NAME "video_m2m input 1"
 #define XLNX_SOBEL_OUT_CARD_NAME "video_m2m output 0"
 #define XLNX_UVC_DRIVER_NAME "uvcvideo"
 #define XLNX_HLS_SOBEL_MODEL_NAME "xlnx,sandbox-1.0"
@@ -108,8 +108,7 @@ typedef enum
 /*  media configuration */
 typedef enum
 {
-	MEDIA_NODE_0,
-	MEDIA_NODE_1
+	MEDIA_NODE_0
 } media_node; 
 
 struct v4l2_hls_subdev {

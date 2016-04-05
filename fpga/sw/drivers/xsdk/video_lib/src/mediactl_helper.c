@@ -100,17 +100,17 @@ int set_media_control(struct video_pipeline *s, media_node node)
 	ASSERT(!media, "Failed to create media device %s\n", media_devname);
 
 	/* Enumerate entities, pads and links */
-	//ret = media_device_enumerate(media);
-	//ASSERT(ret < 0, "Failed to enumerate %s\n", media_devname);
+	ret = media_device_enumerate(media);
+	ASSERT(ret < 0, "Failed to enumerate %s\n", media_devname);
 
 #ifdef DEBUG_MODE
-	//const struct media_device_info *info = media_get_info(media);
-	//print_media_info(info);
+	const struct media_device_info *info = media_get_info(media);
+	print_media_info(info);
 #endif
 
 	memset(media_formats, 0, sizeof (media_formats));
 
-	if (node == MEDIA_NODE_1) {
+	if (node == MEDIA_NODE_0) {
 		/* Set HLS input resolution */
 		sprintf(media_formats, MEDIA_HLS_FMT, 0, s->w, s->h);
 		ret = v4l2_subdev_parse_setup_formats(media, media_formats);
@@ -142,8 +142,8 @@ int get_entity_state(media_node node, char *name)
 	ASSERT(!media, "Failed to create media device device\n");
 
 	/* Enumerate entities, pads and links */
-	//ret = media_device_enumerate(media);
-	//ASSERT(ret < 0, "Failed to enumerate %s (%d)\n", dev_name, ret);
+	ret = media_device_enumerate(media);
+	ASSERT(ret < 0, "Failed to enumerate %s (%d)\n", dev_name, ret);
 
 	/* Check if entity is present */
 	entity = media_get_entity_by_name(media, name, strlen(name));
@@ -171,8 +171,8 @@ int get_entity_devname(media_node node, char *name, char *subdev_name)
 	ASSERT(!media, "Failed to create media device\n");
 
 	/* Enumerate entities, pads and links */
-	//ret = media_device_enumerate(media);
-	//ASSERT(ret < 0, "Failed to enumerate '%s'\n", dev_name);
+	ret = media_device_enumerate(media);
+	ASSERT(ret < 0, "Failed to enumerate '%s'\n", dev_name);
 
 	entity = media_get_entity_by_name(media, name, strlen(name));
 	ASSERT(!entity, "Entity '%s' not found\n", name);
@@ -199,8 +199,8 @@ int get_entity_link_count(media_node node, char *name)
 	ASSERT(!media, "Failed to create media device device\n");
 
 	/* Enumerate entities, pads and links */
-	//ret = media_device_enumerate(media);
-	//ASSERT(ret < 0, "Failed to enumerate %s (%d)\n", dev_name, ret);
+	ret = media_device_enumerate(media);
+	ASSERT(ret < 0, "Failed to enumerate %s (%d)\n", dev_name, ret);
 
 	/* Get entity link count */
 	entity = media_get_entity_by_name(media, name, strlen(name));

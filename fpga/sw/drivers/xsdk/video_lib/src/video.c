@@ -80,11 +80,7 @@ int vlib_init()
 	video_setup->colorspace = COLOR_SPACE;
 
 	/* Detect and configure HLS subdev */
-	//ret = v4l2_hls_init(&video_setup->subdev, XLNX_HLS_SOBEL_MODEL_NAME);
-	//if (!ret)
-		//v4l2_sobel_init(video_setup->subdev.fd);
-	/* Initialize sw sobel */
-	opencv_sobel_init();
+	ret = v4l2_hls_init(&video_setup->subdev, XLNX_HLS_SOBEL_MODEL_NAME);
 
 	return ret;
 }
@@ -103,6 +99,8 @@ int vlib_get_active_height()
 int vlib_set_active_width(int w)
 {
 	video_setup->w = w;
+	video_setup->stride = (video_setup->w * BYTES_PER_PIXEL);
+
 	return VLIB_SUCCESS;
 }
 
@@ -168,7 +166,7 @@ int vlib_change_mode(video_src src, filter_func func, filter_mode mode)
 		break;
 	case FILTER_MODE_HW:
 		init_m2m_hw_pipeline(video_setup);
-		process_thread_fptr = process_m2m_hw_event_loop ;
+		process_thread_fptr = process_m2m_hw_event_loop;
 		break;
 	default:
 		ASSERT(1, "Invalid application mode!\n");

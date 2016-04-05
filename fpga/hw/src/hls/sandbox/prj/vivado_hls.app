@@ -1,9 +1,4 @@
-<AutoPilot:project xmlns:AutoPilot="com.autoesl.autopilot.project" projectType="C/C++" name="prj" top="sandbox">
-    <Simulation argv="">
-        <SimFlow name="csim" setup="false" optimizeCompile="true" clean="false" ldflags="" mflags="-j4"/>
-    </Simulation>
-    <includePaths/>
-    <libraryFlag/>
+<project xmlns="com.autoesl.autopilot.project" name="prj" top="sandbox">
     <files>
         <file name="../../../common/images/test_1080p.bmp" sc="0" tb="1" cflags=" "/>
         <file name="../../hls_sandbox.cpp" sc="0" tb="1" cflags=" "/>
@@ -11,8 +6,14 @@
         <file name="../../test.cpp" sc="0" tb="1" cflags=" "/>
         <file name="top.cpp" sc="0" tb="false" cflags=""/>
     </files>
-    <solutions>
-        <solution name="solution1" status=""/>
+    <includePaths/>
+    <libraryPaths/>
+    <libraryFlag/>
+    <Simulation argv="">
+        <SimFlow name="csim" optimizeCompile="true" ldflags="" mflags="-j4"/>
+    </Simulation>
+    <solutions xmlns="">
+        <solution name="solution1" status="active"/>
     </solutions>
-</AutoPilot:project>
+</project>
 

@@ -121,22 +121,15 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 	ASSERT(ret < 0, "VIDIOC_G_FMT failed: %s\n", ERRSTR);
 
 #ifdef DEBUG_MODE
-	printf("[v4l2_helper] G_FMT(start): width = %u, height = %u, bytes per line = %u,"
+	printf("[v4l2_helper] G_FMT(start): width = %u, height = %u, bytes per line = %u, "
 			"4cc = %.4s, color space = %u\n", fmt.fmt.pix.width,
 		   fmt.fmt.pix.height, fmt.fmt.pix.bytesperline,
 		   (char*) &fmt.fmt.pix.pixelformat, fmt.fmt.pix.colorspace);
 #endif
 
-#ifdef DEBUG_MODE
-	// this is where the driver is set based on FMT, which is based on dev->format
-	// change dev->format, change what gets pushed to the driver -- @jdanner3
-	//printf("[v4l2_helper] Attempting to S_FMT\n");
-#endif
-/*
 	fmt.fmt.pix = dev->format;
 	ret = ioctl(dev->fd, VIDIOC_S_FMT, &fmt);
 	ASSERT(ret < 0, "VIDIOC_S_FMT failed: %s\n", ERRSTR);
-*/
 
 	ret = ioctl(dev->fd, VIDIOC_G_FMT, &fmt);
 	ASSERT(ret < 0, "VIDIOC_G_FMT failed: %s\n", ERRSTR);
@@ -174,7 +167,7 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 
 	// check if stride is supported
 	// added @jdanner3
-	//fmt.fmt.pix.bytesperline = dev->format.bytesperline;
+	fmt.fmt.pix.bytesperline = dev->format.bytesperline;
 	if (fmt.fmt.pix.bytesperline != dev->format.bytesperline) {
 		printf("[v4l2_helper] Requested stride '%d' is not supported by device '%s' (fmt)%d != (dev)%d\n",
 				dev->format.bytesperline, dev->devname, fmt.fmt.pix.bytesperline, 
@@ -205,6 +198,7 @@ int v4l2_init(struct v4l2_dev *dev, unsigned int num_buffers)
 	buf.type = dev->buf_type;
 	buf.index = buffer->index;
 	buf.memory = dev->mem_type;
+
 	if(dev->mem_type == V4L2_MEMORY_DMABUF) {
 	buf.m.fd = buffer->dbuf_fd;
 	}
@@ -276,7 +270,7 @@ int v4l2_hls_init(struct v4l2_hls_subdev *subdev, const char *model_name)
 {
 	printf("v4l2_hls_init started.\n");
 	char hls_model[DEV_NAME_LEN];
-	get_entity_devname(MEDIA_NODE_1, MEDIA_HLS_ENTITY, subdev->name);
+	get_entity_devname(MEDIA_NODE_0, MEDIA_HLS_ENTITY, subdev->name);
 
 	subdev->fd = open(subdev->name, O_RDWR);
 	ASSERT(subdev->fd < 0, "failed to open %s: %s\n", subdev->name, ERRSTR);

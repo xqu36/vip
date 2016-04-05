@@ -7,7 +7,7 @@
 
 `timescale 1 ns / 1 ps 
 
-(* CORE_GENERATION_INFO="sandbox,hls_ip_2014_4,{HLS_INPUT_TYPE=cxx,HLS_INPUT_FLOAT=0,HLS_INPUT_FIXED=0,HLS_INPUT_PART=xc7z020clg484-1,HLS_INPUT_CLOCK=6.666670,HLS_INPUT_ARCH=dataflow,HLS_SYN_CLOCK=5.681000,HLS_SYN_LAT=2081283,HLS_SYN_TPT=2081284,HLS_SYN_MEM=0,HLS_SYN_DSP=0,HLS_SYN_FF=489,HLS_SYN_LUT=754}" *)
+(* CORE_GENERATION_INFO="sandbox,hls_ip_2014_4,{HLS_INPUT_TYPE=cxx,HLS_INPUT_FLOAT=0,HLS_INPUT_FIXED=0,HLS_INPUT_PART=xc7z020clg484-1,HLS_INPUT_CLOCK=6.666667,HLS_INPUT_ARCH=dataflow,HLS_SYN_CLOCK=5.681000,HLS_SYN_LAT=309763,HLS_SYN_TPT=309764,HLS_SYN_MEM=0,HLS_SYN_DSP=0,HLS_SYN_FF=433,HLS_SYN_LUT=674}" *)
 
 module sandbox (
         s_axi_CONTROL_BUS_AWVALID,
@@ -56,8 +56,8 @@ parameter    C_S_AXI_CONTROL_BUS_ADDR_WIDTH = 6;
 parameter    C_DATA_WIDTH = 32;
 parameter    C_ADDR_WIDTH = 32;
 parameter    ap_const_logic_1 = 1'b1;
-parameter    ap_const_lv24_0 = 24'b000000000000000000000000;
-parameter    ap_const_lv3_0 = 3'b000;
+parameter    ap_const_lv16_0 = 16'b0000000000000000;
+parameter    ap_const_lv2_0 = 2'b00;
 parameter    ap_const_lv1_0 = 1'b0;
 parameter    ap_true = 1'b1;
 parameter    ap_const_logic_0 = 1'b0;
@@ -84,16 +84,16 @@ output  [1:0] s_axi_CONTROL_BUS_BRESP;
 input   ap_clk;
 input   ap_rst_n;
 output   interrupt;
-input  [23:0] video_in_TDATA;
-input  [2:0] video_in_TKEEP;
-input  [2:0] video_in_TSTRB;
+input  [15:0] video_in_TDATA;
+input  [1:0] video_in_TKEEP;
+input  [1:0] video_in_TSTRB;
 input  [0:0] video_in_TUSER;
 input  [0:0] video_in_TLAST;
 input  [0:0] video_in_TID;
 input  [0:0] video_in_TDEST;
-output  [23:0] video_out_TDATA;
-output  [2:0] video_out_TKEEP;
-output  [2:0] video_out_TSTRB;
+output  [15:0] video_out_TDATA;
+output  [1:0] video_out_TKEEP;
+output  [1:0] video_out_TSTRB;
 output  [0:0] video_out_TUSER;
 output  [0:0] video_out_TLAST;
 output  [0:0] video_out_TID;
@@ -111,35 +111,31 @@ wire    ap_start;
 wire    ap_ready;
 wire    ap_done;
 reg    ap_idle;
-wire    sandbox_AXIvideo2Mat_U0_ap_start;
-wire    sandbox_AXIvideo2Mat_U0_ap_done;
-wire    sandbox_AXIvideo2Mat_U0_ap_continue;
-wire    sandbox_AXIvideo2Mat_U0_ap_idle;
-wire    sandbox_AXIvideo2Mat_U0_ap_ready;
-wire   [31:0] sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2;
-wire    sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2_ap_vld;
-wire   [23:0] sandbox_AXIvideo2Mat_U0_video_in_TDATA;
-wire    sandbox_AXIvideo2Mat_U0_video_in_TVALID;
-wire    sandbox_AXIvideo2Mat_U0_video_in_TREADY;
-wire   [2:0] sandbox_AXIvideo2Mat_U0_video_in_TKEEP;
-wire   [2:0] sandbox_AXIvideo2Mat_U0_video_in_TSTRB;
-wire   [0:0] sandbox_AXIvideo2Mat_U0_video_in_TUSER;
-wire   [0:0] sandbox_AXIvideo2Mat_U0_video_in_TLAST;
-wire   [0:0] sandbox_AXIvideo2Mat_U0_video_in_TID;
-wire   [0:0] sandbox_AXIvideo2Mat_U0_video_in_TDEST;
-wire   [7:0] sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_din;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_full_n;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_write;
-wire   [7:0] sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_din;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_full_n;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_write;
-wire   [7:0] sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_din;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_full_n;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_write;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_ap_vld;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_ap_vld;
-wire    sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_ap_vld;
-wire    ap_chn_write_sandbox_AXIvideo2Mat_U0_result_channel;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_start;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_done;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_continue;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_idle;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_ready;
+wire   [31:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2_ap_vld;
+wire   [15:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDATA;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TVALID;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TREADY;
+wire   [1:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TKEEP;
+wire   [1:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TSTRB;
+wire   [0:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TUSER;
+wire   [0:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TLAST;
+wire   [0:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TID;
+wire   [0:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDEST;
+wire   [7:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_din;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_full_n;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_write;
+wire   [7:0] sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_din;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_full_n;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_write;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_ap_vld;
+wire    sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_ap_vld;
+wire    ap_chn_write_sandbox_AXIvideo2Mat_16_640_480_16_U0_result_channel;
 wire    result_channel_full_n;
 wire    sandbox_Block_proc_U0_ap_start;
 wire    sandbox_Block_proc_U0_ap_done;
@@ -147,11 +143,11 @@ wire    sandbox_Block_proc_U0_ap_continue;
 wire    sandbox_Block_proc_U0_ap_idle;
 wire    sandbox_Block_proc_U0_ap_ready;
 wire   [31:0] sandbox_Block_proc_U0_result;
-wire   [23:0] sandbox_Block_proc_U0_video_out_TDATA;
+wire   [15:0] sandbox_Block_proc_U0_video_out_TDATA;
 wire    sandbox_Block_proc_U0_video_out_TVALID;
 wire    sandbox_Block_proc_U0_video_out_TREADY;
-wire   [2:0] sandbox_Block_proc_U0_video_out_TKEEP;
-wire   [2:0] sandbox_Block_proc_U0_video_out_TSTRB;
+wire   [1:0] sandbox_Block_proc_U0_video_out_TKEEP;
+wire   [1:0] sandbox_Block_proc_U0_video_out_TSTRB;
 wire   [0:0] sandbox_Block_proc_U0_video_out_TUSER;
 wire   [0:0] sandbox_Block_proc_U0_video_out_TLAST;
 wire   [0:0] sandbox_Block_proc_U0_video_out_TID;
@@ -163,7 +159,7 @@ wire    result_channel_write;
 wire   [31:0] result_channel_dout;
 wire    result_channel_empty_n;
 wire    result_channel_read;
-reg    ap_reg_procdone_sandbox_AXIvideo2Mat_U0 = 1'b0;
+reg    ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0 = 1'b0;
 reg    ap_sig_hs_done;
 reg    ap_reg_procdone_sandbox_Block_proc_U0 = 1'b0;
 reg    ap_CS;
@@ -203,37 +199,33 @@ sandbox_CONTROL_BUS_s_axi_U(
     .ap_idle( ap_idle )
 );
 
-sandbox_AXIvideo2Mat sandbox_AXIvideo2Mat_U0(
+sandbox_AXIvideo2Mat_16_640_480_16_s sandbox_AXIvideo2Mat_16_640_480_16_U0(
     .ap_clk( ap_clk ),
     .ap_rst( ap_rst_n_inv ),
-    .ap_start( sandbox_AXIvideo2Mat_U0_ap_start ),
-    .ap_done( sandbox_AXIvideo2Mat_U0_ap_done ),
-    .ap_continue( sandbox_AXIvideo2Mat_U0_ap_continue ),
-    .ap_idle( sandbox_AXIvideo2Mat_U0_ap_idle ),
-    .ap_ready( sandbox_AXIvideo2Mat_U0_ap_ready ),
-    .AXI_video_strm_V_data_V_2( sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2 ),
-    .AXI_video_strm_V_data_V_2_ap_vld( sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2_ap_vld ),
-    .video_in_TDATA( sandbox_AXIvideo2Mat_U0_video_in_TDATA ),
-    .video_in_TVALID( sandbox_AXIvideo2Mat_U0_video_in_TVALID ),
-    .video_in_TREADY( sandbox_AXIvideo2Mat_U0_video_in_TREADY ),
-    .video_in_TKEEP( sandbox_AXIvideo2Mat_U0_video_in_TKEEP ),
-    .video_in_TSTRB( sandbox_AXIvideo2Mat_U0_video_in_TSTRB ),
-    .video_in_TUSER( sandbox_AXIvideo2Mat_U0_video_in_TUSER ),
-    .video_in_TLAST( sandbox_AXIvideo2Mat_U0_video_in_TLAST ),
-    .video_in_TID( sandbox_AXIvideo2Mat_U0_video_in_TID ),
-    .video_in_TDEST( sandbox_AXIvideo2Mat_U0_video_in_TDEST ),
-    .img_data_stream_0_V_din( sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_din ),
-    .img_data_stream_0_V_full_n( sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_full_n ),
-    .img_data_stream_0_V_write( sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_write ),
-    .img_data_stream_1_V_din( sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_din ),
-    .img_data_stream_1_V_full_n( sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_full_n ),
-    .img_data_stream_1_V_write( sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_write ),
-    .img_data_stream_2_V_din( sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_din ),
-    .img_data_stream_2_V_full_n( sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_full_n ),
-    .img_data_stream_2_V_write( sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_write ),
-    .img_data_stream_0_V_ap_vld( sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_ap_vld ),
-    .img_data_stream_1_V_ap_vld( sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_ap_vld ),
-    .img_data_stream_2_V_ap_vld( sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_ap_vld )
+    .ap_start( sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_start ),
+    .ap_done( sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_done ),
+    .ap_continue( sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_continue ),
+    .ap_idle( sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_idle ),
+    .ap_ready( sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_ready ),
+    .AXI_video_strm_V_data_V_2( sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2 ),
+    .AXI_video_strm_V_data_V_2_ap_vld( sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2_ap_vld ),
+    .video_in_TDATA( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDATA ),
+    .video_in_TVALID( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TVALID ),
+    .video_in_TREADY( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TREADY ),
+    .video_in_TKEEP( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TKEEP ),
+    .video_in_TSTRB( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TSTRB ),
+    .video_in_TUSER( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TUSER ),
+    .video_in_TLAST( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TLAST ),
+    .video_in_TID( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TID ),
+    .video_in_TDEST( sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDEST ),
+    .img_data_stream_0_V_din( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_din ),
+    .img_data_stream_0_V_full_n( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_full_n ),
+    .img_data_stream_0_V_write( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_write ),
+    .img_data_stream_1_V_din( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_din ),
+    .img_data_stream_1_V_full_n( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_full_n ),
+    .img_data_stream_1_V_write( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_write ),
+    .img_data_stream_0_V_ap_vld( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_ap_vld ),
+    .img_data_stream_1_V_ap_vld( sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_ap_vld )
 );
 
 sandbox_Block_proc sandbox_Block_proc_U0(
@@ -271,16 +263,16 @@ FIFO_sandbox_result_channel result_channel_U(
 
 
 
-/// ap_reg_procdone_sandbox_AXIvideo2Mat_U0 assign process. ///
+/// ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0 assign process. ///
 always @ (posedge ap_clk)
-begin : ap_ret_ap_reg_procdone_sandbox_AXIvideo2Mat_U0
+begin : ap_ret_ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0
     if (ap_rst_n_inv == 1'b1) begin
-        ap_reg_procdone_sandbox_AXIvideo2Mat_U0 <= ap_const_logic_0;
+        ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0 <= ap_const_logic_0;
     end else begin
         if ((ap_const_logic_1 == ap_sig_hs_done)) begin
-            ap_reg_procdone_sandbox_AXIvideo2Mat_U0 <= ap_const_logic_0;
-        end else if ((ap_const_logic_1 == sandbox_AXIvideo2Mat_U0_ap_done)) begin
-            ap_reg_procdone_sandbox_AXIvideo2Mat_U0 <= ap_const_logic_1;
+            ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0 <= ap_const_logic_0;
+        end else if ((ap_const_logic_1 == sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_done)) begin
+            ap_reg_procdone_sandbox_AXIvideo2Mat_16_640_480_16_U0 <= ap_const_logic_1;
         end
     end
 end
@@ -306,9 +298,9 @@ begin
 end
 
 /// ap_idle assign process. ///
-always @ (sandbox_AXIvideo2Mat_U0_ap_idle or sandbox_Block_proc_U0_ap_idle or result_channel_empty_n)
+always @ (sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_idle or sandbox_Block_proc_U0_ap_idle or result_channel_empty_n)
 begin
-    if (((ap_const_logic_1 == sandbox_AXIvideo2Mat_U0_ap_idle) & (ap_const_logic_1 == sandbox_Block_proc_U0_ap_idle) & (result_channel_empty_n == ap_const_logic_0))) begin
+    if (((ap_const_logic_1 == sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_idle) & (ap_const_logic_1 == sandbox_Block_proc_U0_ap_idle) & (result_channel_empty_n == ap_const_logic_0))) begin
         ap_idle = ap_const_logic_1;
     end else begin
         ap_idle = ap_const_logic_0;
@@ -324,7 +316,7 @@ begin
         ap_sig_hs_done = ap_const_logic_0;
     end
 end
-assign ap_chn_write_sandbox_AXIvideo2Mat_U0_result_channel = sandbox_AXIvideo2Mat_U0_ap_done;
+assign ap_chn_write_sandbox_AXIvideo2Mat_16_640_480_16_U0_result_channel = sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_done;
 assign ap_done = ap_sig_hs_done;
 assign ap_ready = ap_sig_top_allready;
 
@@ -334,30 +326,29 @@ begin
     ap_rst_n_inv = ~ap_rst_n;
 end
 assign ap_sig_hs_continue = ap_const_logic_1;
-assign ap_sig_top_allready = sandbox_AXIvideo2Mat_U0_ap_ready;
+assign ap_sig_top_allready = sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_ready;
 assign result_channel_U_ap_dummy_ce = ap_const_logic_1;
-assign result_channel_din = sandbox_AXIvideo2Mat_U0_AXI_video_strm_V_data_V_2;
+assign result_channel_din = sandbox_AXIvideo2Mat_16_640_480_16_U0_AXI_video_strm_V_data_V_2;
 assign result_channel_read = sandbox_Block_proc_U0_ap_ready;
-assign result_channel_write = ap_chn_write_sandbox_AXIvideo2Mat_U0_result_channel;
-assign sandbox_AXIvideo2Mat_U0_ap_continue = result_channel_full_n;
-assign sandbox_AXIvideo2Mat_U0_ap_start = ap_start;
-assign sandbox_AXIvideo2Mat_U0_img_data_stream_0_V_full_n = ap_const_logic_1;
-assign sandbox_AXIvideo2Mat_U0_img_data_stream_1_V_full_n = ap_const_logic_1;
-assign sandbox_AXIvideo2Mat_U0_img_data_stream_2_V_full_n = ap_const_logic_1;
-assign sandbox_AXIvideo2Mat_U0_video_in_TDATA = video_in_TDATA;
-assign sandbox_AXIvideo2Mat_U0_video_in_TDEST = video_in_TDEST;
-assign sandbox_AXIvideo2Mat_U0_video_in_TID = video_in_TID;
-assign sandbox_AXIvideo2Mat_U0_video_in_TKEEP = video_in_TKEEP;
-assign sandbox_AXIvideo2Mat_U0_video_in_TLAST = video_in_TLAST;
-assign sandbox_AXIvideo2Mat_U0_video_in_TSTRB = video_in_TSTRB;
-assign sandbox_AXIvideo2Mat_U0_video_in_TUSER = video_in_TUSER;
-assign sandbox_AXIvideo2Mat_U0_video_in_TVALID = video_in_TVALID;
+assign result_channel_write = ap_chn_write_sandbox_AXIvideo2Mat_16_640_480_16_U0_result_channel;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_continue = result_channel_full_n;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_ap_start = ap_start;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_0_V_full_n = ap_const_logic_1;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_img_data_stream_1_V_full_n = ap_const_logic_1;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDATA = video_in_TDATA;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TDEST = video_in_TDEST;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TID = video_in_TID;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TKEEP = video_in_TKEEP;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TLAST = video_in_TLAST;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TSTRB = video_in_TSTRB;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TUSER = video_in_TUSER;
+assign sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TVALID = video_in_TVALID;
 assign sandbox_Block_proc_U0_ap_continue = ap_sig_hs_continue;
 assign sandbox_Block_proc_U0_ap_start = result_channel_empty_n;
 assign sandbox_Block_proc_U0_result = result_channel_dout;
 assign sandbox_Block_proc_U0_video_out_TREADY = video_out_TREADY;
 assign sandbox_CONTROL_BUS_s_axi_U_ap_dummy_ce = ap_const_logic_1;
-assign video_in_TREADY = sandbox_AXIvideo2Mat_U0_video_in_TREADY;
+assign video_in_TREADY = sandbox_AXIvideo2Mat_16_640_480_16_U0_video_in_TREADY;
 assign video_out_TDATA = sandbox_Block_proc_U0_video_out_TDATA;
 assign video_out_TDEST = sandbox_Block_proc_U0_video_out_TDEST;
 assign video_out_TID = sandbox_Block_proc_U0_video_out_TID;

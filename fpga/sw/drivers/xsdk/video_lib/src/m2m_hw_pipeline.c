@@ -62,6 +62,9 @@
 #include "v4l2_helper.h"
 #include "mediactl_helper.h"
 
+#include "opencv/cv.h"
+#include "opencv2/highgui/highgui_c.h"
+
 static struct m2m_hw_stream m2m_hw_stream_handle;
 
 int init_m2m_hw_pipeline(struct video_pipeline *s)
@@ -71,14 +74,14 @@ int init_m2m_hw_pipeline(struct video_pipeline *s)
 	memset(&m2m_hw_stream_handle, 0, sizeof (struct m2m_hw_stream));
 
 	/* Configure media pipelines */
-	set_media_control(s, MEDIA_NODE_1);
+	set_media_control(s, MEDIA_NODE_0);
 
 	/* Set v4l2 device names */
 	/* UVCVIDEO */
 	ret = v4l2_parse_node(s->vid_dev, m2m_hw_stream_handle.video_in.devname);
 	ASSERT(ret < 0, "No video node matching device name %s (%d)\n", s->vid_dev, ret);
 
-	/* TODO CARD NAMES */
+	/* CARD NAMES */
 	ret = v4l2_parse_node(XLNX_SOBEL_IN_CARD_NAME, m2m_hw_stream_handle.video_post_process_in.devname);
 	ASSERT(ret < 0, "No video node matching device name %s (%d)\n", XLNX_SOBEL_IN_CARD_NAME, ret);
 
@@ -92,10 +95,10 @@ int init_m2m_hw_pipeline(struct video_pipeline *s)
 	m2m_hw_stream_handle.video_in.format.bytesperline = s->stride;
 	m2m_hw_stream_handle.video_in.format.colorspace = s->colorspace;
 	m2m_hw_stream_handle.video_in.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	m2m_hw_stream_handle.video_in.mem_type =V4L2_MEMORY_DMABUF ;
+	m2m_hw_stream_handle.video_in.mem_type =V4L2_MEMORY_MMAP;
 	m2m_hw_stream_handle.video_in.setup_ptr = s;
 
-	/* Initialize v4l2 video sobel-in device */
+	/* Initialize v4l2 video sandbox-in device */
 	m2m_hw_stream_handle.video_post_process_in.format.pixelformat = s->in_fourcc;
 	m2m_hw_stream_handle.video_post_process_in.format.width = s->w;
 	m2m_hw_stream_handle.video_post_process_in.format.height = s->h;
@@ -104,13 +107,15 @@ int init_m2m_hw_pipeline(struct video_pipeline *s)
 	m2m_hw_stream_handle.video_post_process_in.buf_type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
 	m2m_hw_stream_handle.video_post_process_in.mem_type = V4L2_MEMORY_MMAP;
 
-	/* Initialize v4l2 video sobel-out device*/
+	/* Initialize v4l2 video sandbox-out device*/
 	m2m_hw_stream_handle.video_post_process_out.format.pixelformat = s->in_fourcc;
 	m2m_hw_stream_handle.video_post_process_out.format.width = s->w;
 	m2m_hw_stream_handle.video_post_process_out.format.height = s->h;
 	m2m_hw_stream_handle.video_post_process_out.format.bytesperline = s->stride;
 	m2m_hw_stream_handle.video_post_process_out.format.colorspace = s->colorspace;
 	m2m_hw_stream_handle.video_post_process_out.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+	// jdanner3 edit 331
+	//m2m_hw_stream_handle.video_post_process_out.mem_type = V4L2_MEMORY_MMAP;
 	m2m_hw_stream_handle.video_post_process_out.mem_type = V4L2_MEMORY_DMABUF;
 
 	return VLIB_SUCCESS;
@@ -124,6 +129,7 @@ Sobel output device re-uses that buffer using DMA buffer sharing mechanism.
 void *process_m2m_hw_event_loop(void *ptr)
 {
 	int i = 0 , ret = 0;
+	// jdanner3 331 uncommented below
 	struct v4l2_exportbuffer eb;
 
 	/* Initialize capture pipeline */
@@ -141,31 +147,122 @@ void *process_m2m_hw_event_loop(void *ptr)
 	/* push cleanup handler */
 	pthread_cleanup_push(uninit_m2m_hw_pipeline, ptr);
 
+	/* VIDEO IN */
+	for (i = 0; i < BUFFER_CNT; ++i)  {
+	 	struct v4l2_buffer buffer;
+		memset(&buffer, 0, sizeof(buffer));
+		buffer.type =V4L2_BUF_TYPE_VIDEO_CAPTURE;
+		buffer.memory = V4L2_MEMORY_MMAP;
+		buffer.index = i;
+		if (-1 == ioctl (m2m_hw_stream_handle.video_in.fd, VIDIOC_QUERYBUF, &buffer)) {
+			perror("VIDIOC_QUERYBUF");
+			exit(EXIT_FAILURE);
+		}
+
+		m2m_hw_stream_handle.video_in.vid_buf[i].v4l2_buff_length=buffer.length;
+
+		/* remember for munmap() */
+		m2m_hw_stream_handle.video_in.vid_buf[i].v4l2_buff = mmap(NULL,
+				buffer.length, PROT_READ|PROT_WRITE, MAP_SHARED,
+				m2m_hw_stream_handle.video_in.fd, buffer.m.offset);
+
+		ASSERT(MAP_FAILED == m2m_hw_stream_handle.video_in.vid_buf[i].v4l2_buff , "mmap failed ");
+		m2m_hw_stream_handle.video_in.vid_buf[i].index = i;
+
+	 }
+
+	/* POST PROCESS IN */
+	for (i = 0; i < BUFFER_CNT; ++i)  {
+	 	struct v4l2_buffer buffer;
+		memset(&buffer, 0, sizeof(buffer));
+		buffer.type =V4L2_BUF_TYPE_VIDEO_OUTPUT;
+		buffer.memory = V4L2_MEMORY_MMAP;
+		buffer.index = i;
+		if (-1 == ioctl (m2m_hw_stream_handle.video_post_process_in.fd, VIDIOC_QUERYBUF, &buffer)) {
+			perror("VIDIOC_QUERYBUF");
+			exit(EXIT_FAILURE);
+		}
+
+		m2m_hw_stream_handle.video_post_process_in.vid_buf[i].v4l2_buff_length=buffer.length;
+
+		m2m_hw_stream_handle.video_post_process_in.vid_buf[i].v4l2_buff = mmap(NULL,
+						buffer.length, PROT_READ|PROT_WRITE, MAP_SHARED,
+						m2m_hw_stream_handle.video_post_process_in.fd, buffer.m.offset);
+
+		ASSERT(MAP_FAILED == m2m_hw_stream_handle.video_post_process_in.vid_buf[i].v4l2_buff , "mmap failed ");
+		m2m_hw_stream_handle.video_post_process_in.vid_buf[i].index = i;
+
+	 }
+
+	// POST PROCESS OUT
+	/*
+	for (i = 0; i < BUFFER_CNT; ++i)  {
+	 	struct v4l2_buffer buffer;
+		memset(&buffer, 0, sizeof(buffer));
+		// jdanner3 331
+		buffer.type =V4L2_BUF_TYPE_VIDEO_CAPTURE;
+		buffer.memory = V4L2_MEMORY_DMABUF;
+		buffer.index = i;
+		if (-1 == ioctl (m2m_hw_stream_handle.video_post_process_out.fd, VIDIOC_QUERYBUF, &buffer)) {
+			perror("VIDIOC_QUERYBUF");
+			exit(EXIT_FAILURE);
+		}
+
+		m2m_hw_stream_handle.video_post_process_out.vid_buf[i].v4l2_buff_length=buffer.length;
+
+		m2m_hw_stream_handle.video_post_process_out.vid_buf[i].v4l2_buff = mmap(NULL,
+				buffer.length, PROT_READ|PROT_WRITE, MAP_SHARED,
+				m2m_hw_stream_handle.video_post_process_out.fd, buffer.m.offset);
+
+		ASSERT(MAP_FAILED == m2m_hw_stream_handle.video_post_process_out.vid_buf[i].v4l2_buff , "mmap failed ");
+		m2m_hw_stream_handle.video_post_process_out.vid_buf[i].index = i;
+	 }
+	*/
+
 	/* Assigning buffer index and set exported buff handle */
 	for(i=0;i<BUFFER_CNT;i++) {
 		m2m_hw_stream_handle.video_in.vid_buf[i].index =i ;
 		m2m_hw_stream_handle.video_post_process_in.vid_buf[i].index=i;
 		m2m_hw_stream_handle.video_post_process_out.vid_buf[i].index =i;
 
-		/* Assign DRM buffer buff-sharing handle */
-		/* TODO: @jdanner3 -- mmap back to userspace? */
-
-		/* export buffer for sharing buffer between two v4l2 devices*/
+		// export buffer for sharing buffer between two v4l2 devices
 		memset(&eb, 0, sizeof(eb));
+		// jdanner3 331 changed to out
 		eb.type = m2m_hw_stream_handle.video_post_process_in.buf_type;
 		eb.index = i;
 		ret = ioctl(m2m_hw_stream_handle.video_post_process_in.fd, VIDIOC_EXPBUF, &eb);
 		ASSERT(ret< 0, "VIDIOC_EXPBUF failed: %s\n", ERRSTR);
 		m2m_hw_stream_handle.video_post_process_in.vid_buf[i].dbuf_fd =eb.fd;
 
-		/*Queue buffer from CAM to post process in */
+		/* MISSING FIXME */
+				/* Assign DRM buffer buff-sharing handle */
+				m2m_hw_stream_handle.video_post_process_out.vid_buf[i].dbuf_fd  =
+						m2m_hw_stream_handle.video_post_process_in.vid_buf[i].dbuf_fd;
+
+#ifdef DEBUG_MODE
+		printf("[m2m_hw_pipeline] queue from CAM to fabric\n");
+#endif
+
+		// THIS ONLY HAPPENS BECAUSE OF BUFFER SHARING
+		/*
 		v4l2_queue_buffer(&m2m_hw_stream_handle.video_in,
 				& (m2m_hw_stream_handle.video_post_process_in.vid_buf[i]));
+		*/
+		v4l2_queue_buffer(&m2m_hw_stream_handle.video_in,
+				& (m2m_hw_stream_handle.video_in.vid_buf[i]));
 
-		/* Queue buffer for out pipeline */
-		/* TODO: should this just mmap back to user space? */
+
+		// need to assign dbuf first
+
+		// Queue buffer for out pipeline
+
 		v4l2_queue_buffer(&m2m_hw_stream_handle.video_post_process_out,
 						& (m2m_hw_stream_handle.video_post_process_out.vid_buf[i]));
+		/*
+		v4l2_queue_buffer(&m2m_hw_stream_handle.video_post_process_out,
+						& (m2m_hw_stream_handle.video_post_process_in.vid_buf[i]));
+*/
+
 	}
 
 	/* Start streaming */
@@ -177,7 +274,7 @@ void *process_m2m_hw_event_loop(void *ptr)
 	ASSERT (ret < 0, "v4l2_device_on [video_post_process_out] failed %d \n",ret);
 
 #ifdef DEBUG_MODE
-	printf("vlib :: Video Capture Pipeline :: started !!");
+	printf("vlib :: Video Capture Pipeline :: started !!\n\n");
 #endif
 	/* Set current buffer index */
 	m2m_hw_stream_handle.current_buffer=-1;
@@ -202,7 +299,48 @@ void *process_m2m_hw_event_loop(void *ptr)
 		if (fds[0].revents & POLLIN) {
 			if (tpg_s2m_count != VDMA_SKIP_FRM_INDEX) {
 				b = v4l2_dequeue_buffer(&m2m_hw_stream_handle.video_in, m2m_hw_stream_handle.video_in.vid_buf);
+
+				printf("video_in: %d\n", tpg_s2m_count);
+				if(!b->v4l2_buff) printf("video_in!b is NULL\n");
+
+				unsigned char* ptr = b->v4l2_buff;
+				if(!ptr) printf("[[ ptr is NULL ]]\n");
+
+				// constructing OpenCV interface
+				IplImage* src_dma = cvCreateImageHeader(cvSize(m2m_hw_stream_handle.video_post_process_out.format.width,
+														m2m_hw_stream_handle.video_post_process_out.format.height),
+														IPL_DEPTH_8U, 2);
+
+				src_dma->widthStep = m2m_hw_stream_handle.video_post_process_out.format.bytesperline;
+				cvSetData(src_dma, ptr, src_dma->widthStep);
+
+				IplImage* saveimg = cvCreateImage(cvGetSize(src_dma), src_dma->depth, 3);
+				IplImage* c1 = cvCreateImage(cvGetSize(saveimg), saveimg->depth, 1);
+				IplImage* c2 = cvCreateImage(cvGetSize(saveimg), saveimg->depth, 1);
+					if(!src_dma->imageData) printf("src_dma is NULL\n");
+					cvSplit(src_dma, c1, c2, NULL, NULL);
+					cvMerge(c1, NULL, NULL, NULL, saveimg);
+
+				printf("\tcvSaveImage...");
+				fflush(stdout);
+					ret = cvSaveImage("/home/c1_video_in.bmp", saveimg, 0);
+				printf("done!\n");
+
+				printf("\tcvReleaseImage...");
+				fflush(stdout);
+					cvReleaseImage(&src_dma);
+					cvReleaseImage(&saveimg);
+					cvReleaseImage(&c1);
+					cvReleaseImage(&c2);
+				printf("done!\n");
+
+				for(i=0;i<BUFFER_CNT;i++) {
+					m2m_hw_stream_handle.video_post_process_in.vid_buf[i].v4l2_buff =
+							m2m_hw_stream_handle.video_in.vid_buf[i].v4l2_buff;
+				}
+
 				v4l2_queue_buffer(&m2m_hw_stream_handle.video_post_process_in, b);
+
 				filter_m2s_qbuf_count++;
 			}
 			tpg_s2m_count++;
@@ -211,36 +349,57 @@ void *process_m2m_hw_event_loop(void *ptr)
 			if (filter_m2s_count != VDMA_SKIP_FRM_INDEX) {
 				b = v4l2_dequeue_buffer(&m2m_hw_stream_handle.video_post_process_in, m2m_hw_stream_handle.video_post_process_in.vid_buf);
 
-				// @jdanner3 -- adding intercept
-				/*
-				printf("Intercepting buffer to write after hw process\n");
-				Mat dst;
-				imdecode(b, 0, &dst);
-    				imwrite("/home/image-hw.bmp", dst);
-				*/
+				printf("post_process_in: %d\n", filter_m2s_count);
+				if(!b->v4l2_buff) printf("video_post_process_in!b is NULL\n");
 
+				unsigned char* ptr = b->v4l2_buff;
+				if(!ptr) printf("[[ ptr is NULL ]]\n");
+
+				// constructing OpenCV interface
+				IplImage* src_dma = cvCreateImageHeader(cvSize(m2m_hw_stream_handle.video_post_process_out.format.width,
+														m2m_hw_stream_handle.video_post_process_out.format.height),
+														IPL_DEPTH_8U, 2);
+
+				src_dma->widthStep = m2m_hw_stream_handle.video_post_process_out.format.bytesperline;
+				cvSetData(src_dma, ptr, src_dma->widthStep);
+
+				IplImage* saveimg = cvCreateImage(cvGetSize(src_dma), src_dma->depth, 3);
+				IplImage* c1 = cvCreateImage(cvGetSize(saveimg), saveimg->depth, 1);
+				IplImage* c2 = cvCreateImage(cvGetSize(saveimg), saveimg->depth, 1);
+					if(!src_dma->imageData) printf("src_dma is NULL\n");
+					cvSplit(src_dma, c1, c2, NULL, NULL);
+					cvMerge(c1, NULL, NULL, NULL, saveimg);
+
+				printf("\tcvSaveImage...");
+				fflush(stdout);
+					ret = cvSaveImage("/home/c1_pp_in.bmp", saveimg, 0);
+				printf("done!\n");
+
+				printf("\tcvReleaseImage...");
+				fflush(stdout);
+					cvReleaseImage(&src_dma);
+					cvReleaseImage(&saveimg);
+					cvReleaseImage(&c1);
+					cvReleaseImage(&c2);
+				printf("done!\n");
 				v4l2_queue_buffer(&m2m_hw_stream_handle.video_in, b);
 				filter_m2s_qbuf_count--;
 			}
-			filter_m2s_count ++;
+			filter_m2s_count++;
 		}
 		if (fds[2].revents & POLLIN) {
-			/*
-			 * TODO: From here, we want to mmap back to userspace instead of out to DRM
-			 */
 			struct buffer *buffer;
 			if (filter_s2m_count != VDMA_SKIP_FRM_INDEX ) {
+				printf("post_process_out: %d\n", filter_s2m_count);
 				buffer = v4l2_dequeue_buffer(&m2m_hw_stream_handle.video_post_process_out,
 							m2m_hw_stream_handle.video_post_process_out.vid_buf);
+				if(!buffer->v4l2_buff) printf("video_post_process_out!b is NULL\n");
 				v4l2_queue_buffer(&m2m_hw_stream_handle.video_post_process_out,buffer);
-
-				// TODO: mmap to userspace?
 			}
 			filter_s2m_count++;
-
 		}
 	}
-
+	printf("Cleaning up!\n");
 	/* push cleanup handler */
 	pthread_cleanup_pop(1);
 

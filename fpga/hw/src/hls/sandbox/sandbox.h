@@ -4,8 +4,8 @@
 #include "hls_video.h"
 
 // maximum image size
-#define MAX_WIDTH  1920
-#define MAX_HEIGHT 1080
+#define MAX_WIDTH  640
+#define MAX_HEIGHT 480
 
 // macros
 #define HARRIS_DETECTOR_PARAM	0.04	// must be 0.04-0.06
@@ -20,8 +20,8 @@
 #define ABS(x)          ((x>0)? x : -x)
 
 // typedef video library core structures
-//typedef hls::stream<ap_axiu<16,1,1,1> > AXI_STREAM;
-typedef hls::stream<ap_axiu<24,1,1,1> > AXI_STREAM;
+typedef hls::stream<ap_axiu<16,1,1,1> > AXI_STREAM;
+//typedef hls::stream<ap_axiu<24,1,1,1> > AXI_STREAM;
 
 // top level function for HW synthesis
 void sandbox(AXI_STREAM& INPUT_STREAM, AXI_STREAM& OUTPUT_STREAM, int rows, int cols);

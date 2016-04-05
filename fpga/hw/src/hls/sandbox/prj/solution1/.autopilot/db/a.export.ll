@@ -30,25 +30,21 @@ target triple = "x86_64-unknown-linux-gnu"
 @str6 = internal constant [1 x i8] zeroinitializer
 @str7 = internal constant [8 x i8] c"ap_fifo\00"
 @str8 = internal constant [1 x i8] zeroinitializer
-@str9 = internal constant [8 x i8] c"ap_fifo\00"
-@str10 = internal constant [1 x i8] zeroinitializer
-@str11 = internal constant [8 x i8] c"ap_fifo\00"
-@str12 = internal constant [1 x i8] zeroinitializer
 
-define void @sandbox(i24* %INPUT_STREAM_V_data_V, i3* %INPUT_STREAM_V_keep_V, i3* %INPUT_STREAM_V_strb_V, i1* %INPUT_STREAM_V_user_V, i1* %INPUT_STREAM_V_last_V, i1* %INPUT_STREAM_V_id_V, i1* %INPUT_STREAM_V_dest_V, i24* %OUTPUT_STREAM_V_data_V, i3* %OUTPUT_STREAM_V_keep_V, i3* %OUTPUT_STREAM_V_strb_V, i1* %OUTPUT_STREAM_V_user_V, i1* %OUTPUT_STREAM_V_last_V, i1* %OUTPUT_STREAM_V_id_V, i1* %OUTPUT_STREAM_V_dest_V, i32 %rows, i32 %cols) {
+define void @sandbox(i16* %INPUT_STREAM_V_data_V, i2* %INPUT_STREAM_V_keep_V, i2* %INPUT_STREAM_V_strb_V, i1* %INPUT_STREAM_V_user_V, i1* %INPUT_STREAM_V_last_V, i1* %INPUT_STREAM_V_id_V, i1* %INPUT_STREAM_V_dest_V, i16* %OUTPUT_STREAM_V_data_V, i2* %OUTPUT_STREAM_V_keep_V, i2* %OUTPUT_STREAM_V_strb_V, i1* %OUTPUT_STREAM_V_user_V, i1* %OUTPUT_STREAM_V_last_V, i1* %OUTPUT_STREAM_V_id_V, i1* %OUTPUT_STREAM_V_dest_V, i32 %rows, i32 %cols) {
 codeRepl:
   %result_channel = alloca i32, align 4
   call void (...)* @_ssdm_op_SpecDataflowPipeline(i32 -1, [1 x i8]* @p_str1807) nounwind
-  call void (...)* @_ssdm_op_SpecBitsMap(i24* %INPUT_STREAM_V_data_V), !map !7
-  call void (...)* @_ssdm_op_SpecBitsMap(i3* %INPUT_STREAM_V_keep_V), !map !11
-  call void (...)* @_ssdm_op_SpecBitsMap(i3* %INPUT_STREAM_V_strb_V), !map !15
+  call void (...)* @_ssdm_op_SpecBitsMap(i16* %INPUT_STREAM_V_data_V), !map !7
+  call void (...)* @_ssdm_op_SpecBitsMap(i2* %INPUT_STREAM_V_keep_V), !map !11
+  call void (...)* @_ssdm_op_SpecBitsMap(i2* %INPUT_STREAM_V_strb_V), !map !15
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %INPUT_STREAM_V_user_V), !map !19
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %INPUT_STREAM_V_last_V), !map !23
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %INPUT_STREAM_V_id_V), !map !27
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %INPUT_STREAM_V_dest_V), !map !31
-  call void (...)* @_ssdm_op_SpecBitsMap(i24* %OUTPUT_STREAM_V_data_V), !map !35
-  call void (...)* @_ssdm_op_SpecBitsMap(i3* %OUTPUT_STREAM_V_keep_V), !map !39
-  call void (...)* @_ssdm_op_SpecBitsMap(i3* %OUTPUT_STREAM_V_strb_V), !map !43
+  call void (...)* @_ssdm_op_SpecBitsMap(i16* %OUTPUT_STREAM_V_data_V), !map !35
+  call void (...)* @_ssdm_op_SpecBitsMap(i2* %OUTPUT_STREAM_V_keep_V), !map !39
+  call void (...)* @_ssdm_op_SpecBitsMap(i2* %OUTPUT_STREAM_V_strb_V), !map !43
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %OUTPUT_STREAM_V_user_V), !map !47
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %OUTPUT_STREAM_V_last_V), !map !51
   call void (...)* @_ssdm_op_SpecBitsMap(i1* %OUTPUT_STREAM_V_id_V), !map !55
@@ -56,21 +52,21 @@ codeRepl:
   call void (...)* @_ssdm_op_SpecBitsMap(i32 %rows), !map !63
   call void (...)* @_ssdm_op_SpecBitsMap(i32 %cols), !map !69
   call void (...)* @_ssdm_op_SpecTopModule([8 x i8]* @str) nounwind
-  %src_data_stream_V_0 = alloca i8, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i8* %src_data_stream_V_0, [8 x i8]* @str1, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str2, [1 x i8]* @str2, [8 x i8]* @str1)
-  %src_data_stream_V_1 = alloca i8, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i8* %src_data_stream_V_1, [8 x i8]* @str3, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str4, [1 x i8]* @str4, [8 x i8]* @str3)
-  %src_data_stream_V_2 = alloca i8, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i8* %src_data_stream_V_2, [8 x i8]* @str5, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str6, [1 x i8]* @str6, [8 x i8]* @str5)
-  call void (...)* @_ssdm_op_SpecInterface(i24* %INPUT_STREAM_V_data_V, i3* %INPUT_STREAM_V_keep_V, i3* %INPUT_STREAM_V_strb_V, i1* %INPUT_STREAM_V_user_V, i1* %INPUT_STREAM_V_last_V, i1* %INPUT_STREAM_V_id_V, i1* %INPUT_STREAM_V_dest_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [13 x i8]* @p_str1806, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807) nounwind
-  call void (...)* @_ssdm_op_SpecInterface(i24* %OUTPUT_STREAM_V_data_V, i3* %OUTPUT_STREAM_V_keep_V, i3* %OUTPUT_STREAM_V_strb_V, i1* %OUTPUT_STREAM_V_user_V, i1* %OUTPUT_STREAM_V_last_V, i1* %OUTPUT_STREAM_V_id_V, i1* %OUTPUT_STREAM_V_dest_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [14 x i8]* @p_str1808, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807) nounwind
+  %src_data_stream_0_V = alloca i8, align 1
+  call void (...)* @_ssdm_op_SpecInterface(i8* %src_data_stream_0_V, [8 x i8]* @str1, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str2, [1 x i8]* @str2, [8 x i8]* @str1)
+  %src_data_stream_1_V = alloca i8, align 1
+  call void (...)* @_ssdm_op_SpecInterface(i8* %src_data_stream_1_V, [8 x i8]* @str3, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str4, [1 x i8]* @str4, [8 x i8]* @str3)
+  call void (...)* @_ssdm_op_SpecInterface(i16* %INPUT_STREAM_V_data_V, i2* %INPUT_STREAM_V_keep_V, i2* %INPUT_STREAM_V_strb_V, i1* %INPUT_STREAM_V_user_V, i1* %INPUT_STREAM_V_last_V, i1* %INPUT_STREAM_V_id_V, i1* %INPUT_STREAM_V_dest_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [13 x i8]* @p_str1806, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807) nounwind
+  call void (...)* @_ssdm_op_SpecInterface(i16* %OUTPUT_STREAM_V_data_V, i2* %OUTPUT_STREAM_V_keep_V, i2* %OUTPUT_STREAM_V_strb_V, i1* %OUTPUT_STREAM_V_user_V, i1* %OUTPUT_STREAM_V_last_V, i1* %OUTPUT_STREAM_V_id_V, i1* %OUTPUT_STREAM_V_dest_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [14 x i8]* @p_str1808, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807) nounwind
   call void (...)* @_ssdm_op_SpecInterface(i32 %rows, [10 x i8]* @p_str1809, i32 0, i32 0, i32 0, i32 0, [12 x i8]* @p_str1810, [5 x i8]* @p_str1811, [1 x i8]* @p_str1807) nounwind
   call void (...)* @_ssdm_op_SpecInterface(i32 %cols, [10 x i8]* @p_str1809, i32 0, i32 0, i32 0, i32 0, [12 x i8]* @p_str1810, [5 x i8]* @p_str1812, [1 x i8]* @p_str1807) nounwind
   call void (...)* @_ssdm_op_SpecInterface(i32 0, [10 x i8]* @p_str1809, i32 0, i32 0, i32 0, i32 0, [12 x i8]* @p_str1810, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807) nounwind
-  call fastcc void @sandbox_AXIvideo2Mat(i32* %result_channel, i24* %INPUT_STREAM_V_data_V, i3* %INPUT_STREAM_V_keep_V, i3* %INPUT_STREAM_V_strb_V, i1* %INPUT_STREAM_V_user_V, i1* %INPUT_STREAM_V_last_V, i1* %INPUT_STREAM_V_id_V, i1* %INPUT_STREAM_V_dest_V, i8* %src_data_stream_V_0, i8* %src_data_stream_V_1, i8* %src_data_stream_V_2)
-  call fastcc void @sandbox_Block__proc(i32* %result_channel, i24* %OUTPUT_STREAM_V_data_V, i3* %OUTPUT_STREAM_V_keep_V, i3* %OUTPUT_STREAM_V_strb_V, i1* %OUTPUT_STREAM_V_user_V, i1* %OUTPUT_STREAM_V_last_V, i1* %OUTPUT_STREAM_V_id_V, i1* %OUTPUT_STREAM_V_dest_V)
+  call fastcc void @"sandbox_AXIvideo2Mat<16, 640, 480, 16>"(i32* %result_channel, i16* %INPUT_STREAM_V_data_V, i2* %INPUT_STREAM_V_keep_V, i2* %INPUT_STREAM_V_strb_V, i1* %INPUT_STREAM_V_user_V, i1* %INPUT_STREAM_V_last_V, i1* %INPUT_STREAM_V_id_V, i1* %INPUT_STREAM_V_dest_V, i8* %src_data_stream_0_V, i8* %src_data_stream_1_V)
+  call fastcc void @sandbox_Block__proc(i32* %result_channel, i16* %OUTPUT_STREAM_V_data_V, i2* %OUTPUT_STREAM_V_keep_V, i2* %OUTPUT_STREAM_V_strb_V, i1* %OUTPUT_STREAM_V_user_V, i1* %OUTPUT_STREAM_V_last_V, i1* %OUTPUT_STREAM_V_id_V, i1* %OUTPUT_STREAM_V_dest_V)
   unreachable
 }
+
+declare void @llvm.dbg.declare(metadata, metadata) nounwind readnone
 
 define weak void @_ssdm_op_SpecInterface(...) nounwind {
 entry:
@@ -126,32 +122,27 @@ entry:
   ret void
 }
 
-define weak i8 @_ssdm_op_PartSelect.i8.i24.i32.i32(i24, i32, i32) nounwind readnone {
+define weak i8 @_ssdm_op_PartSelect.i8.i16.i32.i32(i16, i32, i32) nounwind readnone {
 entry:
-  %empty = call i24 @llvm.part.select.i24(i24 %0, i32 %1, i32 %2)
-  %empty_6 = trunc i24 %empty to i8
-  ret i8 %empty_6
+  %empty = call i16 @llvm.part.select.i16(i16 %0, i32 %1, i32 %2)
+  %empty_7 = trunc i16 %empty to i8
+  ret i8 %empty_7
 }
 
-define weak i24 @_ssdm_op_BitConcatenate.i24.i8.i8.i8(i8, i8, i8) nounwind readnone {
+define weak i16 @_ssdm_op_BitConcatenate.i16.i8.i8(i8, i8) nounwind readnone {
 entry:
-  %empty = zext i8 %1 to i16
-  %empty_7 = zext i8 %2 to i16
-  %empty_8 = shl i16 %empty, 8
-  %empty_9 = or i16 %empty_8, %empty_7
-  %empty_10 = zext i8 %0 to i24
-  %empty_11 = zext i16 %empty_9 to i24
-  %empty_12 = shl i24 %empty_10, 16
-  %empty_13 = or i24 %empty_12, %empty_11
-  ret i24 %empty_13
+  %empty = zext i8 %0 to i16
+  %empty_8 = zext i8 %1 to i16
+  %empty_9 = shl i16 %empty, 8
+  %empty_10 = or i16 %empty_9, %empty_8
+  ret i16 %empty_10
 }
 
-define internal fastcc void @sandbox_AXIvideo2Mat(i32* nocapture %AXI_video_strm_V_data_V_2, i24* %AXI_video_strm_V_data_V, i3* %AXI_video_strm_V_keep_V, i3* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V, i8* %img_data_stream_0_V, i8* %img_data_stream_1_V, i8* %img_data_stream_2_V) {
+define internal fastcc void @"sandbox_AXIvideo2Mat<16, 640, 480, 16>"(i32* nocapture %AXI_video_strm_V_data_V_2, i16* %AXI_video_strm_V_data_V, i2* %AXI_video_strm_V_keep_V, i2* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V, i8* %img_data_stream_0_V, i8* %img_data_stream_1_V) {
 .critedge:
-  call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_2_V, [8 x i8]* @str5, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str6, [1 x i8]* @str6, [8 x i8]* @str5)
   call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_1_V, [8 x i8]* @str3, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str4, [1 x i8]* @str4, [8 x i8]* @str3)
   call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_0_V, [8 x i8]* @str1, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str2, [1 x i8]* @str2, [8 x i8]* @str1)
-  call void (...)* @_ssdm_op_SpecInterface(i1* %AXI_video_strm_V_dest_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_user_V, i3* %AXI_video_strm_V_strb_V, i3* %AXI_video_strm_V_keep_V, i24* %AXI_video_strm_V_data_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [13 x i8]* @p_str1806, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807)
+  call void (...)* @_ssdm_op_SpecInterface(i1* %AXI_video_strm_V_dest_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_user_V, i2* %AXI_video_strm_V_strb_V, i2* %AXI_video_strm_V_keep_V, i16* %AXI_video_strm_V_data_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [13 x i8]* @p_str1806, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807)
   br label %0
 
 ; <label>:0                                       ; preds = %0, %.critedge
@@ -159,11 +150,11 @@ define internal fastcc void @sandbox_AXIvideo2Mat(i32* nocapture %AXI_video_strm
   %tmp = call i32 (...)* @_ssdm_op_SpecRegionBegin([20 x i8]* @p_str1826)
   call void (...)* @_ssdm_op_SpecPipeline(i32 1, i32 1, i32 1, i32 0, [1 x i8]* @p_str1807) nounwind
   call void (...)* @_ssdm_op_SpecLoopTripCount(i32 0, i32 0, i32 0, [1 x i8]* @p_str1807) nounwind
-  %empty = call { i24, i3, i3, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i24P.i3P.i3P.i1P.i1P.i1P.i1P(i24* %AXI_video_strm_V_data_V, i3* %AXI_video_strm_V_keep_V, i3* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V)
-  %tmp_data_V = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty, 0
-  %tmp_user_V = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty, 3
-  %tmp_last_V = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty, 4
-  %empty_14 = call i32 (...)* @_ssdm_op_SpecRegionEnd([20 x i8]* @p_str1826, i32 %tmp)
+  %empty = call { i16, i2, i2, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i16P.i2P.i2P.i1P.i1P.i1P.i1P(i16* %AXI_video_strm_V_data_V, i2* %AXI_video_strm_V_keep_V, i2* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V)
+  %tmp_data_V = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty, 0
+  %tmp_user_V = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty, 3
+  %tmp_last_V = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty, 4
+  %empty_11 = call i32 (...)* @_ssdm_op_SpecRegionEnd([20 x i8]* @p_str1826, i32 %tmp)
   br i1 %tmp_user_V, label %.preheader150.preheader, label %0
 
 .preheader150.preheader:                          ; preds = %0
@@ -173,12 +164,12 @@ define internal fastcc void @sandbox_AXIvideo2Mat(i32* nocapture %AXI_video_strm
 
 .preheader150:                                    ; preds = %.preheader150.preheader, %6
   %axi_last_V1 = phi i1 [ %axi_last_V_3, %6 ], [ %tmp_last_V, %.preheader150.preheader ]
-  %axi_data_V1 = phi i24 [ %axi_data_V_3, %6 ], [ %tmp_data_V, %.preheader150.preheader ]
-  %p_s = phi i11 [ %i_V, %6 ], [ 0, %.preheader150.preheader ]
+  %axi_data_V1 = phi i16 [ %axi_data_V_3, %6 ], [ %tmp_data_V, %.preheader150.preheader ]
+  %p_s = phi i10 [ %i_V, %6 ], [ 0, %.preheader150.preheader ]
   %res = phi i32 [ %res_3, %6 ], [ 0, %.preheader150.preheader ]
-  %exitcond1 = icmp eq i11 %p_s, -128
-  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 1920, i64 1920, i64 1920)
-  %i_V = add i11 %p_s, 1
+  %exitcond1 = icmp eq i10 %p_s, -384
+  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 640, i64 640, i64 640)
+  %i_V = add i10 %p_s, 1
   br i1 %exitcond1, label %7, label %1
 
 ; <label>:1                                       ; preds = %.preheader150
@@ -188,13 +179,13 @@ define internal fastcc void @sandbox_AXIvideo2Mat(i32* nocapture %AXI_video_strm
 
 ; <label>:2                                       ; preds = %_ifconv, %1
   %eol_1 = phi i1 [ %axi_last_V1, %1 ], [ %axi_last_V_2, %_ifconv ]
-  %axi_data_V_1 = phi i24 [ %axi_data_V1, %1 ], [ %p_Val2_s, %_ifconv ]
-  %p_1 = phi i11 [ 0, %1 ], [ %j_V, %_ifconv ]
+  %axi_data_V_1 = phi i16 [ %axi_data_V1, %1 ], [ %p_Val2_s, %_ifconv ]
+  %p_1 = phi i9 [ 0, %1 ], [ %j_V, %_ifconv ]
   %res_1 = phi i32 [ %res, %1 ], [ %res_2, %_ifconv ]
   %eol = phi i1 [ false, %1 ], [ %eol_2, %_ifconv ]
-  %exitcond2 = icmp eq i11 %p_1, -968
-  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 1080, i64 1080, i64 1080)
-  %j_V = add i11 %p_1, 1
+  %exitcond2 = icmp eq i9 %p_1, -32
+  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 480, i64 480, i64 480)
+  %j_V = add i9 %p_1, 1
   br i1 %exitcond2, label %.preheader, label %3
 
 ; <label>:3                                       ; preds = %2
@@ -208,37 +199,35 @@ define internal fastcc void @sandbox_AXIvideo2Mat(i32* nocapture %AXI_video_strm
   br i1 %brmerge, label %_ifconv, label %4
 
 ; <label>:4                                       ; preds = %3
-  %empty_15 = call { i24, i3, i3, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i24P.i3P.i3P.i1P.i1P.i1P.i1P(i24* %AXI_video_strm_V_data_V, i3* %AXI_video_strm_V_keep_V, i3* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V)
-  %tmp_data_V_1 = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty_15, 0
-  %tmp_last_V_1 = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty_15, 4
+  %empty_12 = call { i16, i2, i2, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i16P.i2P.i2P.i1P.i1P.i1P.i1P(i16* %AXI_video_strm_V_data_V, i2* %AXI_video_strm_V_keep_V, i2* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V)
+  %tmp_data_V_1 = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty_12, 0
+  %tmp_last_V_1 = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty_12, 4
   br label %_ifconv
 
 _ifconv:                                          ; preds = %4, %3
   %axi_last_V_2 = phi i1 [ %tmp_last_V_1, %4 ], [ %eol_1, %3 ]
-  %p_Val2_s = phi i24 [ %tmp_data_V_1, %4 ], [ %axi_data_V_1, %3 ]
+  %p_Val2_s = phi i16 [ %tmp_data_V_1, %4 ], [ %axi_data_V_1, %3 ]
   %eol_2 = phi i1 [ %tmp_last_V_1, %4 ], [ %axi_last_V_1_mux, %3 ]
-  %not_tmp_6 = icmp ne i11 %p_1, -969
+  %not_tmp_6 = icmp ne i9 %p_1, -33
   %tmp_4 = trunc i32 %res_1 to i1
   %tmp_8 = or i1 %tmp_4, %not_tmp_6
-  %tmp_5 = call i31 @_ssdm_op_PartSelect.i31.i32.i32.i32(i32 %res_1, i32 1, i32 31)
-  %res_1_s = call i32 @_ssdm_op_BitConcatenate.i32.i31.i1(i31 %tmp_5, i1 %tmp_8)
+  %tmp_9 = call i31 @_ssdm_op_PartSelect.i31.i32.i32.i32(i32 %res_1, i32 1, i32 31)
+  %res_1_s = call i32 @_ssdm_op_BitConcatenate.i32.i31.i1(i31 %tmp_9, i1 %tmp_8)
   %res_2 = select i1 %eol_2, i32 %res_1_s, i32 %res_1
-  %tmp_6 = trunc i24 %p_Val2_s to i8
-  %tmp_7 = call i8 @_ssdm_op_PartSelect.i8.i24.i32.i32(i24 %p_Val2_s, i32 8, i32 15)
-  %tmp_9 = call i8 @_ssdm_op_PartSelect.i8.i24.i32.i32(i24 %p_Val2_s, i32 16, i32 23)
+  %tmp_5 = trunc i16 %p_Val2_s to i8
+  %tmp_6 = call i8 @_ssdm_op_PartSelect.i8.i16.i32.i32(i16 %p_Val2_s, i32 8, i32 15)
   %tmp_s = call i32 (...)* @_ssdm_op_SpecRegionBegin([13 x i8]* @p_str1828)
   call void (...)* @_ssdm_op_SpecProtocol(i32 0, [1 x i8]* @p_str1807) nounwind
-  call void @_ssdm_op_Write.ap_auto.volatile.i8P(i8* %img_data_stream_0_V, i8 %tmp_6)
-  call void @_ssdm_op_Write.ap_auto.volatile.i8P(i8* %img_data_stream_1_V, i8 %tmp_7)
-  call void @_ssdm_op_Write.ap_auto.volatile.i8P(i8* %img_data_stream_2_V, i8 %tmp_9)
-  %empty_16 = call i32 (...)* @_ssdm_op_SpecRegionEnd([13 x i8]* @p_str1828, i32 %tmp_s)
-  %empty_17 = call i32 (...)* @_ssdm_op_SpecRegionEnd([11 x i8]* @p_str1819, i32 %tmp_2)
+  call void @_ssdm_op_Write.ap_auto.volatile.i8P(i8* %img_data_stream_0_V, i8 %tmp_5)
+  call void @_ssdm_op_Write.ap_auto.volatile.i8P(i8* %img_data_stream_1_V, i8 %tmp_6)
+  %empty_13 = call i32 (...)* @_ssdm_op_SpecRegionEnd([13 x i8]* @p_str1828, i32 %tmp_s)
+  %empty_14 = call i32 (...)* @_ssdm_op_SpecRegionEnd([11 x i8]* @p_str1819, i32 %tmp_2)
   store i1 false, i1* %sof_1, align 1
   br label %2
 
 .preheader:                                       ; preds = %2, %5
   %axi_last_V_3 = phi i1 [ %tmp_last_V_2, %5 ], [ %eol_1, %2 ]
-  %axi_data_V_3 = phi i24 [ %tmp_data_V_2, %5 ], [ %axi_data_V_1, %2 ]
+  %axi_data_V_3 = phi i16 [ %tmp_data_V_2, %5 ], [ %axi_data_V_1, %2 ]
   %res_3 = phi i32 [ %res_4, %5 ], [ %res_1, %2 ]
   %eol_3 = phi i1 [ %tmp_last_V_2, %5 ], [ %eol, %2 ]
   br i1 %eol_3, label %6, label %5
@@ -248,15 +237,15 @@ _ifconv:                                          ; preds = %4, %3
   %tmp_3 = call i32 (...)* @_ssdm_op_SpecRegionBegin([18 x i8]* @p_str1827)
   call void (...)* @_ssdm_op_SpecPipeline(i32 1, i32 1, i32 1, i32 0, [1 x i8]* @p_str1807) nounwind
   call void (...)* @_ssdm_op_SpecLoopTripCount(i32 0, i32 0, i32 0, [1 x i8]* @p_str1807) nounwind
-  %empty_18 = call { i24, i3, i3, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i24P.i3P.i3P.i1P.i1P.i1P.i1P(i24* %AXI_video_strm_V_data_V, i3* %AXI_video_strm_V_keep_V, i3* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V)
-  %tmp_data_V_2 = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty_18, 0
-  %tmp_last_V_2 = extractvalue { i24, i3, i3, i1, i1, i1, i1 } %empty_18, 4
+  %empty_15 = call { i16, i2, i2, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i16P.i2P.i2P.i1P.i1P.i1P.i1P(i16* %AXI_video_strm_V_data_V, i2* %AXI_video_strm_V_keep_V, i2* %AXI_video_strm_V_strb_V, i1* %AXI_video_strm_V_user_V, i1* %AXI_video_strm_V_last_V, i1* %AXI_video_strm_V_id_V, i1* %AXI_video_strm_V_dest_V)
+  %tmp_data_V_2 = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty_15, 0
+  %tmp_last_V_2 = extractvalue { i16, i2, i2, i1, i1, i1, i1 } %empty_15, 4
   %res_4 = or i32 %res_3, 2
-  %empty_19 = call i32 (...)* @_ssdm_op_SpecRegionEnd([18 x i8]* @p_str1827, i32 %tmp_3)
+  %empty_16 = call i32 (...)* @_ssdm_op_SpecRegionEnd([18 x i8]* @p_str1827, i32 %tmp_3)
   br label %.preheader
 
 ; <label>:6                                       ; preds = %.preheader
-  %empty_20 = call i32 (...)* @_ssdm_op_SpecRegionEnd([12 x i8]* @p_str1818, i32 %tmp_1)
+  %empty_17 = call i32 (...)* @_ssdm_op_SpecRegionEnd([12 x i8]* @p_str1818, i32 %tmp_1)
   br label %.preheader150
 
 ; <label>:7                                       ; preds = %.preheader150
@@ -264,26 +253,24 @@ _ifconv:                                          ; preds = %4, %3
   ret void
 }
 
-define internal fastcc void @sandbox_Block__proc(i32* nocapture %result, i24* %video_out_V_data_V, i3* %video_out_V_keep_V, i3* %video_out_V_strb_V, i1* %video_out_V_user_V, i1* %video_out_V_last_V, i1* %video_out_V_id_V, i1* %video_out_V_dest_V) {
+define internal fastcc void @sandbox_Block__proc(i32* nocapture %result, i16* %video_out_V_data_V, i2* %video_out_V_keep_V, i2* %video_out_V_strb_V, i1* %video_out_V_user_V, i1* %video_out_V_last_V, i1* %video_out_V_id_V, i1* %video_out_V_dest_V) {
 newFuncRoot:
   %tmp_user_V = alloca i1, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i1* %video_out_V_dest_V, i1* %video_out_V_id_V, i1* %video_out_V_last_V, i1* %video_out_V_user_V, i3* %video_out_V_strb_V, i3* %video_out_V_keep_V, i24* %video_out_V_data_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [14 x i8]* @p_str1808, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807)
+  call void (...)* @_ssdm_op_SpecInterface(i1* %video_out_V_dest_V, i1* %video_out_V_id_V, i1* %video_out_V_last_V, i1* %video_out_V_user_V, i2* %video_out_V_strb_V, i2* %video_out_V_keep_V, i16* %video_out_V_data_V, [5 x i8]* @p_str1805, i32 0, i32 0, i32 0, i32 0, [14 x i8]* @p_str1808, [1 x i8]* @p_str1807, [1 x i8]* @p_str1807)
   %result_load = call i32 @_ssdm_op_Read.ap_auto.volatile.i32P(i32* %result)
   %img_data_stream_0_V_assign = alloca i8, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_0_V_assign, [8 x i8]* @str7, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str8, [1 x i8]* @str8, [8 x i8]* @str7)
+  call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_0_V_assign, [8 x i8]* @str5, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str6, [1 x i8]* @str6, [8 x i8]* @str5)
   %img_data_stream_1_V_assign = alloca i8, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_1_V_assign, [8 x i8]* @str9, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str10, [1 x i8]* @str10, [8 x i8]* @str9)
-  %img_data_stream_2_V_assign = alloca i8, align 1
-  call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_2_V_assign, [8 x i8]* @str11, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str12, [1 x i8]* @str12, [8 x i8]* @str11)
+  call void (...)* @_ssdm_op_SpecInterface(i8* %img_data_stream_1_V_assign, [8 x i8]* @str7, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @str8, [1 x i8]* @str8, [8 x i8]* @str7)
   store i1 true, i1* %tmp_user_V, align 1
   br label %.exitStub
 
 .exitStub:                                        ; preds = %newFuncRoot, %2
-  %p_i = phi i11 [ %i_V, %2 ], [ 0, %newFuncRoot ]
-  %exitcond3_i = icmp eq i11 %p_i, -128
-  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 1920, i64 1920, i64 1920)
-  %i_V = add i11 %p_i, 1
-  br i1 %exitcond3_i, label %"Mat2AXIvideo<24, 1920, 1080, 32>.exit", label %0
+  %p_i = phi i10 [ %i_V, %2 ], [ 0, %newFuncRoot ]
+  %exitcond3_i = icmp eq i10 %p_i, -384
+  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 640, i64 640, i64 640)
+  %i_V = add i10 %p_i, 1
+  br i1 %exitcond3_i, label %"Mat2AXIvideo<16, 640, 480, 16>.exit", label %0
 
 ; <label>:0                                       ; preds = %.exitStub
   call void (...)* @_ssdm_op_SpecLoopName([12 x i8]* @p_str1818) nounwind
@@ -291,52 +278,51 @@ newFuncRoot:
   br label %1
 
 ; <label>:1                                       ; preds = %"operator>>.exit.i", %0
-  %p_3_i = phi i11 [ 0, %0 ], [ %j_V, %"operator>>.exit.i" ]
-  %exitcond4_i = icmp eq i11 %p_3_i, -968
-  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 1080, i64 1080, i64 1080)
-  %j_V = add i11 %p_3_i, 1
+  %p_3_i = phi i9 [ 0, %0 ], [ %j_V, %"operator>>.exit.i" ]
+  %exitcond4_i = icmp eq i9 %p_3_i, -32
+  call void (...)* @_ssdm_op_SpecLoopTripCount(i64 480, i64 480, i64 480)
+  %j_V = add i9 %p_3_i, 1
   br i1 %exitcond4_i, label %2, label %"operator>>.exit.i"
 
 "operator>>.exit.i":                              ; preds = %1
   %tmp_user_V_load = load i1* %tmp_user_V, align 1
   call void (...)* @_ssdm_op_SpecLoopName([11 x i8]* @p_str1819) nounwind
-  %tmp_i_21 = call i32 (...)* @_ssdm_op_SpecRegionBegin([11 x i8]* @p_str1819)
+  %tmp_i_18 = call i32 (...)* @_ssdm_op_SpecRegionBegin([11 x i8]* @p_str1819)
   call void (...)* @_ssdm_op_SpecPipeline(i32 1, i32 1, i32 1, i32 0, [1 x i8]* @p_str1807) nounwind
-  %axi_last_V = icmp eq i11 %p_3_i, -969
+  %axi_last_V = icmp eq i9 %p_3_i, -33
   %tmp_1_i = call i32 (...)* @_ssdm_op_SpecRegionBegin([13 x i8]* @p_str1823)
   call void (...)* @_ssdm_op_SpecProtocol(i32 0, [1 x i8]* @p_str1807) nounwind
-  %tmp_10 = call i8 @_ssdm_op_Read.ap_fifo.volatile.i8P(i8* %img_data_stream_0_V_assign)
-  %tmp_11 = call i8 @_ssdm_op_Read.ap_fifo.volatile.i8P(i8* %img_data_stream_1_V_assign)
-  %tmp = call i8 @_ssdm_op_Read.ap_fifo.volatile.i8P(i8* %img_data_stream_2_V_assign)
+  %tmp_7 = call i8 @_ssdm_op_Read.ap_fifo.volatile.i8P(i8* %img_data_stream_0_V_assign)
+  %tmp = call i8 @_ssdm_op_Read.ap_fifo.volatile.i8P(i8* %img_data_stream_1_V_assign)
   %empty = call i32 (...)* @_ssdm_op_SpecRegionEnd([13 x i8]* @p_str1823, i32 %tmp_1_i)
-  %tmp_data_V = call i24 @_ssdm_op_BitConcatenate.i24.i8.i8.i8(i8 %tmp, i8 %tmp_11, i8 %tmp_10)
-  call void @_ssdm_op_Write.ap_auto.volatile.i24P.i3P.i3P.i1P.i1P.i1P.i1P(i24* %video_out_V_data_V, i3* %video_out_V_keep_V, i3* %video_out_V_strb_V, i1* %video_out_V_user_V, i1* %video_out_V_last_V, i1* %video_out_V_id_V, i1* %video_out_V_dest_V, i24 %tmp_data_V, i3 -1, i3 undef, i1 %tmp_user_V_load, i1 %axi_last_V, i1 undef, i1 undef)
-  %empty_22 = call i32 (...)* @_ssdm_op_SpecRegionEnd([11 x i8]* @p_str1819, i32 %tmp_i_21)
+  %tmp_data_V = call i16 @_ssdm_op_BitConcatenate.i16.i8.i8(i8 %tmp, i8 %tmp_7)
+  call void @_ssdm_op_Write.ap_auto.volatile.i16P.i2P.i2P.i1P.i1P.i1P.i1P(i16* %video_out_V_data_V, i2* %video_out_V_keep_V, i2* %video_out_V_strb_V, i1* %video_out_V_user_V, i1* %video_out_V_last_V, i1* %video_out_V_id_V, i1* %video_out_V_dest_V, i16 %tmp_data_V, i2 -1, i2 undef, i1 %tmp_user_V_load, i1 %axi_last_V, i1 undef, i1 undef)
+  %empty_19 = call i32 (...)* @_ssdm_op_SpecRegionEnd([11 x i8]* @p_str1819, i32 %tmp_i_18)
   store i1 false, i1* %tmp_user_V, align 1
   br label %1
 
 ; <label>:2                                       ; preds = %1
-  %empty_23 = call i32 (...)* @_ssdm_op_SpecRegionEnd([12 x i8]* @p_str1818, i32 %tmp_i)
+  %empty_20 = call i32 (...)* @_ssdm_op_SpecRegionEnd([12 x i8]* @p_str1818, i32 %tmp_i)
   br label %.exitStub
 
-"Mat2AXIvideo<24, 1920, 1080, 32>.exit":          ; preds = %.exitStub
+"Mat2AXIvideo<16, 640, 480, 16>.exit":            ; preds = %.exitStub
   ret void
 }
 
 define weak i31 @_ssdm_op_PartSelect.i31.i32.i32.i32(i32, i32, i32) nounwind readnone {
 entry:
   %empty = call i32 @llvm.part.select.i32(i32 %0, i32 %1, i32 %2)
-  %empty_24 = trunc i32 %empty to i31
-  ret i31 %empty_24
+  %empty_21 = trunc i32 %empty to i31
+  ret i31 %empty_21
 }
 
 define weak i32 @_ssdm_op_BitConcatenate.i32.i31.i1(i31, i1) nounwind readnone {
 entry:
   %empty = zext i31 %0 to i32
-  %empty_25 = zext i1 %1 to i32
-  %empty_26 = shl i32 %empty, 1
-  %empty_27 = or i32 %empty_26, %empty_25
-  ret i32 %empty_27
+  %empty_22 = zext i1 %1 to i32
+  %empty_23 = shl i32 %empty, 1
+  %empty_24 = or i32 %empty_23, %empty_22
+  ret i32 %empty_24
 }
 
 define weak i32 @_ssdm_op_Read.ap_auto.volatile.i32P(i32*) {
@@ -351,11 +337,11 @@ entry:
   ret i8 %empty
 }
 
-define weak void @_ssdm_op_Write.ap_auto.volatile.i24P.i3P.i3P.i1P.i1P.i1P.i1P(i24*, i3*, i3*, i1*, i1*, i1*, i1*, i24, i3, i3, i1, i1, i1, i1) {
+define weak void @_ssdm_op_Write.ap_auto.volatile.i16P.i2P.i2P.i1P.i1P.i1P.i1P(i16*, i2*, i2*, i1*, i1*, i1*, i1*, i16, i2, i2, i1, i1, i1, i1) {
 entry:
-  store i24 %7, i24* %0
-  store i3 %8, i3* %1
-  store i3 %9, i3* %2
+  store i16 %7, i16* %0
+  store i2 %8, i2* %1
+  store i2 %9, i2* %2
   store i1 %10, i1* %3
   store i1 %11, i1* %4
   store i1 %12, i1* %5
@@ -369,23 +355,23 @@ entry:
   ret void
 }
 
-define weak { i24, i3, i3, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i24P.i3P.i3P.i1P.i1P.i1P.i1P(i24*, i3*, i3*, i1*, i1*, i1*, i1*) {
+define weak { i16, i2, i2, i1, i1, i1, i1 } @_ssdm_op_Read.ap_auto.volatile.i16P.i2P.i2P.i1P.i1P.i1P.i1P(i16*, i2*, i2*, i1*, i1*, i1*, i1*) {
 entry:
-  %empty = load i24* %0
-  %empty_28 = load i3* %1
-  %empty_29 = load i3* %2
-  %empty_30 = load i1* %3
-  %empty_31 = load i1* %4
-  %empty_32 = load i1* %5
-  %empty_33 = load i1* %6
-  %mrv_0 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } undef, i24 %empty, 0
-  %mrv1 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } %mrv_0, i3 %empty_28, 1
-  %mrv2 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } %mrv1, i3 %empty_29, 2
-  %mrv3 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } %mrv2, i1 %empty_30, 3
-  %mrv4 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } %mrv3, i1 %empty_31, 4
-  %mrv5 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } %mrv4, i1 %empty_32, 5
-  %mrv6 = insertvalue { i24, i3, i3, i1, i1, i1, i1 } %mrv5, i1 %empty_33, 6
-  ret { i24, i3, i3, i1, i1, i1, i1 } %mrv6
+  %empty = load i16* %0
+  %empty_25 = load i2* %1
+  %empty_26 = load i2* %2
+  %empty_27 = load i1* %3
+  %empty_28 = load i1* %4
+  %empty_29 = load i1* %5
+  %empty_30 = load i1* %6
+  %mrv_0 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } undef, i16 %empty, 0
+  %mrv1 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } %mrv_0, i2 %empty_25, 1
+  %mrv2 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } %mrv1, i2 %empty_26, 2
+  %mrv3 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } %mrv2, i1 %empty_27, 3
+  %mrv4 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } %mrv3, i1 %empty_28, 4
+  %mrv5 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } %mrv4, i1 %empty_29, 5
+  %mrv6 = insertvalue { i16, i2, i2, i1, i1, i1, i1 } %mrv5, i1 %empty_30, 6
+  ret { i16, i2, i2, i1, i1, i1, i1 } %mrv6
 }
 
 define weak void @_ssdm_op_Write.ap_auto.volatile.i8P(i8*, i8) {
@@ -396,7 +382,7 @@ entry:
 
 declare i8 @_autotb_FifoRead_i8(i8*)
 
-declare i24 @llvm.part.select.i24(i24, i32, i32) nounwind readnone
+declare i16 @llvm.part.select.i16(i16, i32, i32) nounwind readnone
 
 declare i32 @llvm.part.select.i32(i32, i32, i32) nounwind readnone
 
@@ -412,17 +398,17 @@ declare i1 @_ssdm_op_PartSelect.i1.i32.i32.i32(i32, i32, i32) nounwind readnone
 !5 = metadata !{metadata !6}
 !6 = metadata !{i32 0, i32 0, i32 1}
 !7 = metadata !{metadata !8}
-!8 = metadata !{i32 0, i32 23, metadata !9}
+!8 = metadata !{i32 0, i32 15, metadata !9}
 !9 = metadata !{metadata !10}
-!10 = metadata !{metadata !"video_in.V.data.V", metadata !5, metadata !"uint24", i32 0, i32 23}
+!10 = metadata !{metadata !"video_in.V.data.V", metadata !5, metadata !"uint16", i32 0, i32 15}
 !11 = metadata !{metadata !12}
-!12 = metadata !{i32 0, i32 2, metadata !13}
+!12 = metadata !{i32 0, i32 1, metadata !13}
 !13 = metadata !{metadata !14}
-!14 = metadata !{metadata !"video_in.V.keep.V", metadata !5, metadata !"uint3", i32 0, i32 2}
+!14 = metadata !{metadata !"video_in.V.keep.V", metadata !5, metadata !"uint2", i32 0, i32 1}
 !15 = metadata !{metadata !16}
-!16 = metadata !{i32 0, i32 2, metadata !17}
+!16 = metadata !{i32 0, i32 1, metadata !17}
 !17 = metadata !{metadata !18}
-!18 = metadata !{metadata !"video_in.V.strb.V", metadata !5, metadata !"uint3", i32 0, i32 2}
+!18 = metadata !{metadata !"video_in.V.strb.V", metadata !5, metadata !"uint2", i32 0, i32 1}
 !19 = metadata !{metadata !20}
 !20 = metadata !{i32 0, i32 0, metadata !21}
 !21 = metadata !{metadata !22}
@@ -440,17 +426,17 @@ declare i1 @_ssdm_op_PartSelect.i1.i32.i32.i32(i32, i32, i32) nounwind readnone
 !33 = metadata !{metadata !34}
 !34 = metadata !{metadata !"video_in.V.dest.V", metadata !5, metadata !"uint1", i32 0, i32 0}
 !35 = metadata !{metadata !36}
-!36 = metadata !{i32 0, i32 23, metadata !37}
+!36 = metadata !{i32 0, i32 15, metadata !37}
 !37 = metadata !{metadata !38}
-!38 = metadata !{metadata !"video_out.V.data.V", metadata !5, metadata !"uint24", i32 0, i32 23}
+!38 = metadata !{metadata !"video_out.V.data.V", metadata !5, metadata !"uint16", i32 0, i32 15}
 !39 = metadata !{metadata !40}
-!40 = metadata !{i32 0, i32 2, metadata !41}
+!40 = metadata !{i32 0, i32 1, metadata !41}
 !41 = metadata !{metadata !42}
-!42 = metadata !{metadata !"video_out.V.keep.V", metadata !5, metadata !"uint3", i32 0, i32 2}
+!42 = metadata !{metadata !"video_out.V.keep.V", metadata !5, metadata !"uint2", i32 0, i32 1}
 !43 = metadata !{metadata !44}
-!44 = metadata !{i32 0, i32 2, metadata !45}
+!44 = metadata !{i32 0, i32 1, metadata !45}
 !45 = metadata !{metadata !46}
-!46 = metadata !{metadata !"video_out.V.strb.V", metadata !5, metadata !"uint3", i32 0, i32 2}
+!46 = metadata !{metadata !"video_out.V.strb.V", metadata !5, metadata !"uint2", i32 0, i32 1}
 !47 = metadata !{metadata !48}
 !48 = metadata !{i32 0, i32 0, metadata !49}
 !49 = metadata !{metadata !50}

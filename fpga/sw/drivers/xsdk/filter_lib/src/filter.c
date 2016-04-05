@@ -5,29 +5,11 @@
  *      Author: ckohn
  */
 
-#include "opencv2/opencv.hpp"
 #include "filter.h"
 
-extern void opencv_sobel(IplImage *src, IplImage *dst);
+extern void opencv_sobel();
 
-void opencv_func(unsigned char *frm_data_in, unsigned char *frm_data_out,
-				 int height, int width, int stride, filter_func func)
+void opencv_func()
 {
-   	// constructing OpenCV interface
-	IplImage* src_dma = cvCreateImageHeader(cvSize(width, height), IPL_DEPTH_8U, 3);
-	IplImage* dst_dma = cvCreateImageHeader(cvSize(width, height), IPL_DEPTH_8U, 3);
-	src_dma->imageData = (char *) frm_data_in;
-	dst_dma->imageData = (char *) frm_data_out;
-	src_dma->widthStep = 2 * stride;
-	dst_dma->widthStep = 2 * stride;
-
-	// call processing function
-	switch (func) {
-	case FILTER_FUNC_SOBEL:
-		opencv_sobel(src_dma, dst_dma);
-		break;
-	}
-
-	cvReleaseImageHeader(&src_dma);
-	cvReleaseImageHeader(&dst_dma);
+	opencv_sobel();
 }

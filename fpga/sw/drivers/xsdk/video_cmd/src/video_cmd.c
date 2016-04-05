@@ -66,25 +66,118 @@
 
 #include "video.h"
 
+#ifdef OPENCV_C
+#include "opencv/cv.h"
+#include "opencv2/highgui/highgui_c.h"
+#endif
+
+#ifdef OPENCV_CPP
+#include "filter.h"
+#endif
+
+typedef enum {
+	MENU_EXIT,
+	MENU_STREAM
+} menu;
+
+int getInput(void)
+{
+	int ch;
+	int ret = -1;
+
+	ch = getchar();
+
+	if (ch >= '0' && ch <= '9')
+		ret = ch - '0';
+
+	while ((ch = getchar()) != '\n' && ch != EOF);
+
+	return ret;
+}
+
 int main(int argc, char *argv[])
 {
-	filter_mode mode = FILTER_MODE_SW;
+	int choice = -1;
+
+#ifdef V4L2
+	filter_mode mode = FILTER_MODE_HW;
 	filter_func func = FILTER_FUNC_SOBEL;
 	video_src src = VIDEO_SRC_UVC;
 
-	/* Initialize video library */
+	// Initialize video library
 	vlib_init();
 	vlib_set_active_height(HRES);
 	vlib_set_active_width(WRES);
+#endif
 
-	/* Start default src/mode */
-	vlib_change_mode(src, func, mode);
+#ifdef OPENCV_C
+	CvCapture* cap;
+	int vinterface = 2;
+	printf("Opening capture on video interface %d...", vinterface);
+	fflush(stdout);
+		cap = cvCaptureFromCAM(vinterface);
+	printf("done!\n");
+	IplImage* frame
+#endif
 
-/*
-exit:
-	vlib_pipeline_stop();
-	vlib_uninit();
-	exit(0);
-*/
+	/* Main control menu */
+	do {
+		printf("------------- Menu Application -----------------\n");
+		printf("%d -> Stream USB\n\n", MENU_STREAM);
+		printf("------------- Exit Application -----------------\n");
+		printf("%d -> Exit\n\n", MENU_EXIT);
+
+		choice = getInput();
+
+		switch(choice) {
+		case MENU_EXIT:
+#ifdef V4L2
+			printf("Exiting v4l2...");
+			fflush(stdout);
+				vlib_pipeline_stop();
+				vlib_uninit();
+			printf("done!\n");
+#endif
+
+#ifdef OPENCV_C
+			printf("Releasing capture...");
+			fflush(stdout);
+				cvReleaseCapture(&cap);
+			printf("done!\n");
+#endif
+			printf("Exiting application.\n");
+			exit(0);
+		case MENU_STREAM:
+#ifdef V4L2
+			printf("Starting v4l2 application...\n");
+			// Start default src/mode
+			vlib_change_mode(src, func, mode);
+#endif
+
+#ifdef OPENCV_C
+			printf("Starting C application...\n");
+			for(;;) {
+				printf("Attempting to read frame...");
+				fflush(stdout);
+					frame = cvQueryFrame(cap);
+				printf("done!\r");
+				fflush(stdout);
+
+				char c = cvWaitKey(30);
+				if(c == 27) printf("***** ESC received *****\n"); break;
+			}
+#endif
+
+#ifdef OPENCV_CPP
+			printf("Starting CPP application...\n");
+			opencv_func();
+#endif
+			break;
+		default:
+			printf("\n\n ********* Invalid input, Please try Again ***********\n");
+			continue;
+		}
+	} while (choice != 0);
+
 	return 0;
 }

@@ -62614,8 +62614,8 @@ void FindStereoCorrespondenceBM(
 
 
 // typedef video library core structures
-//typedef hls::stream<ap_axiu<16,1,1,1> > AXI_STREAM;
-typedef hls::stream<ap_axiu<24,1,1,1> > AXI_STREAM;
+typedef hls::stream<ap_axiu<16,1,1,1> > AXI_STREAM;
+//typedef hls::stream<ap_axiu<24,1,1,1> > AXI_STREAM;
 
 // top level function for HW synthesis
 void sandbox(AXI_STREAM& INPUT_STREAM, AXI_STREAM& OUTPUT_STREAM, int rows, int cols);
@@ -62635,8 +62635,8 @@ void sandbox(AXI_STREAM& video_in, AXI_STREAM& video_out, int rows, int cols)
 //#pragma HLS INTERFACE ap_stable port=rows
 //#pragma HLS INTERFACE ap_stable port=cols
 
-    hls::Mat<1920, 1080, (((0) & ((1 << 4) - 1)) + (((3)-1) << 4))> src;
-    hls::Mat<1920, 1080, (((0) & ((1 << 4) - 1)) + (((3)-1) << 4))> out;
+    hls::Mat<640, 480, (((0) & ((1 << 4) - 1)) + (((2)-1) << 4))> src;
+    hls::Mat<640, 480, (((0) & ((1 << 4) - 1)) + (((2)-1) << 4))> out;
 
     int result;
 

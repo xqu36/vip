@@ -42,7 +42,6 @@
 
 #ifndef ___FILTER_H___
 #define ___FILTER_H___
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -55,8 +54,7 @@ typedef enum
 } filter_func;
 
 /* Calls filter function */
-void opencv_func(unsigned char *frm_data_in, unsigned char *frm_data_out,
-			     int height, int width, int stride, filter_func func);
+void opencv_func();
 
 #ifdef __cplusplus
 }

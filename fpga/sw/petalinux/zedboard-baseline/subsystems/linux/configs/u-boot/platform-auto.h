@@ -186,10 +186,10 @@
 	"nc=setenv stdout nc;setenv stdin nc;\0" \
 	"sdboot=echo boot Petalinux; mmcinfo && fatload mmc 0 ${netstart} ${kernel_img} && bootm \0" \
 	"autoload=no\0" \
-	"clobstart=0x04000000\0" \
-	"netstart=0x04000000\0" \
-	"dtbnetstart=0x05800000\0" \
-	"loadaddr=0x04000000\0" \
+	"clobstart=0x01000000\0" \
+	"netstart=0x01000000\0" \
+	"dtbnetstart=0x02800000\0" \
+	"loadaddr=0x01000000\0" \
 	"boot_img=BOOT.BIN\0" \
 	"load_boot=tftp ${clobstart} ${boot_img}\0" \
 	"update_boot=setenv img boot; setenv psize ${bootsize}; setenv installcmd \"install_boot\"; run load_boot ${installcmd}; setenv img; setenv psize; setenv installcmd\0" \

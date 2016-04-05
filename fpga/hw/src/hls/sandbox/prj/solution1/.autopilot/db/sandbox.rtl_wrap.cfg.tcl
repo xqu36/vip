@@ -5,7 +5,7 @@ set rawDecl ""
 set globalVariable ""
 set PortList ""
 set PortName0 "video_in"
-set BitWidth0 "96"
+set BitWidth0 "64"
 set ArrayOpt0 ""
 set Const0 "0"
 set Volatile0 "0"
@@ -15,7 +15,7 @@ set Dims0 [list 0]
 set Interface0 [list AP_STREAM 0] 
 set structMem0 ""
 set PortName00 "data"
-set BitWidth00 "32"
+set BitWidth00 "16"
 set ArrayOpt00 ""
 set Const00 "0"
 set Volatile00 "0"
@@ -23,7 +23,7 @@ set Pointer00 "0"
 set Reference00 "0"
 set Dims00 [list 0]
 set Interface00 "wire"
-set DataType00 "[list ap_uint 24 ]"
+set DataType00 "[list ap_uint 16 ]"
 set Port00 [list $PortName00 $Interface00 $DataType00 $Pointer00 $Dims00 $Const00 $Volatile00 $ArrayOpt00]
 lappend structMem0 $Port00
 set PortName01 "keep"
@@ -35,7 +35,7 @@ set Pointer01 "0"
 set Reference01 "0"
 set Dims01 [list 0]
 set Interface01 "wire"
-set DataType01 "[list ap_uint 3 ]"
+set DataType01 "[list ap_uint 2 ]"
 set Port01 [list $PortName01 $Interface01 $DataType01 $Pointer01 $Dims01 $Const01 $Volatile01 $ArrayOpt01]
 lappend structMem0 $Port01
 set PortName02 "strb"
@@ -47,7 +47,7 @@ set Pointer02 "0"
 set Reference02 "0"
 set Dims02 [list 0]
 set Interface02 "wire"
-set DataType02 "[list ap_uint 3 ]"
+set DataType02 "[list ap_uint 2 ]"
 set Port02 [list $PortName02 $Interface02 $DataType02 $Pointer02 $Dims02 $Const02 $Volatile02 $ArrayOpt02]
 lappend structMem0 $Port02
 set PortName03 "user"
@@ -99,12 +99,12 @@ set DataType06 "[list ap_uint 1 ]"
 set Port06 [list $PortName06 $Interface06 $DataType06 $Pointer06 $Dims06 $Const06 $Volatile06 $ArrayOpt06]
 lappend structMem0 $Port06
 set structParameter0 [list "int D" "int U" "int TI" "int TD" ]
-set structArgument0 [list 24 1 1 1 ]
-set DataType0 [list "ap_axiu<24, 1, 1, 1>" "struct ap_axiu" $structMem0 1 0 $structParameter0 $structArgument0]
+set structArgument0 [list 16 1 1 1 ]
+set DataType0 [list "ap_axiu<16, 1, 1, 1>" "struct ap_axiu" $structMem0 1 0 $structParameter0 $structArgument0]
 set Port0 [list $PortName0 $Interface0 $DataType0 $Pointer0 $Dims0 $Const0 $Volatile0 $ArrayOpt0]
 lappend PortList $Port0
 set PortName1 "video_out"
-set BitWidth1 "96"
+set BitWidth1 "64"
 set ArrayOpt1 ""
 set Const1 "0"
 set Volatile1 "0"
@@ -114,7 +114,7 @@ set Dims1 [list 0]
 set Interface1 [list AP_STREAM 0] 
 set structMem1 ""
 set PortName10 "data"
-set BitWidth10 "32"
+set BitWidth10 "16"
 set ArrayOpt10 ""
 set Const10 "0"
 set Volatile10 "0"
@@ -122,7 +122,7 @@ set Pointer10 "0"
 set Reference10 "0"
 set Dims10 [list 0]
 set Interface10 "wire"
-set DataType10 "[list ap_uint 24 ]"
+set DataType10 "[list ap_uint 16 ]"
 set Port10 [list $PortName10 $Interface10 $DataType10 $Pointer10 $Dims10 $Const10 $Volatile10 $ArrayOpt10]
 lappend structMem1 $Port10
 set PortName11 "keep"
@@ -134,7 +134,7 @@ set Pointer11 "0"
 set Reference11 "0"
 set Dims11 [list 0]
 set Interface11 "wire"
-set DataType11 "[list ap_uint 3 ]"
+set DataType11 "[list ap_uint 2 ]"
 set Port11 [list $PortName11 $Interface11 $DataType11 $Pointer11 $Dims11 $Const11 $Volatile11 $ArrayOpt11]
 lappend structMem1 $Port11
 set PortName12 "strb"
@@ -146,7 +146,7 @@ set Pointer12 "0"
 set Reference12 "0"
 set Dims12 [list 0]
 set Interface12 "wire"
-set DataType12 "[list ap_uint 3 ]"
+set DataType12 "[list ap_uint 2 ]"
 set Port12 [list $PortName12 $Interface12 $DataType12 $Pointer12 $Dims12 $Const12 $Volatile12 $ArrayOpt12]
 lappend structMem1 $Port12
 set PortName13 "user"
@@ -198,8 +198,8 @@ set DataType16 "[list ap_uint 1 ]"
 set Port16 [list $PortName16 $Interface16 $DataType16 $Pointer16 $Dims16 $Const16 $Volatile16 $ArrayOpt16]
 lappend structMem1 $Port16
 set structParameter1 [list "int D" "int U" "int TI" "int TD" ]
-set structArgument1 [list 24 1 1 1 ]
-set DataType1 [list "ap_axiu<24, 1, 1, 1>" "struct ap_axiu" $structMem1 1 0 $structParameter1 $structArgument1]
+set structArgument1 [list 16 1 1 1 ]
+set DataType1 [list "ap_axiu<16, 1, 1, 1>" "struct ap_axiu" $structMem1 1 0 $structParameter1 $structArgument1]
 set Port1 [list $PortName1 $Interface1 $DataType1 $Pointer1 $Dims1 $Const1 $Volatile1 $ArrayOpt1]
 lappend PortList $Port1
 set PortName2 "rows"

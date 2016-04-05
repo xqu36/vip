@@ -44,162 +44,42 @@
 #include "opencv2/opencv.hpp"
 #include "sobel.h"
 
+using namespace std;
 using namespace cv;
 
-static int x_coeff[3][3];
-static int y_coeff[3][3];
-static unsigned int high_thresh;
-static unsigned int low_thresh;
-static unsigned int inv;
-
-void opencv_sobel_coeff(int x_op[3][3], int y_op[3][3])
+void opencv_sobel()
 {
-	unsigned int i, j;
+	printf(">> Hello from inside opencv_sobel! <<\n");
 
-	for (i = 0; i < 3; i++) {
-		for (j = 0; j < 3; j++) {
-			x_coeff[i][j] = x_op[i][j];
-			y_coeff[i][j] = y_op[i][j];
-		}
-	}
-}
+	VideoCapture capture(-1);
 
-void opencv_sobel_invert(unsigned int val)
-{
-  	inv = val;
-}
-
-void opencv_sobel_thresh(unsigned int max, unsigned int min)
-{
-	high_thresh = max;
-	low_thresh = min;
-}
-
-void opencv_sobel_init()
-{
-	int x_op[3][3] = {
-		{1, 0, -1},
-		{2, 0, -2},
-		{1, 0, -1}
-	};
-
-	int y_op[3][3] = {
-		{ 1,  2,  1},
-		{ 0,  0,  0},
-		{-1, -2, -1}
-	};
-
-	int max = HLS_SOBEL_HIGH_THRESH_VAL;
-	int min = HLS_SOBEL_LOW_THRESH_VAL;
-	int val = HLS_SOBEL_INVERT_VAL;
-
-	opencv_sobel_coeff(x_op, y_op);
-	opencv_sobel_thresh(max, min);
-	opencv_sobel_invert(val);
-}
-
-static Vec2b opencv_sobel_operator(unsigned char y_window[3][3] ,int low_thresh,int high_thresh, int inv)
-{
-	unsigned int i, j;
-
-	short x_weight = 0;
-	short y_weight = 0;
-
-	short edge_weight;
-	unsigned char edge_val;
-	Vec2b pixel;
-
-	// Compute approximation of the gradients in the X-Y direction
-	for (i = 0; i < 3; i++) {
-		for (j = 0; j < 3; j++) {
-			// X direction gradient
-			x_weight = x_weight + (y_window[i][j] * x_coeff[i][j]);
-			// Y direction gradient
-			y_weight = y_weight + (y_window[i][j] * y_coeff[i][j]);
-		}
+	if(!capture.isOpened()) {
+		printf("Capture failed to open.\n");
+		return;
 	}
 
-	edge_weight = ABS(x_weight) + ABS(y_weight);
+	Mat frame;
+	capture >> frame;
 
-	if (edge_weight < 255)
-		edge_val = (255-(unsigned char)(edge_weight));
-	else
-		edge_val = 0;
+	if(frame.empty()) {
+		printf("Frame is captured, but empty.\n");
+		return;
+	}
 
-	// Edge thresholding
-	if(edge_val > high_thresh)
-		edge_val = 255;
-	else if(edge_val < low_thresh)
-		edge_val = 0;
+	printf("Entering capture loop -->\n");
 
-	// Inversion
-	if (inv == 1)
-		edge_val = 255 - edge_val;
+	for(;;) {
+		capture >> frame;
 
-	pixel.val[0] = edge_val;
-	pixel.val[1] = 128;
+		if(frame.empty()) {
+			printf("Frame in loop is empty.\n");
+			break;
+		}
 
-	return pixel;
-}
+		if(waitKey(30) >= 0) break;
+	}
 
-void opencv_sobel(IplImage *_src, IplImage *_dst)
-{
-    Mat src(_src);
-    Mat dst(_dst);
-
-    /*
-    unsigned char y_window[3][3] = {0};
-    unsigned char line_buffer[3][MAX_WIDTH+1];
-    int rows = src.rows;
-    int cols = src.cols;
-    int row, col, i;
-
-    unsigned int img_low_thresh = low_thresh;
-    unsigned int img_high_thresh = high_thresh;
-    unsigned int img_inv = inv;
-
-    assert(rows <= MAX_HEIGHT);
-    assert(cols <= MAX_WIDTH);
-
-    for (row = 0; row < rows + 1; row++) {
-        for (col = 0; col < cols + 1; col++) {
-            Vec2b p;
-            unsigned char pix;
-
-            if (row < rows && col < cols) {
-                p = src.at<Vec2b>(row, col);
-            }
-
-            for (i = 0; i < 3; i++) {
-                y_window[i][2] = y_window[i][1];
-                y_window[i][1] = y_window[i][0];
-            }
-
-            y_window[2][0] = (line_buffer[2][col] = line_buffer[1][col]);
-            y_window[1][0] = (pix = line_buffer[1][col] = line_buffer[0][col]);
-            y_window[0][0] = (line_buffer[0][col] = p.val[0]);
-
-            int output_row = row-1;
-            int output_col = col-1;
-            Vec2b edge;
-
-            if(output_row == 0 || output_col == 0 || output_row == (rows-1) || output_col == (cols-1)){
-                edge.val[0] = 0;
-                edge.val[1] = 128;
-            } else {
-                //edge.val[0] = y_window[1][1];
-                //edge.val[1] = 128;
-                edge = opencv_sobel_operator(y_window , img_low_thresh , img_high_thresh , img_inv );
-            }
-
-            // Account for the spatial shift introduced by the filter.
-            if(output_row >= 0 && output_col >= 0) {
-                dst.at<Vec2b>(output_row, output_col) = edge;
-            }
-        }
-    }
-    */
-    cvtColor(src, dst, CV_BGR2GRAY);
+	printf("Exiting capture loop.\n");
 
     // @jdanner3
     /*
@@ -208,7 +88,8 @@ void opencv_sobel(IplImage *_src, IplImage *_dst)
     Mat outImg;
     split(saveImg, channels);
     merge(channels, 1, outImg);
-    */
 
-    imwrite("/home/image.bmp", dst);
+    printf("---> Saving image from opencv_sobel\n");
+    imwrite("image.bmp", dst);
+    */
 }
