@@ -15,7 +15,7 @@
  * ========================================================================
  */
 
-#include "RegionGrowing.hpp"
+#include "rgrow.hpp"
 
 
 seed_fill::seed_fill()
