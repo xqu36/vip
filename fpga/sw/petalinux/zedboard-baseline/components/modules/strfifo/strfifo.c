@@ -58,22 +58,30 @@ module_param(mystr, charp, S_IRUGO);
 */
 
 struct strfifo_local {
-	void __iomem *C_BASEADDR;
-	struct device *dev;
-	int *txbuffer, *rxbuffer;
-
-	//int32_t irq_mask;
-	int32_t fifo_depth;
-	int32_t tdest;
-
-	//int irq;
-
+	
 	unsigned long mem_start;
 	unsigned long mem_end;
+
+
+  	void __iomem *C_BASEADDR;
+  	struct device *dev;
+	//char *name;
+	int irq;
+	int32_t irq_mask;
+	int32_t fifo_depth;
+	int32_t tdest;
+	int *txbuffer, *rxbuffer;
+	struct completion comp;
+	struct spinlock mlock;
+	struct list_head list;
+	//struct miscdevice misc;
+
+
 };
 // Initializing strfifo struct
 
 static struct strfifo_local *strfifo;
+static LIST_HEAD(strfifo_data_list);
 
 
 /*INITIALIZATION FUNCTIONS*/
@@ -103,7 +111,7 @@ static struct file_operations fops = {
 static int strfifo_open(struct inode *inodep, struct file *filep){
 	
 	filep->private_data = (struct device*)sdev;
-	axi_fifo = sdev;
+	strfifo = sdev;
    	return 0;
 }
 
@@ -115,7 +123,7 @@ static ssize_t strfifo_read(struct file *filep, char *buffer, size_t len, loff_t
 static int strfifo_release(struct inode *inodep, struct file *filep){
 	
 	filep->private_data = NULL;
-
+	printk(KERN_INFO "strfifo: close()\n");
 	return 0;
 }
 /************************/
@@ -125,6 +133,10 @@ static int strfifo_release(struct inode *inodep, struct file *filep){
 
 /* IRQ Functions*/
 
+static void printIRQmask(int mask)
+{
+	//
+};
 static int get_irq_status(void)
 {
 	return readl(strfifo->C_BASEADDR+ISR);
@@ -204,6 +216,74 @@ static int fill_tx_fifo(int *buffer, int xfer_len)
 		return 0;
 				
 }
+
+
+static int strfifo_write_buffer(int *txbuffer, uint32_t tdest, 
+		uint32_t xfer_len)
+{
+	int rc = 0;
+	unsigned long flags;
+
+	reset_irq_reg();
+	set_irq_status(IRQ_TC_MASK);
+	
+	if(fill_tx_fifo(txbuffer, xfer_len) < 0)
+	{
+		printk(KERN_ERR "fill tx fifo failed\n");
+		rc = TX_FAILED;
+		goto fail;
+	}
+	
+	set_tx_tdest_address(tdest);
+	set_tx_len(xfer_len);
+
+// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
+	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0
+	
+	wait_for_completion(&strfifo->comp); 
+
+	spin_lock_irqsave(&strfifo->mlock, flags);
+
+	// check if IRQ_TC_COMPLETE is the only flag received
+	if(strfifo->irq_mask == IRQ_TC_MASK)
+		rc = XFER_SUCCESS;		
+	else 
+	{
+		printk(KERN_ERR "strfifo xfer failed\n");
+		printIRQmask(strfifo->irq_mask);
+		status = TX_FAILED;
+	}
+
+	spin_unlock_irqrestore(&strfifo->mlock, flags);
+
+
+/* Original Code 
+
+	set_tx_tdest_address(tdest);
+	set_tx_len(xfer_len);
+
+	init_completion(&strfifo->comp); //wait for next IRQ
+	spin_lock_irqsave(&strfifo->mlock, flags);
+
+	// check if IRQ_TC_COMPLETE is the only flag received
+	if(strfifo->irq_mask == IRQ_TC_MASK)
+		rc = XFER_SUCCESS;		
+	else 
+	{
+		printk(KERN_ERR "strfifo xfer failed\n");
+		printIRQmask(strfifo->irq_mask);
+		status = TX_FAILED;
+	}
+
+	spin_unlock_irqrestore(&strfifo->mlock, flags);
+*/
+	return rc;
+
+fail:
+	return rc;
+
+};
+
 
 /* RX FUNCTIONS */
 

@@ -58,19 +58,30 @@ module_param(mystr, charp, S_IRUGO);
 */
 
 struct strfifo_local {
-	void __iomem *C_BASEADDR;
-	struct device *dev;
-	int *txbuffer, *rxbuffer;
+	
+	unsigned long mem_start;
+	unsigned long mem_end;
+
+
+  	void __iomem *C_BASEADDR;
+  	struct device *dev;
+	//char *name;
+	int irq;
 	int32_t irq_mask;
 	int32_t fifo_depth;
 	int32_t tdest;
-	int irq;
-	unsigned long mem_start;
-	unsigned long mem_end;
+	int *txbuffer, *rxbuffer;
+	struct completion comp;
+	struct spinlock mlock;
+	struct list_head list;
+	//struct miscdevice misc;
+
+
 };
 // Initializing strfifo struct
 
 static struct strfifo_local *strfifo;
+static LIST_HEAD(strfifo_data_list);
 
 
 /*INITIALIZATION FUNCTIONS*/
@@ -100,7 +111,7 @@ static struct file_operations fops = {
 static int strfifo_open(struct inode *inodep, struct file *filep){
 	
 	filep->private_data = (struct device*)sdev;
-	axi_fifo = sdev;
+	strfifo = sdev;
    	return 0;
 }
 
@@ -112,7 +123,7 @@ static ssize_t strfifo_read(struct file *filep, char *buffer, size_t len, loff_t
 static int strfifo_release(struct inode *inodep, struct file *filep){
 	
 	filep->private_data = NULL;
-
+	printk(KERN_INFO "strfifo: close()\n");
 	return 0;
 }
 /************************/
@@ -122,6 +133,10 @@ static int strfifo_release(struct inode *inodep, struct file *filep){
 
 /* IRQ Functions*/
 
+static void printIRQmask(int mask)
+{
+	//
+};
 static int get_irq_status(void)
 {
 	return readl(strfifo->C_BASEADDR+ISR);
@@ -151,9 +166,8 @@ static irqreturn_t strfifo_irq(int irq, void *lp)
 	return IRQ_HANDLED;
 }
 
-/*****************/
+
 /* TX FUNCTIONS */
-/***************/
 
 static int get_tx_fifo_vacancy(void)
 {
@@ -203,9 +217,76 @@ static int fill_tx_fifo(int *buffer, int xfer_len)
 				
 }
 
-/*****************/
+
+static int strfifo_write_buffer(int *txbuffer, uint32_t tdest, 
+		uint32_t xfer_len)
+{
+	int rc = 0;
+	unsigned long flags;
+
+	reset_irq_reg();
+	set_irq_status(IRQ_TC_MASK);
+	
+	if(fill_tx_fifo(txbuffer, xfer_len) < 0)
+	{
+		printk(KERN_ERR "fill tx fifo failed\n");
+		rc = TX_FAILED;
+		goto fail;
+	}
+	
+	set_tx_tdest_address(tdest);
+	set_tx_len(xfer_len);
+
+// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
+	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0
+	
+	wait_for_completion(&strfifo->comp); 
+
+	spin_lock_irqsave(&strfifo->mlock, flags);
+
+	// check if IRQ_TC_COMPLETE is the only flag received
+	if(strfifo->irq_mask == IRQ_TC_MASK)
+		rc = XFER_SUCCESS;		
+	else 
+	{
+		printk(KERN_ERR "strfifo xfer failed\n");
+		printIRQmask(strfifo->irq_mask);
+		status = TX_FAILED;
+	}
+
+	spin_unlock_irqrestore(&strfifo->mlock, flags);
+
+
+/* Original Code 
+
+	set_tx_tdest_address(tdest);
+	set_tx_len(xfer_len);
+
+	init_completion(&strfifo->comp); //wait for next IRQ
+	spin_lock_irqsave(&strfifo->mlock, flags);
+
+	// check if IRQ_TC_COMPLETE is the only flag received
+	if(strfifo->irq_mask == IRQ_TC_MASK)
+		rc = XFER_SUCCESS;		
+	else 
+	{
+		printk(KERN_ERR "strfifo xfer failed\n");
+		printIRQmask(strfifo->irq_mask);
+		status = TX_FAILED;
+	}
+
+	spin_unlock_irqrestore(&strfifo->mlock, flags);
+*/
+	return rc;
+
+fail:
+	return rc;
+
+};
+
+
 /* RX FUNCTIONS */
-/***************/
+
 static int get_rx_fifo_occupancy(void)
 {
 	return readl(strfifo->C_BASEADDR+RDFO);
@@ -248,7 +329,6 @@ static int strfifo_probe(struct platform_device *pdev)
 	struct resource *r_irq; /* Interrupt resources */
 	struct resource *r_mem; /* IO mem resources */
 	struct device *dev = &pdev->dev;
-	//Setting lp as pointer to strfifo_local
 	struct strfifo_local *lp = NULL;
 
 	int rc = 0;
@@ -282,8 +362,8 @@ static int strfifo_probe(struct platform_device *pdev)
 		goto error1;
 	}
 
-	lp->C_BASEADDR = ioremap(lp->mem_start, lp->mem_end - lp->mem_start + 1);
-	if (!lp->C_BASEADDR) {
+	lp->base_addr = ioremap(lp->mem_start, lp->mem_end - lp->mem_start + 1);
+	if (!lp->base_addr) {
 		dev_err(dev, "strfifo: Could not allocate iomem\n");
 		rc = -EIO;
 		goto error2;
@@ -295,7 +375,7 @@ static int strfifo_probe(struct platform_device *pdev)
 		dev_info(dev, "no IRQ found\n");
 		dev_info(dev, "strfifo at 0x%08x mapped to 0x%08x\n",
 			(unsigned int __force)lp->mem_start,
-			(unsigned int __force)lp->C_BASEADDR);
+			(unsigned int __force)lp->base_addr);
 		return 0;
 	}
 	lp->irq = r_irq->start;
@@ -309,7 +389,7 @@ static int strfifo_probe(struct platform_device *pdev)
 
 	dev_info(dev,"strfifo at 0x%08x mapped to 0x%08x, irq=%d\n",
 		(unsigned int __force)lp->mem_start,
-		(unsigned int __force)lp->C_BASEADDR,
+		(unsigned int __force)lp->base_addr,
 		lp->irq);
 	return 0;
 error3:
@@ -335,7 +415,7 @@ static int strfifo_remove(struct platform_device *pdev)
 
 #ifdef CONFIG_OF
 static struct of_device_id strfifo_of_match[] = {
-	{ .compatible = "xlnx,strfifo", },
+	{ .compatible = "vendor,strfifo", },
 	{ /* end of list */ },
 };
 MODULE_DEVICE_TABLE(of, strfifo_of_match);
@@ -422,4 +502,3 @@ static void __exit strfifo_exit(void)
 
 module_init(strfifo_init);
 module_exit(strfifo_exit);
-
