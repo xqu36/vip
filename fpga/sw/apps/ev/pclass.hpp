@@ -14,11 +14,9 @@
 
 #include "opencv2/opencv.hpp"
 #include "ccomp.hpp"
+#include "segmentation.hpp"
 
-#define MIN_NUM_PIXELS 500
-#define CAR_SIZE_THRESHOLD 700
-#define MIN_AREA 250
-
+using namespace std;
 using namespace cv;
 
 enum objType {
@@ -27,21 +25,25 @@ enum objType {
 };
 
 class PathClassifier {
-protected:
-  Mat carPath;
-  Mat pedPath;
+  
+private:
+  int prows;
+  int pcols;
 
   int carPathCount;
   int pedPathCount;
 
-  bool carPathIsValid;
-  bool pedPathIsValid;
+  int carPathIsValid;
+  int pedPathIsValid;
 
 public:
+  Mat carPath;
+  Mat pedPath;
+
   PathClassifier(int rows, int cols);
 
-  int classify(ConnectedComponent& ccomp);
-  void updatePath(ConnectedComponent& ccomp, int type);
+  int classify(ConnectedComponent& ccomp, const Mat& objmask);
+  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask);
 };
 
 #endif // PCLASS_H

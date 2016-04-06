@@ -1,6 +1,7 @@
 //connected_components.h
 #ifndef CONNECTED_COMPONENTS_H
 #define CONNECTED_COMPONENTS_H
+#include "segmentation.hpp"
 #include <opencv2/core/core.hpp>
 #include <memory>
 

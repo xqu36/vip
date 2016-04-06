@@ -112,22 +112,39 @@ int main() {
     erode(lrTexMask, lrTexMask, sE, Point(-1, -1), 2);
 */
     //erode and dilate
+    /*
     distanceTransform(foregroundMask, dist, CV_DIST_L1, 3);
     threshold(dist, dist, 1, 255, THRESH_BINARY);
     dist.convertTo(dist, CV_8U);
+    */
 
-    erode(dist, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
+    erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
-    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
+    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
 
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
 
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
-      int classification;
-      classification = pclass.classify(vec_cc[i]);
 
+      int cc_pix = vec_cc[i].getPixelCount();
+      if(cc_pix < MIN_NUM_PIXELS) continue;
+
+      Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
+      objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
+
+      dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
+      erode(objmask, objmask, sE_e, Point(-1, -1), 4);
+
+      distanceTransform(objmask, dist, CV_DIST_L1, 3);
+      //threshold(dist, dist, 25, 255, THRESH_BINARY);
+      normalize(dist, dist, 0, 255, NORM_MINMAX);
+      dist.convertTo(dist, CV_8U);
+
+      int classification = -1;
+      classification = pclass.classify(vec_cc[i], dist);
+      
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
@@ -137,7 +154,9 @@ int main() {
           rectangle(frame, r, Scalar(255,0,0));
           break;
         case 2:
-          rectangle(frame, r, Scalar(0,255,0));
+          rectangle(frame, r, Scalar(180,0,180));
+          break;
+        default:
           break;
       }
       /*
@@ -190,7 +209,7 @@ int main() {
 
     /* OUT */
     imshow("frame", frame);
-    imshow("foreground_ed3", foregroundMask_ed3);
+    imshow("path", pclass.carPath);
     
     if(waitKey(30) >= 0) break;
   }

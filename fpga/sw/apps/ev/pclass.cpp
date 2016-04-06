@@ -13,18 +13,22 @@
 
 // constructor
 PathClassifier::PathClassifier(int rows, int cols) {
-  Mat carPath = Mat::zeros(rows, cols, CV_8U);
-  Mat pedPath = Mat::zeros(rows, cols, CV_8U);
 
-  int carPathCount = 0;
-  int pedPathCount = 0;
+  prows = rows;
+  pcols = cols;
 
-  bool carPathIsValid = false;
-  bool pedPathIsValid = false;
+  carPath = Mat::zeros(rows, cols, CV_8U);
+  pedPath = Mat::zeros(rows, cols, CV_8U);
+
+  carPathCount = 0;
+  pedPathCount = 0;
+
+  carPathIsValid = 0;
+  pedPathIsValid = 0;
 }
 
 // initial effort is just for cars
-int PathClassifier::classify(ConnectedComponent& ccomp) {
+int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
 
   // return -1          = not worth of consideration
   // classification 0   = car
@@ -36,13 +40,9 @@ int PathClassifier::classify(ConnectedComponent& ccomp) {
 
   // first stage: Width/Height/Size
   int cc_pix = ccomp.getPixelCount();
-  int bb_area = ccomp.getBoundingBoxArea(); 
 
-  if(cc_pix < MIN_NUM_PIXELS) return -1;
   if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) pedVotes += 30;
-  else carVotes += 30;
-  
-  if(cc_pix > CAR_SIZE_THRESHOLD) carVotes += 10;
+  else if(cc_pix > CAR_SIZE_THRESHOLD) carVotes += 30;
 
   // second stage: Path Position
   if(carPathIsValid) {
@@ -50,30 +50,30 @@ int PathClassifier::classify(ConnectedComponent& ccomp) {
     // @MEGAN get centroid
 
     // check intersections
-    if(/* centroid within the path */ true) carVotes += 20;
-    else carVotes -= 20;
+    //if(/* centroid within the path */ true) carVotes += 20;
+    //else carVotes -= 20;
+
+    if(carVotes >= pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
 
   // If path doesn't exist, create car path using Haar classifier
-  } else updatePath(ccomp, TYPE_CAR);
+  //} else if(carVotes >= pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
+  } else carPathCount++;
+  if(carPathCount > 160) carPathIsValid = 1;
 
-  if(pedVotes < 30 || carVotes < 30) return 2;
+  if(pedVotes < 30 && carVotes < 30) return 2;
   return (carVotes >= pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
-void PathClassifier::updatePath(ConnectedComponent& ccomp, int type) {
-
+void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask) {
   if(type == TYPE_CAR) {
-    Mat objmask = Mat::zeros(/* TODO param res */ 320, 240, CV_8U);
-    objmask = ccomp.getMask(objmask.rows, objmask.cols);
+    carPath |= objmask;
+    carPathCount++;
+  }
 
     // >>> run Haar on mask/image
 
-    if(/* Haar returns postive for car */ true) {
-      carPath |= objmask;
-      carPathCount++;
-    }
-  } else if(type == TYPE_PED) {}
-
-  if(carPathCount > 60) carPathIsValid = true;
+    //if(/* Haar returns postive for car */ true) {
+   // }
+  //} else if(type == TYPE_PED) {}
 }
 
