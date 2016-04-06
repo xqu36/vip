@@ -149,11 +149,14 @@ int main() {
         case TYPE_CAR:
           rectangle(frame, r, Scalar(0,0,255));
           break;
+        case TYPE_CAR_ONPATH:
+          rectangle(frame, r, Scalar(0,0,255), 3);
+          break;
         case TYPE_PED:
           rectangle(frame, r, Scalar(255,0,0));
           break;
-        case 2:
-          rectangle(frame, r, Scalar(255,0,255));
+        case TYPE_UNCLASS: 
+          rectangle(frame, r, Scalar(0,255,0));
           break;
         default:
           break;

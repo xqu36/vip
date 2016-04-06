@@ -21,7 +21,9 @@ using namespace cv;
 
 enum objType {
   TYPE_CAR,
-  TYPE_PED
+  TYPE_CAR_ONPATH,
+  TYPE_PED,
+  TYPE_UNCLASS
 };
 
 class PathClassifier {

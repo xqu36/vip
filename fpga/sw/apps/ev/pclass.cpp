@@ -42,38 +42,54 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
   int cc_pix = ccomp.getPixelCount();
 
   if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) pedVotes += 30;
-  else if(cc_pix > CAR_SIZE_THRESHOLD) carVotes += 30;
+  else carVotes += 30;
+  if(cc_pix > CAR_SIZE_THRESHOLD) carVotes += 10;
 
   // second stage: Path Position
   if(carPathIsValid) {
-    Rect r = ccomp.getBoundingBox();
-    // @MEGAN get centroid
+    Point cntd = ccomp.getCentroidBox();
 
     // check intersections
-    //if(/* centroid within the path */ true) carVotes += 20;
-    //else carVotes -= 20;
+    if(carPath.at<unsigned char>(cntd) > 128) {
+      carVotes += 20;
 
-    if(carVotes >= pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
+      // reasonably sure this is a car; on path with more votes. Update path
+      // TODO: assign weights with updating path?
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask);
+    } else {
+      carVotes -= 20;
 
-  // If path doesn't exist, create car path using Haar classifier
-  //} else if(carVotes >= pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
+      // if not on the path, use Haar to more correctly determine car-ness & add to path
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
+    }
   } else carPathCount++;
+
+  /* TODO: How will we count the carPath as valid? */
   if(carPathCount > 160) carPathIsValid = 1;
 
-  if(pedVotes < 30 && carVotes < 30) return 2;
-  return (carVotes >= pedVotes) ? TYPE_CAR : TYPE_PED;
+  if(pedVotes < 30 && carVotes < 30 || pedVotes == carVotes) 
+    return TYPE_UNCLASS;
+
+  if(carVotes >= 50) 
+    return TYPE_CAR_ONPATH;
+
+  return (carVotes > pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask) {
+
+  // Haar Cascades
   if(type == TYPE_CAR) {
-    carPath |= objmask;
-    carPathCount++;
-  }
+    // @MEGAN
+    // TODO >>> run Haar on mask/image
+    if(/* Haar returns postive for car */ true) {
+      carPath |= objmask;
+    }
 
-    // >>> run Haar on mask/image
+  // already reasonably confident about car-ness
+  } else if(type == TYPE_CAR_ONPATH) {
+      carPath |= objmask;
 
-    //if(/* Haar returns postive for car */ true) {
-   // }
-  //} else if(type == TYPE_PED) {}
+  } else if(type == TYPE_PED) {}
 }
 
