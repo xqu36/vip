@@ -126,10 +126,10 @@ std::shared_ptr< const std::vector<cv::Point2i> > ConnectedComponent::getPixels(
   return m_pixels;
 }
 
+// @jdanner3
 cv::Mat ConnectedComponent::getMask(int rows, int cols){
     cv::Mat mask = cv::Mat::zeros(rows, cols, CV_8UC1);
 
-    /* TODO: Watch out for memory leaks @jdanner3 */
     vector< cv::Point2i >::iterator it = m_pixels->begin();
     while(it != m_pixels->end()) {
         mask.at<unsigned char>(*it) = 0xff;
@@ -138,6 +138,49 @@ cv::Mat ConnectedComponent::getMask(int rows, int cols){
     return mask;
 }
 
+// @jdanner3
+cv::Point ConnectedComponent::getCentroidBox(void) {
+  return cv::Point(m_bb.x+(m_bb.width/2) , m_bb.y+(m_bb.height/2));
+}
+
+// @jdanner3
+cv::Point ConnectedComponent::getCentroidExact(cv::Mat mask) {
+  int maxRow;
+  int maxCol;
+
+  //find max pixel per row
+  int maxPixelPerRow = 0;
+  for(int k = 0; k<mask.rows; k++) {
+    int numofPixPerRow = 0;
+
+    for(int j = 0; j<mask.cols; j++){
+      if(mask.at<unsigned char>(k,j) == 0xff){
+        numofPixPerRow++;
+      }
+    }
+    if(numofPixPerRow > maxPixelPerRow){
+      maxPixelPerRow = numofPixPerRow;
+      maxRow = k;
+    }
+  }
+
+  //find max pixel for col
+  int maxPixelPerCol = 0;
+  for(int m= 0; m<mask.cols; m++){
+    int numofPixPerCol = 0;
+    for(int n=0; n<mask.rows; n++){
+      if(mask.at<unsigned char>(n,m) == 0xff){
+        numofPixPerCol++;
+      }
+    }
+    if(numofPixPerCol > maxPixelPerCol){
+      maxPixelPerCol = numofPixPerCol;
+      maxCol = m;
+    }
+  }
+
+  return cv::Point(maxCol, maxRow);
+}
 
 int ConnectedComponent::getPixelCount(void) const {
   return m_pixel_count;

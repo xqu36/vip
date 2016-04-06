@@ -138,7 +138,6 @@ int main() {
       erode(objmask, objmask, sE_e, Point(-1, -1), 4);
 
       distanceTransform(objmask, dist, CV_DIST_L1, 3);
-      //threshold(dist, dist, 25, 255, THRESH_BINARY);
       normalize(dist, dist, 0, 255, NORM_MINMAX);
       dist.convertTo(dist, CV_8U);
 
@@ -154,54 +153,15 @@ int main() {
           rectangle(frame, r, Scalar(255,0,0));
           break;
         case 2:
-          rectangle(frame, r, Scalar(180,0,180));
+          rectangle(frame, r, Scalar(255,0,255));
           break;
         default:
           break;
       }
-      /*
-         int maxRow;
-        int maxCol;
 
-        //find max pixel per row
-        int maxPixelPerRow = 0;
-        for(int k = 0; k<objmask.rows; k++){
-
-          int numofPixPerRow = 0;
-
-          for(int j = 0; j<objmask.cols; j++){
-              
-              if(objmask.at<unsigned char>(k,j) == 0xff){
-                numofPixPerRow++;
-              }
-          }
-          if(numofPixPerRow > maxPixelPerRow){
-            maxPixelPerRow = numofPixPerRow;
-            maxRow = k;
-          }
-        }
-
-        //find max pixel for col
-        int maxPixelPerCol = 0;
-        for(int m= 0; m<objmask.cols; m++){
-          int numofPixPerCol = 0;
-          for(int n=0; n<objmask.rows; n++){
-            if(objmask.at<unsigned char>(n,m) == 0xff){
-              numofPixPerCol++;
-            }
-          }
-          if(numofPixPerCol > maxPixelPerCol){
-            maxPixelPerCol = numofPixPerCol;
-            maxCol = m;
-          }
-        }
-
-
-        //display circle based on the maxCol and maxRow points
-        circle(frame, Point(maxCol, maxRow), 5, Scalar(0,255,0));
-        circle(frame, Point((r.x + (r.width/2)), (r.y + (r.height/2))), 5, Scalar(0,0,255));
-      */
-
+      //display centroids
+      circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
+      circle(frame, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
     }
 
     vstats.updateFPS();

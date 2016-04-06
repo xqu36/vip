@@ -37,6 +37,8 @@ public:
   int getPixelCount(void) const;
   std::shared_ptr< const std::vector<cv::Point2i> > getPixels(void) const;
   cv::Mat getMask(int rows, int cols);
+  cv::Point getCentroidBox(void);
+  cv::Point getCentroidExact(cv::Mat mask);
 };
 
 void findCC(const cv::Mat& src, std::vector<ConnectedComponent>& cc);
