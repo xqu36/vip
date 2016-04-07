@@ -23,6 +23,7 @@ enum objType {
   TYPE_CAR,
   TYPE_CAR_ONPATH,
   TYPE_PED,
+  TYPE_PED_ONPATH,
   TYPE_UNCLASS
 };
 
