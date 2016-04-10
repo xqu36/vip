@@ -194,22 +194,73 @@ static void set_tx_len(uint32_t nwords)
 
 static int fill_tx_fifo(int *buffer, int xfer_len)
 {
-	// check whether TDFD has enough memory space
-	// if not, set transmit size to max available size
-	// then transmit
-	int k;
-	int WordsLeft = xfer_len; // total remaining words to write
-	int MemSize = get_tx_fifo_vacancy(); // available space to write, in words
+	// total words remaining
+	
+	// check whether TDFD has enough memory
+	// if TDFD has enough memory, write to TDFD
+	// if not, set total words remaining to TDFD memory size
+	// write to TDFD
+	int k, EnoughMem=1;
+	int WordsLeft = xfer_len;
+	int MemSize = get_tx_fifo_vacancy(); // in words
 
 	if (MemSize < WordsLeft)
 	{
-		WordsLeft = MemSize; // if memory space is not enough, set write size to available space size
+		WordsLeft = MemSize;
+		EnoughMem = 0;
 	}
 	for(k=0; k<WordsLeft; k++)
 	{
-		set_tx_fifo(buffer[k]); // write to memory space
+		set_tx_fifo(buffer[k]);
 	}
+	
+	// check whether data is filled in TDFD
+	// because vacancy only changes every 2 words written, I'm doing a general check
+	if (EnoughMem && (MemSize > get_tx_fifo_vacancy()))
+	{
+		return 0;
+	} else if ((!EnoughMem) && (get_tx_fifo_vacancy()==0))
+	{
+		// if not enough memory is available, check whether TDFD is filled completely
+		return 0;
+	} else
+	{
+		return -1;
+	}
+		
+	
+	
 
+		
+
+/* Original Code */
+/*
+	int nR1, nR2, k = 0;
+	// nR1 = number of available storage locations before filling
+	nR1 = get_tx_fifo_vacancy();
+
+	for(k = 0; k < xfer_len; k++)
+		set_tx_fifo(buffer[k]); //write FPGA
+	// nR2 = number of available storage locations after filling
+	nR2 = get_tx_fifo_vacancy();
+
+	
+
+
+	if ((nR1-nR2) != xfer_len)
+		return -1;
+	else
+		return 0;
+*/
+/* Original */
+	/* Original Code
+	if((nR2-nR1) != xfer_len)
+		return -1;
+	else 
+		return 0x00; */
+
+	
+	// nR1 - nR2 = number of locations successfully written
 				
 }
 
