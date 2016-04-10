@@ -171,6 +171,9 @@ static irqreturn_t strfifo_irq(int irq, void *lp)
 
 static int get_tx_fifo_vacancy(void)
 {
+	// the return value tells us how many available writes there are
+	// the register value changes every 2 writes
+	// each write is 4 bytes long, or 1 word long
 	return (int)(readl(strfifo->C_BASEADDR+TDFV)&TDFV_MASK);
 }
 
@@ -191,29 +194,22 @@ static void set_tx_len(uint32_t nwords)
 
 static int fill_tx_fifo(int *buffer, int xfer_len)
 {
-	int nR1, nR2, k = 0;
-	// nR1 = number of available storage locations before filling
-	nR1 = get_tx_fifo_vacancy();
+	// check whether TDFD has enough memory space
+	// if not, set transmit size to max available size
+	// then transmit
+	int k;
+	int WordsLeft = xfer_len; // total remaining words to write
+	int MemSize = get_tx_fifo_vacancy(); // available space to write, in words
 
-	for(k = 0; k < xfer_len; k++)
-		set_tx_fifo(buffer[k]); //write FPGA
-	// nR2 = number of available storage locations after filling
-	nR2 = get_tx_fifo_vacancy();
+	if (MemSize < WordsLeft)
+	{
+		WordsLeft = MemSize; // if memory space is not enough, set write size to available space size
+	}
+	for(k=0; k<WordsLeft; k++)
+	{
+		set_tx_fifo(buffer[k]); // write to memory space
+	}
 
-	
-
-	/* Original Code
-	if((nR2-nR1) != xfer_len)
-		return -1;
-	else 
-		return 0x00; */
-
-	
-	// nR1 - nR2 = number of locations successfully written
-	if ((nR1-nR2) != xfer_len)
-		return -1;
-	else
-		return 0;
 				
 }
 
