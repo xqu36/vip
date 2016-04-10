@@ -235,10 +235,11 @@ static int strfifo_write_buffer(int *txbuffer, uint32_t tdest,
 	}
 	
 	set_tx_tdest_address(tdest);
+	// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
+	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0	
 	set_tx_len(xfer_len);
 
-// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
-	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0
+
 	
 	wait_for_completion(&strfifo->comp); 
 
@@ -330,6 +331,47 @@ static int strfifo_probe(struct platform_device *pdev)
 	struct resource *r_mem; /* IO mem resources */
 	struct device *dev = &pdev->dev;
 	struct strfifo_local *lp = NULL;
+
+
+
+
+
+/* Driver initialization moved from init */
+
+	/* Initialize strfifo class and char driver*/
+
+	printk(KERN_INFO "Initializing the strfifo..\n");
+ 
+	   // Try to dynamically allocate a major number for the device -- more difficult but worth it
+	   majorNumber = register_chrdev(0, DRIVER_NAME, &fops);
+	   if (majorNumber<0){
+	      printk(KERN_ALERT "strfifo failed to register a major number\n");
+	      return majorNumber;
+	   }
+	   printk(KERN_INFO "strfifo: registered correctly with major number %d\n", majorNumber);
+	 
+	   // Register the device class
+	   strfifoClass = class_create(THIS_MODULE, CLASS_NAME);
+	   if (IS_ERR(strfifoClass)){                // Check for error and clean up if there is
+	      unregister_chrdev(majorNumber, DRIVER_NAME);
+	      printk(KERN_ALERT "Failed to register device class\n");
+	      return PTR_ERR(strfifoClass);          // Correct way to return an error on a pointer
+	   }
+	   printk(KERN_INFO "strfifo: device class registered correctly\n");
+	 
+	   // Register the device driver
+	   strfifo = device_create(strfifoClass, NULL, MKDEV(majorNumber, 0), NULL, DRIVER_NAME);
+	   
+	if (IS_ERR(strfifo)){               // Clean up if there is an error
+		class_destroy(strfifoClass);           // Repeated code but the alternative is goto statements
+	        unregister_chrdev(majorNumber, DRIVER_NAME);
+	        printk(KERN_ALERT "Failed to create the device\n");
+	        return PTR_ERR(strfifo);
+	     }
+	   printk(KERN_INFO "strfifo: device class created correctly\n"); // Made it! device was initialized
+	   return 0;
+/* Driver initialization moved from init (end) */	
+
 
 	int rc = 0;
 	
@@ -442,49 +484,11 @@ static int __init strfifo_init(void)
 	printk("<1>Module parameters were (0x%08x) and \"%s\"\n", myint,
 	       mystr);
 
-	platform_driver_register(&strfifo_driver); // register platform driver. Wasn't sure if it's needed.
 
-	/* Initialize strfifo class and char driver*/
-
-	printk(KERN_INFO "Initializing the strfifo..\n");
- 
-	   // Try to dynamically allocate a major number for the device -- more difficult but worth it
-	   majorNumber = register_chrdev(0, DRIVER_NAME, &fops);
-	   if (majorNumber<0){
-	      printk(KERN_ALERT "strfifo failed to register a major number\n");
-	      return majorNumber;
-	   }
-	   printk(KERN_INFO "strfifo: registered correctly with major number %d\n", majorNumber);
-	 
-	   // Register the device class
-	   strfifoClass = class_create(THIS_MODULE, CLASS_NAME);
-	   if (IS_ERR(strfifoClass)){                // Check for error and clean up if there is
-	      unregister_chrdev(majorNumber, DRIVER_NAME);
-	      printk(KERN_ALERT "Failed to register device class\n");
-	      return PTR_ERR(strfifoClass);          // Correct way to return an error on a pointer
-	   }
-	   printk(KERN_INFO "strfifo: device class registered correctly\n");
-	 
-	   // Register the device driver
-	   strfifo = device_create(strfifoClass, NULL, MKDEV(majorNumber, 0), NULL, DRIVER_NAME);
-	   
-	if (IS_ERR(strfifo)){               // Clean up if there is an error
-		class_destroy(strfifoClass);           // Repeated code but the alternative is goto statements
-	        unregister_chrdev(majorNumber, DRIVER_NAME);
-	        printk(KERN_ALERT "Failed to create the device\n");
-	        return PTR_ERR(strfifo);
-	     }
-	   printk(KERN_INFO "strfifo: device class created correctly\n"); // Made it! device was initialized
-	   return 0;
-	
 	//
 	// Default by Xilinx
-	//return platform_driver_register(&strfifo_driver);
+	return platform_driver_register(&strfifo_driver); // Not sure if this is needed
 }
-
-
-
-
 
 
 static void __exit strfifo_exit(void)
