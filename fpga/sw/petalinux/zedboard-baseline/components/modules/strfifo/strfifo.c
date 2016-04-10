@@ -105,6 +105,7 @@ static struct file_operations fops = {
 	.open = strfifo_open,
 	.read = strfifo_read,
 	.release = strfifo_release,
+	.write = strfifo_write,
 	//.unlocked_ioctl = strfifo_ioctl,
 };
 
@@ -194,12 +195,12 @@ static void set_tx_len(uint32_t nwords)
 
 static int fill_tx_fifo(int *buffer, int xfer_len)
 {
-	// total words remaining
-	
 	// check whether TDFD has enough memory
 	// if TDFD has enough memory, write to TDFD
 	// if not, set total words remaining to TDFD memory size
 	// write to TDFD
+
+	// return the lengths of data actually written to TDFD
 	int k, EnoughMem=1;
 	int WordsLeft = xfer_len;
 	int MemSize = get_tx_fifo_vacancy(); // in words
@@ -218,11 +219,11 @@ static int fill_tx_fifo(int *buffer, int xfer_len)
 	// because vacancy only changes every 2 words written, I'm doing a general check
 	if (EnoughMem && (MemSize > get_tx_fifo_vacancy()))
 	{
-		return 0;
+		return WordsLeft;
 	} else if ((!EnoughMem) && (get_tx_fifo_vacancy()==0))
 	{
 		// if not enough memory is available, check whether TDFD is filled completely
-		return 0;
+		return WordsLeft;
 	} else
 	{
 		return -1;
@@ -269,23 +270,30 @@ static int strfifo_write_buffer(int *txbuffer, uint32_t tdest,
 		uint32_t xfer_len)
 {
 	int rc = 0;
+	int len_xfered;
 	unsigned long flags;
 
 	reset_irq_reg();
 	set_irq_status(IRQ_TC_MASK);
-	
-	if(fill_tx_fifo(txbuffer, xfer_len) < 0)
+	len_xfered = fill_tx_fifo(txbuffer, xfer_len); // return value shows the actual transfer length, in words
+	if(len_xfered < 0)
 	{
 		printk(KERN_ERR "fill tx fifo failed\n");
 		rc = TX_FAILED;
 		goto fail;
+	}else{
+		// print transfer length
+		printk("fill tx fifo succeeded\n");
+		printk("Desired Xfer Length: %d, Actual Xfer Length: %d\n",xfer_len, len_xfered );
 	}
 	
 	set_tx_tdest_address(tdest);
 	// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
 	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0	
-	set_tx_len(xfer_len);
-
+	
+	
+	//set_tx_len(xfer_len);
+	set_tx_len(len_xfered); // set the actual transmit length
 
 	
 	wait_for_completion(&strfifo->comp); 
@@ -337,6 +345,7 @@ fail:
 
 static int get_rx_fifo_occupancy(void)
 {
+	
 	return readl(strfifo->C_BASEADDR+RDFO);
 }
 
@@ -363,12 +372,17 @@ static int get_rx_fifo(void)
 // for file operation
 static void read_rx_fifo(int *rxbuffer, int len_)
 {
+	// we should check whether the received packet size matches the transmitted packet size
 	int k = 0;
 	for(k = 0; k < len_; k++)
 		rxbuffer[k] = get_rx_fifo();	
 }
 
-
+static int strfifo_read_buffer(int *rxbuffer, uint32_t tdest, 
+		uint32_t xfer_len)
+{
+	// implementation
+}
 
 // Default by Xilinx
 
