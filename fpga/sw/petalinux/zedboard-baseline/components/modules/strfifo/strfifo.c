@@ -199,7 +199,7 @@ static int get_tx_fifo_vacancy(void)
 	return (int)(readl(strfifo->C_BASEADDR+TDFV)&TDFV_MASK);
 }
 
-static void set_txdest(uint32_t addr)
+static void set_tx_tdest_address(uint32_t addr)
 {
 	writel(addr, strfifo->C_BASEADDR+TDR);
 }
@@ -308,7 +308,7 @@ static int strfifo_write_buffer(int *txbuffer, uint32_t tdest,
 		printk("Desired Xfer Length: %d, Actual Xfer Length: %d\n",xfer_len, len_xfered );
 	}
 	
-	set_txdest(tdest);
+	set_tx_tdest_address(tdest);
 	// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
 	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0	
 	
@@ -393,10 +393,10 @@ static void set_rx_tdest_address(uint32_t addr)
 	writel(addr, strfifo->C_BASEADDR+RDR);
 }
 */
-static uint32_t* get_rxdest(void)
+static uint32_t get_rx_tdest_address(void)
 {
-	// return the address where rx data is stored
-	return (uint32_t*)readl(strfifo->C_BASEADDR+RDR);
+	// return the address where rx data should be transfered to
+	return readl(strfifo->C_BASEADDR+RDR);
 }
 
 static void reset_rx_fifo(void)
@@ -418,12 +418,12 @@ static void read_rx_fifo(uint32_t *rxbuffer, uint32_t len_)
 		rxbuffer[k] = get_rx_fifo();	
 }
 
-static uint32_t strfifo_read_buffer(uint32_t *rxbuffer, uint32_t xfer_len)
+static uint32_t strfifo_read_buffer(uint32_t *rxbuffer, uint32_t tdest,uint32_t xfer_len)
 {
 	int status = 0;
 	uint32_t nwords;
 	uint32_t bytes_received;
-	uint32_t *rxdest;
+	uint32_t rx_tdest; // received date transmission destination
 	int rc_flag = get_irq_status() && IRQ_RC_MASK; // rc_flag is >0 if there's an rc interrupt
 // read ISR an see if there's an RC interrupt
 	if (!IRQ_RC_MASK)  
@@ -446,7 +446,7 @@ static uint32_t strfifo_read_buffer(uint32_t *rxbuffer, uint32_t xfer_len)
 		goto fail;
 	}
 // read receive fifo occupancy (RDFO)
-// RDFD reflects the number of words received in the lastest packet received.
+// RDFO reflects the number of words received in the lastest packet received.
 	nwords = get_rx_fifo_occupancy();
 	if (nwords != xfer_len)
 	{
@@ -458,16 +458,41 @@ static uint32_t strfifo_read_buffer(uint32_t *rxbuffer, uint32_t xfer_len)
 	
 // read RLR. Receive Length. It should give the number of bytes of the corresponding receive data stored in the receive data FIFO.
 	bytes_received = get_rx_len(); // in bytes
-// read RDR , Receive Destination Address.
-// Assign the receive destination address to rxdest of type uint32_t *
-	rxdest = get_rxdest();
+// read RDR , Received Data Transmission Destination Address.
+	rx_tdest = get_rx_tdest_address();
+	if (rx_tdest!=tdest)
+	{
+		printk(KERN_ERR "Received Data Transfer Destination Corrupted. axi xfer failed\n");
+		status = RX_FAILED;
+		goto fail;
+	{
+	
 // read RDFO again, makesure that the received data hasn't changed.
-
+	nwords = get_rx_fifo_occupancy();
+	if (nwords != xfer_len)
+	{
+		// xfer_len should be in words
+		printk(KERN_ERR "Wrong Received Data Length. axi xfer failed\n");
+		status = RX_FAILED;
+		goto fail;
+	}
 // read data and store it into buffer
+	read_rx_fifo(rxbuffer, xfer_len); //read FPGA
+	// data should now be read and stored in rxbuffer
 
 // read RDFO again, now the occupancy should be 0, since all the data has been read
-
-
+	nwords = get_rx_fifo_occupancy();
+	if (nwords == 0)
+	{
+		printk("axi xfer succeeded\n");
+		status = XFER_SUCCESS;
+		goto fail;
+	} else
+	{
+		printk(KERN_ERR "Received Data Transmission incomplete. axi xfer failed\n");
+		status = RX_FAILED;
+		goto fail;
+	}
 fail:
 	//spin_unlock_irqrestore(&axi_fifo->mlock, flags); //restore IRQ
 	return status;
