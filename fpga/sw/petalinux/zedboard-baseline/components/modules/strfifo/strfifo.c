@@ -46,6 +46,22 @@ MODULE_DESCRIPTION
 #define TxUSER 0x38
 
 
+// ISR bit mask
+#define IRQ_RFPE_MASK (1<<19)
+#define IRQ_RFPF_MASK (1<<20)
+#define IRQ_TFPE_MASK (1<<21)
+#define IRQ_TFPF_MASK (1<<22)
+#define IRQ_RRC_MASK (1<<23)
+#define IRQ_TRC_MASK (1<<24)
+#define IRQ_TSE_MASK (1<<25)
+#define IRQ_RC_MASK (1<<26)
+#define IRQ_TC_MASK (1<<27)
+#define IRQ_TPOE_MASK (1<<28)
+#define IRQ_RPUE_MASK (1<<29)
+#define IRQ_RPORE_MASK (1<<30)
+#define IRQ_RPURE_MASK (1<<31)
+
+
 
 /* Simple example of how to receive command line parameters to your module.
    Delete if you don't need them */
@@ -400,8 +416,10 @@ static void read_rx_fifo(int *rxbuffer, int len_)
 static int strfifo_read_buffer(int *rxbuffer, uint32_t tdest, 
 		uint32_t xfer_len)
 {
+
+	int rc_flag = ( get_irq_status() && ;
 // read ISR an see if there's an RC interrupt
-	
+	if (IRQ_RC_MASK)  // see if there is Receive_Complete Interrupt. rc_flag should be 1
 
 // reset ISR
 
