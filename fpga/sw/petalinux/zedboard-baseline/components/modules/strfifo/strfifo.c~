@@ -364,7 +364,7 @@ fail:
 
 /* RX FUNCTIONS */
 
-static int get_rx_fifo_occupancy(void)
+static uint32_t get_rx_fifo_occupancy(void)
 {
 	
 	return readl(strfifo->C_BASEADDR+RDFO);
@@ -379,7 +379,7 @@ static void set_rx_len(uint32_t nwords)
 }
 */
 
-static int get_rx_len(void)
+static uint32_t get_rx_len(void)
 {
 	
 	return readl(strfifo->C_BASEADDR+RLR);
@@ -393,10 +393,10 @@ static void set_rx_tdest_address(uint32_t addr)
 	writel(addr, strfifo->C_BASEADDR+RDR);
 }
 */
-static int get_rxdest(void)
+static uint32_t* get_rxdest(void)
 {
 	// return the address where rx data is stored
-	return readl(strfifo->C_BASEADDR+RDR);
+	return (uint32_t*)readl(strfifo->C_BASEADDR+RDR);
 }
 
 static void reset_rx_fifo(void)
@@ -404,25 +404,26 @@ static void reset_rx_fifo(void)
 	writel(RESET_FIFO_MASK, strfifo->C_BASEADDR+RDFR);
 }
 
-static int get_rx_fifo(void)
+static uint32_t get_rx_fifo(void)
 {
 	return readl(strfifo->C_BASEADDR+RDFD);
 }
 
 // for file operation
-static void read_rx_fifo(int *rxbuffer, int len_)
+static void read_rx_fifo(uint32_t *rxbuffer, uint32_t len_)
 {
 	// we should check whether the received packet size matches the transmitted packet size
-	int k = 0;
+	uint32_t k = 0;
 	for(k = 0; k < len_; k++)
 		rxbuffer[k] = get_rx_fifo();	
 }
 
-static int strfifo_read_buffer(int *rxbuffer, uint32_t xfer_len)
+static uint32_t strfifo_read_buffer(uint32_t *rxbuffer, uint32_t xfer_len)
 {
 	int status = 0;
-	int nwords;
-	int bytes_received;
+	uint32_t nwords;
+	uint32_t bytes_received;
+	uint32_t *rxdest;
 	int rc_flag = get_irq_status() && IRQ_RC_MASK; // rc_flag is >0 if there's an rc interrupt
 // read ISR an see if there's an RC interrupt
 	if (!IRQ_RC_MASK)  
@@ -457,8 +458,9 @@ static int strfifo_read_buffer(int *rxbuffer, uint32_t xfer_len)
 	
 // read RLR. Receive Length. It should give the number of bytes of the corresponding receive data stored in the receive data FIFO.
 	bytes_received = get_rx_len(); // in bytes
-// read RDR , Receive Destination Address
-	
+// read RDR , Receive Destination Address.
+// Assign the receive destination address to rxdest of type uint32_t *
+	rxdest = get_rxdest();
 // read RDFO again, makesure that the received data hasn't changed.
 
 // read data and store it into buffer
