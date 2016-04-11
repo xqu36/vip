@@ -381,7 +381,28 @@ static void read_rx_fifo(int *rxbuffer, int len_)
 static int strfifo_read_buffer(int *rxbuffer, uint32_t tdest, 
 		uint32_t xfer_len)
 {
-	// implementation
+// read ISR an see there's an RC interrupt
+
+// reset ISR
+
+// make sure there's no more RC interrupt, or make sure ISR is reset successfully
+
+// read receive fifo occupancy (RDFO)
+// If there's only one packet received, value will be returned
+
+// read RLR. Receive Length. It should give the number of bytes of the corresponding receive data stored in the receive data FIFO.
+
+// read RDR , Receive Destination Address
+
+// read RDFO again, makesure that the received data hasn't changed.
+
+// read data and store it into buffer
+
+// read RDFO again, now the occupancy should be 0, since all the data has been read
+
+
+
+
 }
 
 // Default by Xilinx
