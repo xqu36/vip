@@ -349,11 +349,14 @@ static int get_rx_fifo_occupancy(void)
 	return readl(strfifo->C_BASEADDR+RDFO);
 }
 
+/*
+It is impossible to set rx_len according to data sheet
+
 static void set_rx_len(uint32_t nwords)
 {
 	writel(nwords*4, strfifo->C_BASEADDR+RLR);
 }
-
+*/
 static void set_rx_tdest_address(uint32_t addr)
 {
 	writel(addr, strfifo->C_BASEADDR+RDR);
@@ -381,7 +384,8 @@ static void read_rx_fifo(int *rxbuffer, int len_)
 static int strfifo_read_buffer(int *rxbuffer, uint32_t tdest, 
 		uint32_t xfer_len)
 {
-// read ISR an see there's an RC interrupt
+// read ISR an see if there's an RC interrupt
+	
 
 // reset ISR
 
