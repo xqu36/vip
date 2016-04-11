@@ -178,7 +178,7 @@ static int get_tx_fifo_vacancy(void)
 	return (int)(readl(strfifo->C_BASEADDR+TDFV)&TDFV_MASK);
 }
 
-static void set_tx_tdest_address(uint32_t addr)
+static void set_txdest(uint32_t addr)
 {
 	writel(addr, strfifo->C_BASEADDR+TDR);
 }
@@ -287,7 +287,7 @@ static int strfifo_write_buffer(int *txbuffer, uint32_t tdest,
 		printk("Desired Xfer Length: %d, Actual Xfer Length: %d\n",xfer_len, len_xfered );
 	}
 	
-	set_tx_tdest_address(tdest);
+	set_txdest(tdest);
 	// completion tutorial: https://www.kernel.org/doc/Documentation/scheduler/completion.txt
 	init_completion(&strfifo->comp); //wait for next IRQ," done" set to 0	
 	
@@ -357,9 +357,25 @@ static void set_rx_len(uint32_t nwords)
 	writel(nwords*4, strfifo->C_BASEADDR+RLR);
 }
 */
+
+static int get_rx_len(void)
+{
+	
+	return readl(strfifo->C_BASEADDR+RLR);
+}
+
+/*
+It is impossible to set rx_destination according to data sheet
+
 static void set_rx_tdest_address(uint32_t addr)
 {
 	writel(addr, strfifo->C_BASEADDR+RDR);
+}
+*/
+static int get_rxdest(void)
+{
+	// return the address where rx data is stored
+	return readl(strfifo->C_BASEADDR+RDR);
 }
 
 static void reset_rx_fifo(void)
