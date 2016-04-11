@@ -28,6 +28,11 @@ MODULE_DESCRIPTION
 // The mask for Transmit Data Vacancy (16th - 0th bit)
 #define TDFV_MASK 0xfff
 
+// Status Definition
+#define XFER_SUCCESS 0x00
+#define TX_FAILED (-1)
+#define RX_FAILED (-2)
+
 // Register Addresses 
 #define ISR 0x00 
 #define IER 0x04 
@@ -413,25 +418,47 @@ static void read_rx_fifo(int *rxbuffer, int len_)
 		rxbuffer[k] = get_rx_fifo();	
 }
 
-static int strfifo_read_buffer(int *rxbuffer, uint32_t tdest, 
-		uint32_t xfer_len)
+static int strfifo_read_buffer(int *rxbuffer, uint32_t xfer_len)
 {
-
-	int rc_flag = ( get_irq_status() && ;
+	int status = 0;
+	int nwords;
+	int bytes_received;
+	int rc_flag = get_irq_status() && IRQ_RC_MASK; // rc_flag is >0 if there's an rc interrupt
 // read ISR an see if there's an RC interrupt
-	if (IRQ_RC_MASK)  // see if there is Receive_Complete Interrupt. rc_flag should be 1
+	if (!IRQ_RC_MASK)  
+	{
+		// if there is no rc interrupt, go to fail
+		printk(KERN_ERR "No RC interrupt Received. axi xfer failed\n");
+		status = RX_FAILED;
+		goto fail;
+	}
 
 // reset ISR
-
+	reset_irq_reg();
 // make sure there's no more RC interrupt, or make sure ISR is reset successfully
-
+	rc_flag = get_irq_status() && IRQ_RC_MASK;
+	if (IRQ_RC_MASK)  
+	{
+		// if there is extra rc interrupt, go to fail
+		printk(KERN_ERR "Received Extra RC Interrupt. Read_Buffer Failed\n");
+		status = RX_FAILED;
+		goto fail;
+	}
 // read receive fifo occupancy (RDFO)
-// If there's only one packet received, value will be returned
-
+// RDFD reflects the number of words received in the lastest packet received.
+	nwords = get_rx_fifo_occupancy();
+	if (nwords != xfer_len)
+	{
+		// xfer_len should be in words
+		printk(KERN_ERR "Wrong Received Data Length. axi xfer failed\n");
+		status = RX_FAILED;
+		goto fail;
+	}
+	
 // read RLR. Receive Length. It should give the number of bytes of the corresponding receive data stored in the receive data FIFO.
-
+	bytes_received = get_rx_len(); // in bytes
 // read RDR , Receive Destination Address
-
+	
 // read RDFO again, makesure that the received data hasn't changed.
 
 // read data and store it into buffer
@@ -439,7 +466,9 @@ static int strfifo_read_buffer(int *rxbuffer, uint32_t tdest,
 // read RDFO again, now the occupancy should be 0, since all the data has been read
 
 
-
+fail:
+	//spin_unlock_irqrestore(&axi_fifo->mlock, flags); //restore IRQ
+	return status;
 
 }
 
