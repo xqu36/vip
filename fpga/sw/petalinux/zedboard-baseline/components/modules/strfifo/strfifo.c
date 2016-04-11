@@ -70,7 +70,7 @@ struct strfifo_local {
 	int32_t irq_mask;
 	int32_t fifo_depth;
 	int32_t tdest;
-	int *txbuffer, *rxbuffer;
+	uint32_t *txbuffer, *rxbuffer;
 	struct completion comp;
 	struct spinlock mlock;
 	struct list_head list;
