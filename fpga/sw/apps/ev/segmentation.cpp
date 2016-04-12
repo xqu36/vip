@@ -170,6 +170,9 @@ int main() {
           break;
       }
 
+      // keep this line
+      // don't keep this line
+
       //display centroids
       circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
       circle(frame, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));

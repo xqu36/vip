@@ -31,6 +31,7 @@
 							<tool id="xilinx.gnu.armlinux.c.toolchain.compiler.1179338261" name="ARM Linux gcc compiler" superClass="xilinx.gnu.armlinux.c.toolchain.compiler">
 								<option id="xilinx.gnu.compiler.dircategory.includes.1630749691" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/video_lib/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XILINX_SDK}/data/embeddedsw/ThirdParty/opencv/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/filter_lib/include}&quot;"/>
 								</option>
 								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.1820582162" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" value="gnu.c.optimization.level.none" valueType="enumerated"/>
