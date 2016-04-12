@@ -83,13 +83,16 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     // @MEGAN
     // TODO >>> run Haar on mask/image
     if(/* Haar returns postive for car */ true) {
-      carPath |= objmask;
+  	  carPath.convertTo(carPath, CV_32F);
+      accumulateWeighted(objmask, carPath, 0.03);
+      carPath.convertTo(carPath, CV_8U);
     }
 
   // already reasonably confident about car-ness
   } else if(type == TYPE_CAR_ONPATH) {
-      carPath |= objmask;
-
+      carPath.convertTo(carPath, CV_32F);
+      accumulateWeighted(objmask, carPath, 0.03);
+      carPath.convertTo(carPath, CV_8U);
   } else if(type == TYPE_PED) {}
 }
 

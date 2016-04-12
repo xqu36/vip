@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 
-#define INFILE "img/klaus_high_320x240.mp4"
+#define INFILE "/home/mia/Desktop/EVSSH/mp4/klaus_high.mp4"
 
 #define DETECTSHADOWS 1
 #define NMIXTURES 3
