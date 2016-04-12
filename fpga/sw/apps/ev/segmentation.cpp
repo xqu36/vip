@@ -59,7 +59,14 @@ int main() {
 
   PathClassifier pclass(vstats.getHeight(), vstats.getWidth());
 
+  int pedCount = 0;
+  int carCount = 0;
+
+  int instPedCount, instCarCount;
+  int prevPedCount, prevCarCount;
+
   // processing loop
+  cout << endl;
   for(;;) {
 
     /* PRE-PROCESSING */
@@ -125,6 +132,11 @@ int main() {
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
 
+    prevCarCount = instCarCount;
+    prevPedCount = instPedCount;
+
+    instPedCount = 0;
+    instCarCount = 0;
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
@@ -153,15 +165,19 @@ int main() {
       switch(classification) {
         case TYPE_CAR:
           rectangle(frame, r, Scalar(0,0,255));
+          instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
           rectangle(frame, r, Scalar(0,0,255), 3);
+          instCarCount++;
           break;
         case TYPE_PED:
           rectangle(frame, r, Scalar(255,0,0));
+          instPedCount++;
           break;
         case TYPE_PED_ONPATH:
           rectangle(frame, r, Scalar(255,0,0), 3);
+          instPedCount++;
           break;
         case TYPE_UNCLASS: 
           rectangle(frame, r, Scalar(0,255,0));
@@ -170,21 +186,23 @@ int main() {
           break;
       }
 
-      // keep this line
-      // don't keep this line
-
       //display centroids
       circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
       circle(frame, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
     }
 
     vstats.updateFPS();
-    vstats.displayStats();
+    //vstats.displayStats();
 
     /* OUT */
     imshow("frame", frame);
     imshow("path", pclass.carPath);
     imshow("ppath", pclass.pedPath);
+
+    if(prevPedCount > instPedCount) pedCount++; 
+    if(prevCarCount > instCarCount) carCount++; 
+
+    cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
     if(waitKey(30) >= 0) break;
   }
