@@ -14,11 +14,20 @@
 using namespace cv;
 using namespace std;
 
-int main() {
+int main(int argc, char** argv) {
 
   /* IN */
 
-  VideoCapture capture(INFILE);
+  string infile = "";
+
+  if(argc > 1) {
+    infile = argv[1];
+  } else {
+    cout << "Please input video => ./segmentation [.mp4]" << endl;
+    exit(0);
+  }
+
+  VideoCapture capture(infile);
   VideoStats vstats;
 
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
