@@ -2,7 +2,7 @@
 
 CC := arm-xilinx-eabi-gcc
 CC_FLAGS :=     
-CFLAGS := 
+CFLAGS := -MMD -MP
 LN_FLAGS := -lrsa -Wl,--start-group,-lxil,-lgcc,-lc,--end-group -Wl,--start-group,-lxilffs,-lxil,-lgcc,-lc,--end-group -Wl,--start-group,-lrsa,-lxil,-lgcc,-lc,--end-group  -Wl,--gc-sections
 
 c_SOURCES := $(wildcard *.c)
@@ -15,6 +15,7 @@ OBJS += $(patsubst %.s, %.o, $(s_SOURCES))
 LSCRIPT := -Tlscript.ld
 
 CURRENT_DIR = $(shell pwd)
+DEPFILES := $(patsubst %.o, %.d, $(OBJS))
 LIBS := zynq_fsbl_bsp/ps7_cortexa9_0/lib/libxil.a
 EXEC := executable.elf
 
@@ -39,5 +40,6 @@ $(LIBS):
 	$(CC) $(CC_FLAGS) $(CFLAGS) -c $< -o $@ $(INCLUDEPATH)
 
 clean:
-	rm -rf $(OBJS) $(LIBS) $(EXEC)
+	rm -rf $(OBJS) $(LIBS) $(EXEC) *.o
 
+-include $(DEPFILES)

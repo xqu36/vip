@@ -135,9 +135,14 @@ int main() {
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
       dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
-      erode(objmask, objmask, sE_e, Point(-1, -1), 4);
+      //erode(objmask, objmask, sE_d, Point(-1, -1), 4);
 
-      distanceTransform(objmask, dist, CV_DIST_L1, 3);
+      distanceTransform(objmask, dist, CV_DIST_L2, 3);
+      normalize(dist, dist, 0, 255, NORM_MINMAX);
+      threshold(dist, dist, 150, 255, THRESH_TOZERO);
+      dist.convertTo(dist, CV_8U);
+
+      distanceTransform(dist, dist, CV_DIST_L2, 3);
       normalize(dist, dist, 0, 255, NORM_MINMAX);
       dist.convertTo(dist, CV_8U);
 
@@ -155,12 +160,18 @@ int main() {
         case TYPE_PED:
           rectangle(frame, r, Scalar(255,0,0));
           break;
+        case TYPE_PED_ONPATH:
+          rectangle(frame, r, Scalar(255,0,0), 3);
+          break;
         case TYPE_UNCLASS: 
           rectangle(frame, r, Scalar(0,255,0));
           break;
         default:
           break;
       }
+
+      // keep this line
+      // don't keep this line
 
       //display centroids
       circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
@@ -173,6 +184,7 @@ int main() {
     /* OUT */
     imshow("frame", frame);
     imshow("path", pclass.carPath);
+    imshow("ppath", pclass.pedPath);
     
     if(waitKey(30) >= 0) break;
   }

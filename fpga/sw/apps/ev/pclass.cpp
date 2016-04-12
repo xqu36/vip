@@ -61,6 +61,22 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask);
+    }
+
+    // check intersections
+    if(pedPath.at<unsigned char>(cntd) > 128) {
+      pedVotes += 20;
+
+      // reasonably sure this is a ped; on path with more votes. Update path
+      // TODO: assign weights with updating path?
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, objmask);
+    } else {
+      pedVotes -= 20;
+
+      // if not on the path, use Haar to more correctly determine car-ness & add to path
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask);
     }
   } else carPathCount++;
 
@@ -73,12 +89,14 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
   if(carVotes >= 50) 
     return TYPE_CAR_ONPATH;
 
+  if(pedVotes >= 50) 
+    return TYPE_PED_ONPATH;
+
   return (carVotes > pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask) {
 
-  // Haar Cascades
   if(type == TYPE_CAR) {
     // @MEGAN
     // TODO >>> run Haar on mask/image
@@ -90,9 +108,39 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 
   // already reasonably confident about car-ness
   } else if(type == TYPE_CAR_ONPATH) {
+//<<<<<<< HEAD
       carPath.convertTo(carPath, CV_32F);
       accumulateWeighted(objmask, carPath, 0.03);
       carPath.convertTo(carPath, CV_8U);
   } else if(type == TYPE_PED) {}
+//=======
+if (type == TYPE_CAR_ONPATH) {
+	carsInPath = 50;
+	if (carQueue.size() < carsInPath) {
+		carPath |= objmask;
+		carQueue.push_back(objmask);
+	} else {
+		carQueue.pop_front();
+		carQueue.push_back(objmask);
+		redrawMask(carQueue);
+	}
+} else if(type == TYPE_PED) {
+
+    // @MEGAN
+    // TODO >>> run Haar on mask/image
+    if(/* Haar returns negative for car */ true) {
+      pedPath |= objmask;
+    }
+  } else if(type == TYPE_PED_ONPATH) {
+    pedPath |= objmask;
+  }
+//>>>>>>> 1ddfba8b7f022502fb70be892e2bf2c260fb806d
+}
+
+void PathClassifier::redrawMask(deque<Mat> carQueue) {
+	for (int i = 0; i < carQueue.size(); i++) {
+		carPath = Mat::zeros(prows, pcols, CV_8U);
+		carPath |= carQueue[i];
+	}
 }
 

@@ -23,6 +23,7 @@ enum objType {
   TYPE_CAR,
   TYPE_CAR_ONPATH,
   TYPE_PED,
+  TYPE_PED_ONPATH,
   TYPE_UNCLASS
 };
 
@@ -38,6 +39,9 @@ private:
   int carPathIsValid;
   int pedPathIsValid;
 
+  int carsInPath;
+  deque<Mat> carQueue;
+
 public:
   Mat carPath;
   Mat pedPath;
@@ -46,6 +50,7 @@ public:
 
   int classify(ConnectedComponent& ccomp, const Mat& objmask);
   void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask);
+  void redrawMask(deque<Mat> carQueue);
 };
 
 #endif // PCLASS_H
