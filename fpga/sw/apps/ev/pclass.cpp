@@ -28,7 +28,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
 }
 
 // initial effort is just for cars
-int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
+int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& origFrame) {
 
   // return -1          = not worth of consideration
   // classification 0   = car
@@ -55,13 +55,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
 
       // reasonably sure this is a car; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask, origFrame);
     } else {
       carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask, origFrame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask, origFrame);
     }
 
     // check intersections
@@ -70,13 +70,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
 
       // reasonably sure this is a ped; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, objmask);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, objmask,origFrame);
     } else {
       pedVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask,origFrame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask,origFrame);
     }
   } else carPathCount++;
 
@@ -95,7 +95,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
   return (carVotes > pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
-void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask) {
+void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& origFrame) {
 
   if(type == TYPE_CAR) {
     // @MEGAN

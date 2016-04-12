@@ -45,8 +45,8 @@ public:
 
   PathClassifier(int rows, int cols);
 
-  int classify(ConnectedComponent& ccomp, const Mat& objmask);
-  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask);
+  int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& origFrame);
+  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& origFrame);
 };
 
 #endif // PCLASS_H

@@ -147,7 +147,7 @@ int main() {
       dist.convertTo(dist, CV_8U);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], dist);
+      classification = pclass.classify(vec_cc[i], dist, frame);
       
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
