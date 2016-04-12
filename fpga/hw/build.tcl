@@ -1,10 +1,10 @@
-# Set the reference directory for source file relative paths (by default the value is script directory path)
+# Set source file relative path reference directory
 set origin_dir [file dirname [info script]]
 
 # Set the directory path for the original project from where this script was exported
 set orig_proj_dir "[file normalize "$origin_dir/project"]"
 
-# Create project 
+# Create project
 create_project zedboard_baseline $origin_dir/project
 
 # Set the directory path for the new project
@@ -89,14 +89,14 @@ set_property "part" "xc7z020clg484-1" $obj
 # set the current impl run
 current_run -implementation [get_runs impl_1]
 
-# Update repo catalog
+# Update IP Repo Catalog
 update_ip_catalog -rebuild
 
-# Create Block Design
+# Create block diagram
 source $origin_dir/src/bd/zedboard_baseline.tcl
 regenerate_bd_layout
 
-# Generate Wrapper 
+# Generate wrapper
 make_wrapper -files [get_files $design_name.bd] -top -import
 validate_bd_design
 
@@ -107,12 +107,12 @@ generate_target all [get_files $origin_dir/project/zedboard_baseline.srcs/source
 launch_runs synth_1
 wait_on_run synth_1
 
-# run impl
+# Run implementation
 launch_runs impl_1 -to_step write_bitstream
 wait_on_run impl_1
 
-# Export HW
+# Export the hardware for use in the rest of the project
 file mkdir $origin_dir/project/zedboard_baseline.sdk
 file copy -force $origin_dir/project/zedboard_baseline.runs/impl_1/zedboard_baseline_wrapper.sysdef $origin_dir/project/zedboard_baseline.sdk/zedboard_baseline_wrapper.hdf
 
-puts "INFO: Project built:zedboard_baseline"
+puts "INFO: Project created:zedboard_baseline"

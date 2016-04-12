@@ -1,0 +1,8 @@
+image: {
+// first partition must be the first stage bootloader
+[bootloader] zynq_fsbl.elf
+// second partition is bitstream
+zedboard_baseline_wrapper.bit
+// third partition is U-Boot
+u-boot.elf
+}

@@ -398,6 +398,7 @@ set_property PACKAGE_PIN M15 [get_ports {sws_8bits_tri_i[7]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports -of_objects [get_iobanks 13]];
 
 # Encryption settings for the bitstream specified here
+# Vivado 2015.4 made these read-only. Encryption arguments must be passed to BootGen
 #set_property BITSTREAM.ENCRYPTION.ENCRYPT Yes [current_design]
 #set_property BITSTREAM.ENCRYPTION.ENCRYPTKEYSELECT bbram [current_design]
 #set_property BITSTREAM.ENCRYPTION.KEYFILE ../../../../build/keygen/dummy_key.nky [current_design]
