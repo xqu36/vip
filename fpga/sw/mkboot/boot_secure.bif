@@ -1,0 +1,10 @@
+image: {
+// keys to be used
+[aeskeyfile] keyfile.nky
+// first partition must be the first stage bootloader
+[bootloader, encryption=aes] zynq_fsbl.elf
+// second partition is bitstream
+[encryption=aes] zedboard_baseline_wrapper.bit
+// third partition is U-Boot
+[encryption=aes] u-boot.elf
+}

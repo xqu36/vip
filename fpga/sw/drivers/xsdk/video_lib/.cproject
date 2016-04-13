@@ -32,6 +32,7 @@
 								<option id="xilinx.gnu.compiler.option.debugging.level.1815278588" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.dircategory.includes.640991645" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${XILINX_SDK}/data/embeddedsw/ThirdParty/opencv/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/filter_lib/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../../../pre-built/include&quot;"/>
 								</option>
