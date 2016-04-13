@@ -15,6 +15,7 @@
 #include "opencv2/opencv.hpp"
 #include "ccomp.hpp"
 #include "segmentation.hpp"
+#include "peddetect.hpp"
 
 using namespace std;
 using namespace cv;
@@ -42,14 +43,16 @@ private:
   int carsInPath;
   deque<Mat> carQueue;
 
+  PedestrianDetector peddetect;
+
 public:
   Mat carPath;
   Mat pedPath;
 
   PathClassifier(int rows, int cols);
 
-  int classify(ConnectedComponent& ccomp, const Mat& objmask);
-  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask);
+  int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
+  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& frame);
   void redrawMask(deque<Mat> carQueue);
 };
 

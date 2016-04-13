@@ -28,12 +28,13 @@ PathClassifier::PathClassifier(int rows, int cols) {
 }
 
 // initial effort is just for cars
-int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
+int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame) {
 
   // return -1          = not worth of consideration
   // classification 0   = car
   // classification 1   = pedestrian
   // classification >1  = as of yet unclass'd
+  // UPDATE: check enums in pclass.hpp for detailed types
 
   int pedVotes = 0;
   int carVotes = 0;
@@ -55,13 +56,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
 
       // reasonably sure this is a car; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask, frame);
     } else {
       carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask, frame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask, frame);
     }
 
     // check intersections
@@ -70,13 +71,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
 
       // reasonably sure this is a ped; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, objmask);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, objmask, frame);
     } else {
       pedVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask);
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask, frame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask, frame);
     }
   } else carPathCount++;
 
@@ -95,7 +96,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask) {
   return (carVotes > pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
-void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask) {
+void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& frame) {
 
   if(type == TYPE_CAR) {
     // @MEGAN
@@ -130,19 +131,23 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 	  }
 
   } else if(type == TYPE_PED) {
+    
+    // find cropped image of obj
+    // HoG to determine if pedestrian
+    Mat objframe;
+    Mat rectMask = ccomp.getRectMask(frame.rows, frame.cols);
+    frame.copyTo(objframe, rectMask);
 
-    // @MEGAN
-    // TODO >>> run Haar on mask/image
-    if(/* Haar returns negative for car */ true) {
+    if(peddetect.detectPedestrian(objframe)) {
       pedPath |= objmask;
+      imwrite("./peddetect.jpg", objframe);
+      cout << "Writing peddetect" << endl;
     }
-  } else if(type == TYPE_PED_ONPATH) {
-    pedPath |= objmask;
-  }
+  } else if(type == TYPE_PED_ONPATH) pedPath |= objmask;
 }
 
 void PathClassifier::redrawMask(deque<Mat> carQueue) {
-		carPath = Mat::zeros(prows, pcols, CV_8U);
+    carPath = Mat::zeros(prows, pcols, CV_8U);
 	for (int i = 0; i < carQueue.size(); i++) {
 		carPath |= carQueue[i];
 	}

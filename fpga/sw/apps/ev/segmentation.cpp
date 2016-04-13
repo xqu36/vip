@@ -168,7 +168,7 @@ int main(int argc, char** argv) {
       dist.convertTo(dist, CV_8U);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], dist);
+      classification = pclass.classify(vec_cc[i], dist, frame);
       
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
@@ -211,7 +211,7 @@ int main(int argc, char** argv) {
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
-    cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
+    //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
     if(waitKey(30) >= 0) break;
   }
