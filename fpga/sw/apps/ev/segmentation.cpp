@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
   Mat prev_frame;
   prev_frame = frame.clone();
 
-  Mat mframe;
+  Mat oframe;
   Mat foregroundMask, backgroundModel;
   Mat foregroundMask_ed1, foregroundMask_ed2, foregroundMask_ed3;
   Mat dist;
@@ -92,11 +92,10 @@ int main(int argc, char** argv) {
         cout << "Done!" << endl;
         continue;
     }
-    mframe.setTo(Scalar(0,0,0));
 
     //medianBlur(frame, frame, 7);
+    frame.copyTo(oframe);
     GaussianBlur(frame, frame, Size(5, 5), 0, 0);
-    //blur(frame, frame, Size(7,7));
 
     /* PROCESSING */
 
@@ -111,7 +110,6 @@ int main(int argc, char** argv) {
     // update background model
     MOG(frame, foregroundMask, 0.005);
     MOG.getBackgroundImage(backgroundModel);
-    frame.copyTo(mframe, foregroundMask);
 
     Mat shadowMask = Mat::zeros(frame.rows, frame.cols, CV_8U);
 
@@ -168,7 +166,7 @@ int main(int argc, char** argv) {
       dist.convertTo(dist, CV_8U);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], dist, frame);
+      classification = pclass.classify(vec_cc[i], dist, oframe);
       
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {

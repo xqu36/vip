@@ -37,7 +37,8 @@ public:
   int getPixelCount(void) const;
   std::shared_ptr< const std::vector<cv::Point2i> > getPixels(void) const;
   cv::Mat getMask(int rows, int cols);
-  cv::Mat getRectMask(int rows, int cols);
+  //cv::Mat getRectMask(int rows, int cols);
+  cv::Rect getRectMask(int rows, int cols);
   cv::Point getCentroidBox(void);
   cv::Point getCentroidExact(cv::Mat mask);
 };

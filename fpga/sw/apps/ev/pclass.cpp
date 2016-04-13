@@ -135,13 +135,18 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     // find cropped image of obj
     // HoG to determine if pedestrian
     Mat objframe;
-    Mat rectMask = ccomp.getRectMask(frame.rows, frame.cols);
-    frame.copyTo(objframe, rectMask);
+    //Mat rectMask = ccomp.getRectMask(frame.rows, frame.cols);
+    Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
 
-    if(peddetect.detectPedestrian(objframe)) {
+    //frame.copyTo(objframe, rectMask);
+    objframe = frame(rectMask);
+
+    Mat re_objframe;
+    resize(objframe, re_objframe, Size(64,128));
+
+    if(peddetect.detectPedestrian(re_objframe)) {
       pedPath |= objmask;
       imwrite("./peddetect.jpg", objframe);
-      cout << "Writing peddetect" << endl;
     }
   } else if(type == TYPE_PED_ONPATH) pedPath |= objmask;
 }

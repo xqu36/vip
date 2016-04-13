@@ -24,7 +24,7 @@ bool PedestrianDetector::detectPedestrian(const Mat& objframe) {
     HOGDescriptor hog;
     hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
 
-    hog.detectMultiScale(objframe, detected, 0, Size(2,2), Size(8,8), 1.05, 2);
+    hog.detectMultiScale(objframe, detected, 0, Size(4,4), Size(16,16), 1.05, 2);
 
     // pedestrian is detected 
     // TODO / FIXME: use non-maximal suppression to extrapolate small false positives as one box

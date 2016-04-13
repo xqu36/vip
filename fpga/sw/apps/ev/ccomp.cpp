@@ -138,7 +138,8 @@ cv::Mat ConnectedComponent::getMask(int rows, int cols){
     return mask;
 }
 
-cv::Mat ConnectedComponent::getRectMask(int rows, int cols){
+//cv::Mat ConnectedComponent::getRectMask(int rows, int cols){
+cv::Rect ConnectedComponent::getRectMask(int rows, int cols){
     cv::Mat mask = cv::Mat::zeros(rows, cols, CV_8UC1);
     int xx = (m_bb.x-10 < 0) ? 0 : m_bb.x-10;
     int yy = (m_bb.y-10 < 0) ? 0 : m_bb.y-10;
@@ -148,7 +149,8 @@ cv::Mat ConnectedComponent::getRectMask(int rows, int cols){
     cv::Rect r(xx, yy, ww, hh);
     mask(r) = 1;
 
-    return mask;
+    //return mask;
+    return r;
 }
 
 // @jdanner3
