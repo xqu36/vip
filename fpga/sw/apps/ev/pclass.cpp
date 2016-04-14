@@ -112,6 +112,12 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     Mat frame_gray;
     std::vector<Rect> cars;
 
+    cvtColor(objframe, frame_gray, CV_BGR2GRAY);
+    equalizeHist( frame_gray, frame_gray );
+    cascade.detectMultiScale(frame_gray, cars, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(0, 0));
+
+
+
     if(cars.size() >=1) {
       /*
   	  carPath.convertTo(carPath, CV_32F);
