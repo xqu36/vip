@@ -40,20 +40,22 @@ private:
   int carPathIsValid;
   int pedPathIsValid;
 
-  int carsInPath;
+  int carsInPath, pedsInPath;
   deque<Mat> carQueue;
+  deque<Mat> pedQueue;
 
-  PedestrianDetector peddetect;
 
 public:
   Mat carPath;
   Mat pedPath;
 
-  PathClassifier(int rows, int cols);
+  PedestrianDetector peddetect;
 
+  PathClassifier(int rows, int cols);
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
   void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& frame);
-  void redrawMask(deque<Mat> carQueue);
+  //void redrawMask(deque<Mat> carQueue);
+  void redrawMask();
 };
 
 #endif // PCLASS_H

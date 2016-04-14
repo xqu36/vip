@@ -100,34 +100,28 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 
   if(type == TYPE_CAR) {
     // @MEGAN
-    // TODO >>> run Haar on mask/image
     if(/* Haar returns postive for car */ true) {
-      /*
-  	  carPath.convertTo(carPath, CV_32F);
-      accumulateWeighted(objmask, carPath, 0.03);
-      carPath.convertTo(carPath, CV_8U);
-      */
-	    carsInPath = 150;
+	    carsInPath = 400;
 	    if (carQueue.size() < carsInPath) {
-		    carPath |= objmask;
 		    carQueue.push_back(objmask);
+		    redrawMask();
 	    } else {
 		    carQueue.pop_front();
 		    carQueue.push_back(objmask);
-		    redrawMask(carQueue);
+		    redrawMask();
 	    }
     }
 
   // already reasonably confident about car-ness
   } else if (type == TYPE_CAR_ONPATH) {
-	  carsInPath = 150;
+	  carsInPath = 400;
 	  if (carQueue.size() < carsInPath) {
-		  carPath |= objmask;
 		  carQueue.push_back(objmask);
+		  redrawMask();
 	  } else {
 		  carQueue.pop_front();
 		  carQueue.push_back(objmask);
-		  redrawMask(carQueue);
+		  redrawMask();
 	  }
 
   } else if(type == TYPE_PED) {
@@ -135,26 +129,89 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     // find cropped image of obj
     // HoG to determine if pedestrian
     Mat objframe;
-    //Mat rectMask = ccomp.getRectMask(frame.rows, frame.cols);
     Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
-
-    //frame.copyTo(objframe, rectMask);
     objframe = frame(rectMask);
 
-    Mat re_objframe;
-    resize(objframe, re_objframe, Size(64,128));
+    Mat re_objframe = objframe.clone();
 
-    if(peddetect.detectPedestrian(re_objframe)) {
-      pedPath |= objmask;
-      imwrite("./peddetect.jpg", objframe);
+    // hog's defaultPeopleDetector needs a person of at least 64,128 size
+    if(rectMask.size().height < 128 || rectMask.size().width < 64) {
+      resize(objframe, re_objframe, Size(64,128));
     }
-  } else if(type == TYPE_PED_ONPATH) pedPath |= objmask;
+
+    if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
+	  pedsInPath = 400;
+	  if(pedQueue.size() < pedsInPath) {
+		pedQueue.push_back(objmask);
+		redrawMask();
+	  } else {
+		pedQueue.pop_front();
+		pedQueue.push_back(objmask);
+		redrawMask();
+	  }
+    }
+  } else if(type == TYPE_PED_ONPATH) {
+
+    Mat objframe;
+    Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
+
+    if(rectMask.size().height > peddetect.getMaxSize().height || rectMask.size().width > peddetect.getMaxSize().width) {
+
+      objframe = frame(rectMask);
+      Mat re_objframe = objframe.clone();
+
+      // hog's defaultPeopleDetector needs a person of at least 64,128 size
+      if(rectMask.size().height < 128 || rectMask.size().width < 64) {
+        resize(objframe, re_objframe, Size(64,128));
+      }
+
+      // check to make sure
+      if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
+	    pedsInPath = 400;
+	    if(pedQueue.size() < pedsInPath) {
+	      pedQueue.push_back(objmask);
+		  redrawMask();
+	    } else {
+		  pedQueue.pop_front();
+		  pedQueue.push_back(objmask);
+		  redrawMask();
+        }
+      }
+    } else {
+	    pedsInPath = 400;
+	    if(pedQueue.size() < pedsInPath) {
+	      pedQueue.push_back(objmask);
+		  redrawMask();
+	    } else {
+		  pedQueue.pop_front();
+		  pedQueue.push_back(objmask);
+		  redrawMask();
+        }
+    }
+  }
 }
 
-void PathClassifier::redrawMask(deque<Mat> carQueue) {
+void PathClassifier::redrawMask() {
     carPath = Mat::zeros(prows, pcols, CV_8U);
-	for (int i = 0; i < carQueue.size(); i++) {
-		carPath |= carQueue[i];
+	for(int i = 0; i < carQueue.size(); i++) {
+        carPath |= carQueue[i];
 	}
+    /*
+    distanceTransform(carPath, carPath, CV_DIST_L2, 3);
+    normalize(carPath, carPath, 0, 255, NORM_MINMAX);
+    threshold(carPath, carPath, 0, 255, THRESH_TOZERO);
+    carPath.convertTo(carPath, CV_8U);
+    */
+
+    pedPath = Mat::zeros(prows, pcols, CV_8U);
+	for(int i = 0; i < pedQueue.size(); i++) {
+		pedPath |= pedQueue[i];
+	}
+    /*
+    distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
+    normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
+    threshold(pedPath, pedPath, 0, 255, THRESH_TOZERO);
+    pedPath.convertTo(pedPath, CV_8U);
+    */
 }
 

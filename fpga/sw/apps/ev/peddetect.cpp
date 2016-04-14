@@ -9,30 +9,31 @@
 #include "peddetect.hpp"
 
 PedestrianDetector::PedestrianDetector() {
-    minHeight = 0;
-    minWidth = 0;
+    minHeight = INT_MAX;
+    minWidth = INT_MAX;
     maxHeight = 0;
     maxWidth = 0;
+
+    pedSizeValid = false;
 }
 
-bool PedestrianDetector::detectPedestrian(const Mat& objframe) {
+bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsize) {
 
     vector<Rect> detected;
-
-    imwrite("try.jpg", objframe);
 
     HOGDescriptor hog;
     hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
 
-    hog.detectMultiScale(objframe, detected, 0, Size(4,4), Size(16,16), 1.05, 2);
+    hog.detectMultiScale(objframe, detected, 0, Size(2,2), Size(8,8), 1.05, 2);
 
     // pedestrian is detected 
     // TODO / FIXME: use non-maximal suppression to extrapolate small false positives as one box
     if(detected.size() != 0 ) {
-        if(detected[0].width < minWidth) minWidth = detected[0].width;
-        if(detected[0].width > maxWidth) maxWidth = detected[0].width;
-        if(detected[0].height < minHeight) minHeight = detected[0].height;
-        if(detected[0].height > maxHeight) maxHeight = detected[0].height;
+        if(objsize.width < minWidth) minWidth = objsize.width;
+        if(objsize.width > maxWidth) maxWidth = objsize.width;
+        if(objsize.height < minHeight) minHeight = objsize.height;
+        if(objsize.height > maxHeight) maxHeight = objsize.height;
+        pedSizeValid = true;
         return true;
     } else return false;
 }

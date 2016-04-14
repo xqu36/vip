@@ -15,9 +15,10 @@ class PedestrianDetector {
         int maxWidth;
 
     public:
-        PedestrianDetector();
-        bool detectPedestrian(const Mat& objframe);
+        bool pedSizeValid;
 
+        PedestrianDetector();
+        bool detectPedestrian(const Mat& objframe, const Size& objsize);
         Size getMinSize();
         Size getMaxSize();
 };

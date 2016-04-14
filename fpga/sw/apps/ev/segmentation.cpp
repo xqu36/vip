@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
-    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
+    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
 
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
@@ -147,8 +147,15 @@ int main(int argc, char** argv) {
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
-      int cc_pix = vec_cc[i].getPixelCount();
-      if(cc_pix < MIN_NUM_PIXELS) continue;
+      Rect cc_bb = vec_cc[i].getBoundingBox();
+      int currentSize = cc_bb.width*cc_bb.height;
+      int pedSize = pclass.peddetect.getMinSize().area();
+      int reqSize;
+      if(!pclass.peddetect.pedSizeValid) reqSize = 400; // hardcoded for resolution/possible env
+      else reqSize = pedSize * 0.10;
+      if(reqSize < 200) reqSize = 200;
+
+      if(currentSize < reqSize) continue;
 
       Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
@@ -167,6 +174,7 @@ int main(int argc, char** argv) {
 
       int classification = -1;
       classification = pclass.classify(vec_cc[i], dist, oframe);
+      //classification = pclass.classify(vec_cc[i], objmask, oframe);
       
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
@@ -187,7 +195,7 @@ int main(int argc, char** argv) {
           instPedCount++;
           break;
         case TYPE_UNCLASS: 
-          rectangle(frame, r, Scalar(0,255,0));
+          //rectangle(frame, r, Scalar(0,255,0));
           break;
         default:
           break;
