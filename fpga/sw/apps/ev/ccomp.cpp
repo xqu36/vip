@@ -138,6 +138,12 @@ cv::Mat ConnectedComponent::getMask(int rows, int cols){
     return mask;
 }
 
+cv::Mat ConnectedComponent::getRectMask(int rows, int cols){
+    cv::Mat mask = cv::Mat::zeros(rows, cols, CV_8UC1);
+    mask(m_bb) = 1;
+    return mask;
+}
+
 // @jdanner3
 cv::Point ConnectedComponent::getCentroidBox(void) {
   return cv::Point(m_bb.x+(m_bb.width/2) , m_bb.y+(m_bb.height/2));

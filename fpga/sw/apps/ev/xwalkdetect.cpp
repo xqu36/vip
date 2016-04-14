@@ -21,30 +21,105 @@ int main() {
 
   /* IN */
 
-  string infile = "/home/ableemer/vip/fpga/sw/apps/ev/klaus_high_snapshot.JPG";
+  string infile = "/home/ableemer/vip/fpga/sw/apps/ev/klaus_low_snapshot2.JPG";
 
   VideoCapture capture(infile);
 
+  string infile2 = "/home/ableemer/vip/fpga/sw/apps/ev/klaus_low_snapshot2_car2.JPG";
+
+  VideoCapture carPath(infile2);
+
+  string infile3 = "/home/ableemer/vip/fpga/sw/apps/ev/klaus_low_snapshot2_ppl2.JPG";
+
+  VideoCapture pplPath(infile3);
+
   Mat frame, frame_r, frame_g, frame_b, avgframe, frame_bw, blur_frame, out_blur_frame, avg_background, out_avg_background, frame_diff, out_frame_diff, bk_frame, out_bk_frame;
-  Mat out_frame_r, out_frame_g, out_frame_b, frame_road, frame_road_bw;
-  Mat road_bw_otsu, road_bw_adapt_gauss, road_bw_adapt, centers;
+  //Mat out_frame_r, out_frame_g, out_frame_b, frame_road, frame_road_bw;
+  //Mat road_bw_otsu, road_bw_adapt_gauss, road_bw_adapt, centers;
+  Mat carP, pplP, frame_r2, frame_g2, frame_b2, frame_r3, frame_g3, frame_b3;
   capture >> frame;
-  Mat frame_og = frame.clone();
+  carPath >> carP;
+  pplPath >> pplP;
+  imshow("carP", carP);
+
+  //Mat frame_og = frame.clone();
   //frame = imread(infile, 1);
 
   if (!frame.data) { cout << "No image data." << endl; return -1; }
+ //Split frame into red, green and blue images.
+  Mat rgbSplit[3];
+  Mat rgbSplit2[3];
+  Mat rgbSplit3[3];
+  //Mat rgbSplit2[3];
+  split(carP, rgbSplit);
+  split(pplP, rgbSplit2);
+  split(frame, rgbSplit3);
+  //rgbSplit2 = rgbSplit;
+  /*threshold(rgbSplit[0], frame_r, 50, 255, THRESH_TOZERO);
+  threshold(rgbSplit[1], frame_g, 50, 255, THRESH_TOZERO);
+  threshold(rgbSplit[2], frame_b, 50, 255, THRESH_TOZERO);
 
-  //Split frame into red, green and blue images.
+  threshold(rgbSplit2[0], frame_r2, 50, 255, THRESH_TOZERO);
+  threshold(rgbSplit2[1], frame_g2, 50, 255, THRESH_TOZERO);
+  threshold(rgbSplit2[2], frame_b2, 50, 255, THRESH_TOZERO);  
+*/
+  frame_r = rgbSplit[0];
+  frame_g = rgbSplit[1];
+  frame_b = rgbSplit[2];
+
+  frame_r2 = rgbSplit2[0];
+  frame_g2 = rgbSplit2[1];
+  frame_b2 = rgbSplit2[2];
+
+  frame_r3 = rgbSplit3[0];
+  frame_g3 = rgbSplit3[1];
+  frame_b3 = rgbSplit3[2];
+
+  int r = frame_r.rows;
+  int c = frame_r.cols;
+  for(int i = 0; i < r; i++){
+    for(int j = 0; j < c; j++){
+      if(frame_r.at<int>(i, j) == 0)
+        if(frame_r2.at<int>(i, j) == 0){
+        frame_r3.at<int>(i, j) = 0;
+        frame_g3.at<int>(i, j) = 0;
+        frame_b3.at<int>(i, j) = 0;
+      }
+      /*else if(frame_g.at<int>(i, j) != 0 || frame_g2.at<int>(i, j) != 0){
+        frame_r3.at<int>(i, j) = 0;
+        frame_g3.at<int>(i, j) = 0;
+        frame_b3.at<int>(i, j) = 0;
+      }
+      else if(frame_b.at<int>(i, j) != 0 || frame_b2.at<int>(i, j) != 0){
+        frame_r3.at<int>(i, j) = 0;
+        frame_g3.at<int>(i, j) = 0;
+        frame_b3.at<int>(i, j) = 0;
+      }*/
+    }
+  }
+
+  rgbSplit3[0]=frame_r3;
+  rgbSplit3[1]=frame_g3;
+  rgbSplit3[2]=frame_b3;
+
+  merge(rgbSplit3, 3, frame);
+
+  frame.convertTo(frame, CV_8U);
+  imshow("people danger path?", frame);
+  imwrite("/home/ableemer/vip/fpga/sw/apps/ev/dangerPath1.JPG", frame);
+
+
+  /*//Split frame into red, green and blue images.
   Mat rgbSplit[3];
   //Mat rgbSplit2[3];
   split(frame, rgbSplit);
   //rgbSplit2 = rgbSplit;
-  threshold(rgbSplit[0], frame_r, 45, 255, THRESH_TOZERO);
-  threshold(frame_r, frame_r, 125, 255, THRESH_TOZERO_INV);
-  threshold(rgbSplit[1], frame_g, 55, 255, THRESH_TOZERO);
-  threshold(frame_g, frame_g, 115, 255, THRESH_TOZERO_INV);
-  threshold(rgbSplit[2], frame_b, 45, 255, THRESH_TOZERO);
-  threshold(frame_b, frame_b, 115, 255, THRESH_TOZERO_INV);
+  threshold(rgbSplit[0], frame_r, 32, 255, THRESH_TOZERO);
+  threshold(frame_r, frame_r, 48, 255, THRESH_TOZERO_INV);
+  threshold(rgbSplit[1], frame_g, 37, 255, THRESH_TOZERO);
+  threshold(frame_g, frame_g, 58, 255, THRESH_TOZERO_INV);
+  threshold(rgbSplit[2], frame_b, 30, 255, THRESH_TOZERO);
+  threshold(frame_b, frame_b, 50, 255, THRESH_TOZERO_INV);
 
   int r = frame_r.rows;
   int c = frame_r.cols;
@@ -65,6 +140,7 @@ int main() {
     }
   }
 
+
   //cout << r << " " << c << endl;
   //cout << frame_r.rows << " " << frame_r.cols << endl;
   //cout << frame_g.rows << " " << frame_g.cols << endl;
@@ -72,13 +148,11 @@ int main() {
 
   rgbSplit[0]=frame_r;
   rgbSplit[1]=frame_g;
-  cout << "before b frame" << endl;
   rgbSplit[2]=frame_b;
-  cout << "after b frame" << endl;
   merge(rgbSplit, 3, frame);
 
   imshow("frame post-thresh", frame);
-
+*/
   /* PROCESSING */
     // Create black and white frame
     //cvtColor(frame, frame_bw, CV_BGR2GRAY);
@@ -92,20 +166,22 @@ int main() {
     threshold(frame_bw, bk_frame, 60, 255, THRESH_BINARY);
     */
     
-  for(int j = 0; j < 5; j++){
-    for(int i = 0; i < 2; i++){
-          //dilate(frame, frame, Mat(), Point(-1,-1), 2,1,1);
+  /*
+MORPHOLOGICAL
+  for(int j = 0; j < 3; j++){
+    for(int i = 0; i < 3; i++){
+          dilate(frame, frame, Mat(), Point(-1,-1), 2,1,1);
           erode(frame, frame, Mat(), Point(-1,-1), 2,1,1);
     }
     for(int i = 0; i < 3; i++){
-          dilate(frame, frame, Mat(), Point(-1,-1), 2,1,1);
+          //dilate(frame, frame, Mat(), Point(-1,-1), 2,1,1);
           //erode(frame, frame, Mat(), Point(-1,-1), 2,1,1);
     }
   }
   cvtColor(frame, frame, CV_BGR2GRAY);
   frame.convertTo(frame, CV_8U);
-  imshow("frame", frame);
-
+  imshow("frame", frame);*/
+/*
   Mat dist;
   distanceTransform(frame, dist, CV_DIST_L2, 3);
   normalize(dist, dist, 0, 1., NORM_MINMAX);
