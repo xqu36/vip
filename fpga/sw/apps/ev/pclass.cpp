@@ -57,7 +57,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
       // TODO: assign weights with updating path?
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask, origFrame);
     } else {
-      carVotes -= 20;
+      //carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask, origFrame);
@@ -100,6 +100,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
   if(type == TYPE_CAR) {
     // @MEGAN
     // TODO >>> run Haar on mask/image
+    //printf("running\n");
     CascadeClassifier cascade;
     cascade.load("car3.xml");
 
@@ -114,7 +115,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 
     cvtColor(objframe, frame_gray, CV_BGR2GRAY);
     equalizeHist( frame_gray, frame_gray );
-    cascade.detectMultiScale(frame_gray, cars, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(0, 0));
+    cascade.detectMultiScale(frame_gray, cars, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30));
 
 
 

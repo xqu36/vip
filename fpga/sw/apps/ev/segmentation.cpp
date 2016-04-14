@@ -211,7 +211,7 @@ int main(int argc, char** argv) {
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
-    cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
+    //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
     if(waitKey(30) >= 0) break;
   }
