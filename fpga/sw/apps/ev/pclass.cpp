@@ -104,8 +104,11 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     cascade.load("car3.xml");
 
 
-    Mat objframe;// = objmask | origFrame;I
-    origFrame.copyTo(objframe, objmask);
+    Mat objframe;// = objmask | origFrame;I]
+    
+    Rect rectMask = ccomp.getRectMask(objmask.rows, objmask.cols);
+    objframe = origFrame(rectMask);
+
     Mat frame_gray;
     std::vector<Rect> cars;
 
