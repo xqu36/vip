@@ -18,8 +18,8 @@
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* XILINX CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
@@ -32,6 +32,8 @@
 /*****************************************************************************/
 /**
 * @file xgpio_sinit.c
+* @addtogroup gpio_v4_0
+* @{
 *
 * The implementation of the XGpio driver's static initialzation
 * functionality.
@@ -47,6 +49,8 @@
 * ----- ---- -------- -----------------------------------------------
 * 2.01a jvb  10/13/05 First release
 * 2.11a mta  03/21/07 Updated to new coding style
+* 4.0   sha  07/15/15 Defined macro XPAR_XGPIO_NUM_INSTANCES if not
+*		      defined in xparameters.h
 * </pre>
 *
 *****************************************************************************/
@@ -58,6 +62,10 @@
 #include "xgpio_i.h"
 
 /************************** Constant Definitions ****************************/
+
+#ifndef XPAR_XGPIO_NUM_INSTANCES
+#define XPAR_XGPIO_NUM_INSTANCES		0
+#endif
 
 /**************************** Type Definitions ******************************/
 
@@ -148,3 +156,4 @@ int XGpio_Initialize(XGpio * InstancePtr, u16 DeviceId)
 	return XGpio_CfgInitialize(InstancePtr, ConfigPtr,
 				   ConfigPtr->BaseAddress);
 }
+/** @} */

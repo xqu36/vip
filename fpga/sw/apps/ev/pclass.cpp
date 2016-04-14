@@ -100,13 +100,43 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
   if(type == TYPE_CAR) {
     // @MEGAN
     // TODO >>> run Haar on mask/image
-    if(/* Haar returns postive for car */ true) {
-      carPath |= objmask;
+    CascadeClassifier cascade;
+    cascade.load("car3.xml");
+
+
+    Mat objframe;// = objmask | origFrame;I
+    origFrame.copyTo(objframe, objmask);
+    Mat frame_gray;
+    std::vector<Rect> cars;
+
+    if(cars.size() >=1) {
+      /*
+  	  carPath.convertTo(carPath, CV_32F);
+      accumulateWeighted(objmask, carPath, 0.03);
+      carPath.convertTo(carPath, CV_8U);
+      */
+	    carsInPath = 150;
+	    if (carQueue.size() < carsInPath) {
+		    carPath |= objmask;
+		    carQueue.push_back(objmask);
+	    } else {
+		    carQueue.pop_front();
+		    carQueue.push_back(objmask);
+		    redrawMask(carQueue);
+	    }
     }
 
   // already reasonably confident about car-ness
-  } else if(type == TYPE_CAR_ONPATH) {
-      carPath |= objmask;
+  } else if (type == TYPE_CAR_ONPATH) {
+	  carsInPath = 150;
+	  if (carQueue.size() < carsInPath) {
+		  carPath |= objmask;
+		  carQueue.push_back(objmask);
+	  } else {
+		  carQueue.pop_front();
+		  carQueue.push_back(objmask);
+		  redrawMask(carQueue);
+	  }
 
   } else if(type == TYPE_PED) {
 
@@ -118,5 +148,12 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
   } else if(type == TYPE_PED_ONPATH) {
     pedPath |= objmask;
   }
+}
+
+void PathClassifier::redrawMask(deque<Mat> carQueue) {
+		carPath = Mat::zeros(prows, pcols, CV_8U);
+	for (int i = 0; i < carQueue.size(); i++) {
+		carPath |= carQueue[i];
+	}
 }
 

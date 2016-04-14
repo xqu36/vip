@@ -39,6 +39,9 @@ private:
   int carPathIsValid;
   int pedPathIsValid;
 
+  int carsInPath;
+  deque<Mat> carQueue;
+
 public:
   Mat carPath;
   Mat pedPath;
@@ -47,6 +50,7 @@ public:
 
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& origFrame);
   void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& origFrame);
+  void redrawMask(deque<Mat> carQueue);
 };
 
 #endif // PCLASS_H
