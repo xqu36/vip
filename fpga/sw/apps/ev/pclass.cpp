@@ -25,6 +25,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
 
   carPathIsValid = 0;
   pedPathIsValid = 0;
+
+  //if(!cascade.load("cars3.xml")) cout << "Problem loading" << endl;
 }
 
 // initial effort is just for cars
@@ -101,9 +103,9 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     // @MEGAN
     // TODO >>> run Haar on mask/image
     //printf("running\n");
-    CascadeClassifier cascade;
-    cascade.load("car3.xml");
 
+     CascadeClassifier cascade;
+     cascade.load("cars3.xml");
 
     Mat objframe;// = objmask | origFrame;I]
     
@@ -114,17 +116,13 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     std::vector<Rect> cars;
 
     cvtColor(objframe, frame_gray, CV_BGR2GRAY);
-    equalizeHist( frame_gray, frame_gray );
-    cascade.detectMultiScale(frame_gray, cars, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30));
+    //equalizeHist( frame_gray, frame_gray );
+    //cascade.detectMultiScale(frame_gray, cars, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(30,30));
+    cascade.detectMultiScale(frame_gray, cars, 1.05, 1, 0|CV_HAAR_SCALE_IMAGE, Size(20,20));
 
-
+    imwrite("try.jpg", frame_gray);
 
     if(cars.size() >=1) {
-      /*
-  	  carPath.convertTo(carPath, CV_32F);
-      accumulateWeighted(objmask, carPath, 0.03);
-      carPath.convertTo(carPath, CV_8U);
-      */
 	    carsInPath = 150;
 	    if (carQueue.size() < carsInPath) {
 		    carPath |= objmask;

@@ -42,6 +42,8 @@ private:
   int carsInPath;
   deque<Mat> carQueue;
 
+  //CascadeClassifier cascade;
+
 public:
   Mat carPath;
   Mat pedPath;
