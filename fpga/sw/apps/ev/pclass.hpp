@@ -51,6 +51,7 @@ public:
   Mat pedPath;
 
   PedestrianDetector peddetect;
+  PedestrianDetector cardetect;
 
   PathClassifier(int rows, int cols);
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);

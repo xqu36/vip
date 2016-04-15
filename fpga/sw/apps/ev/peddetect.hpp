@@ -16,9 +16,11 @@ class PedestrianDetector {
 
     public:
         bool pedSizeValid;
+        bool carSizeValid;
 
         PedestrianDetector();
         bool detectPedestrian(const Mat& objframe, const Size& objsize);
+        bool detectCar(const Mat& objframe, const Size& objsize);
         Size getMinSize();
         Size getMaxSize();
 };

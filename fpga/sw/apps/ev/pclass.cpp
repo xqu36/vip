@@ -58,7 +58,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
       // TODO: assign weights with updating path?
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask, frame);
     } else {
-      carVotes -= 20;
+      //carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask, frame);
@@ -98,24 +98,14 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& frame) {
 
+  Mat objframe;
+  Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
+  objframe = frame(rectMask);
+
   if(type == TYPE_CAR) {
 
-    CascadeClassifier cascade;
-    if(!cascade.load("cars3.xml")) cout << "can't load" << endl;
 
-    Mat objframe;
-    
-    Rect rectMask = ccomp.getRectMask(objmask.rows, objmask.cols);
-    objframe = frame(rectMask);
-
-    Mat frame_gray;
-    vector<Rect> cars;
-
-    cvtColor(objframe, frame_gray, CV_BGR2GRAY);
-    //equalizeHist(frame_gray, frame_gray);
-    cascade.detectMultiScale(frame_gray, cars, 1.05, 1, 0|CV_HAAR_SCALE_IMAGE, Size(20,20));
-
-    if(cars.size() > 0) {
+    if(cardetect.detectCar(objframe, rectMask.size())) {
 	    carsInPath = 400;
 	    if (carQueue.size() < carsInPath) {
 		    carQueue.push_back(objmask);
@@ -129,6 +119,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 
   // already reasonably confident about car-ness
   } else if (type == TYPE_CAR_ONPATH) {
+      /*
 	  carsInPath = 400;
 	  if (carQueue.size() < carsInPath) {
 		  carQueue.push_back(objmask);
@@ -138,15 +129,12 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 		  carQueue.push_back(objmask);
 		  redrawMask();
 	  }
+      */
 
   } else if(type == TYPE_PED) {
     
     // find cropped image of obj
     // HoG to determine if pedestrian
-    Mat objframe;
-    Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
-    objframe = frame(rectMask);
-
     Mat re_objframe = objframe.clone();
 
     // hog's defaultPeopleDetector needs a person of at least 64,128 size
@@ -167,12 +155,8 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
     }
   } else if(type == TYPE_PED_ONPATH) {
 
-    Mat objframe;
-    Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
-
     if(rectMask.size().height > peddetect.getMaxSize().height || rectMask.size().width > peddetect.getMaxSize().width) {
 
-      objframe = frame(rectMask);
       Mat re_objframe = objframe.clone();
 
       // hog's defaultPeopleDetector needs a person of at least 64,128 size
@@ -193,6 +177,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
         }
       }
     } else {
+        /*
 	    pedsInPath = 400;
 	    if(pedQueue.size() < pedsInPath) {
 	      pedQueue.push_back(objmask);
@@ -202,6 +187,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& 
 		  pedQueue.push_back(objmask);
 		  redrawMask();
         }
+        */
     }
   }
 }
