@@ -16,6 +16,7 @@
 #include "ccomp.hpp"
 #include "segmentation.hpp"
 #include "peddetect.hpp"
+#include "opencv2/objdetect/objdetect.hpp"
 
 using namespace std;
 using namespace cv;

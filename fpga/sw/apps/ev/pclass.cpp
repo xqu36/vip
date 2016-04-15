@@ -99,8 +99,23 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& frame) {
 
   if(type == TYPE_CAR) {
-    // @MEGAN
-    if(/* Haar returns postive for car */ true) {
+
+    CascadeClassifier cascade;
+    if(!cascade.load("cars3.xml")) cout << "can't load" << endl;
+
+    Mat objframe;
+    
+    Rect rectMask = ccomp.getRectMask(objmask.rows, objmask.cols);
+    objframe = frame(rectMask);
+
+    Mat frame_gray;
+    vector<Rect> cars;
+
+    cvtColor(objframe, frame_gray, CV_BGR2GRAY);
+    //equalizeHist(frame_gray, frame_gray);
+    cascade.detectMultiScale(frame_gray, cars, 1.05, 1, 0|CV_HAAR_SCALE_IMAGE, Size(20,20));
+
+    if(cars.size() > 0) {
 	    carsInPath = 400;
 	    if (carQueue.size() < carsInPath) {
 		    carQueue.push_back(objmask);
