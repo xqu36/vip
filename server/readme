@@ -6,6 +6,10 @@ The python script it runs should also be in the same directory, and this
 script requires PyCrypto to run
 PyCrypto can be installed with pip or easyinstall
 
+The python script also requires a public keyfile in the same directory, one can be generated, or just use the one provided for now, I'll also include the Decryption script and private key in
+the test directory for testing purposes.
+
+
 Notes on the Node.js server:
 don't modify the file structure of the server
 On my machine, the fup directory was inside /var/www, but it shouldn't need to be there
