@@ -1,0 +1,16 @@
+Notes on ssendf.sh:
+This is the SecureSendFile script:
+It takes one argument: the file to encrypt and send, in the current directory
+example: ./ssendf.sh test.json
+The python script it runs should also be in the same directory, and this 
+script requires PyCrypto to run
+PyCrypto can be installed with pip or easyinstall
+
+Notes on the Node.js server:
+don't modify the file structure of the server
+On my machine, the fup directory was inside /var/www, but it shouldn't need to be there
+it can be run with 
+	sudo nodejs fup.js
+from inside the fup directory
+It puts all uploaded files in the fup/uploads directory, where they are handled by 
+decsend.sh
