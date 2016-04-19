@@ -25,9 +25,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
 
   carPathIsValid = 0;
   pedPathIsValid = 0;
-
-  Point centroid = ccomp.getPixelCount();
-
+  
   //if(!cascade.load("cars3.xml")) cout << "Problem loading" << endl;
 }
 
@@ -100,7 +98,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& pedobjmask, c
 }
 
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& origFrame) {
-  centroid = getCentroidBox();
+
   if(type == TYPE_CAR) {
     // @MEGAN
     // TODO >>> run Haar on mask/image
