@@ -26,11 +26,13 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = 0;
   pedPathIsValid = 0;
 
+  Point centroid = ccomp.getPixelCount();
+
   //if(!cascade.load("cars3.xml")) cout << "Problem loading" << endl;
 }
 
 // initial effort is just for cars
-int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& origFrame) {
+int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& pedobjmask, const Mat& carobjmask, const Mat& origFrame) {
 
   // return -1          = not worth of consideration
   // classification 0   = car
@@ -57,13 +59,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 
       // reasonably sure this is a car; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, objmask, origFrame);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, carobjmask, origFrame);
     } else {
       //carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask, origFrame);
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask, origFrame);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, carobjmask, origFrame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, pedobjmask, origFrame);
     }
 
     // check intersections
@@ -72,13 +74,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 
       // reasonably sure this is a ped; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, objmask,origFrame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, pedobjmask,origFrame);
     } else {
       pedVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, objmask,origFrame);
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, objmask,origFrame);
+      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, carobjmask,origFrame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, pedobjmask,origFrame);
     }
   } else carPathCount++;
 
@@ -98,7 +100,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 }
 
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& origFrame) {
-
+  centroid = getCentroidBox();
   if(type == TYPE_CAR) {
     // @MEGAN
     // TODO >>> run Haar on mask/image
