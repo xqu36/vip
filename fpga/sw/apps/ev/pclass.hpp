@@ -38,15 +38,16 @@ private:
   int carPathCount;
   int pedPathCount;
 
-  int carPathIsValid;
-  int pedPathIsValid;
+  bool carPathIsValid;
+  bool pedPathIsValid;
 
   int carsInPath, pedsInPath;
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
 
-
 public:
+  bool bgValid;
+
   Mat carPath;
   Mat pedPath;
 
@@ -55,8 +56,7 @@ public:
 
   PathClassifier(int rows, int cols);
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
-  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask, const Mat& frame);
-  //void redrawMask(deque<Mat> carQueue);
+  void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame);
   void redrawMask();
 };
 

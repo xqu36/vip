@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
       dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
-      //erode(objmask, objmask, sE_d, Point(-1, -1), 4);
+      erode(objmask, objmask, sE_d, Point(-1, -1), 2);
 
       distanceTransform(objmask, dist, CV_DIST_L2, 3);
       normalize(dist, dist, 0, 255, NORM_MINMAX);
@@ -173,44 +173,45 @@ int main(int argc, char** argv) {
       dist.convertTo(dist, CV_8U);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], dist, oframe);
-      //classification = pclass.classify(vec_cc[i], objmask, oframe);
+      //classification = pclass.classify(vec_cc[i], dist, oframe);
+      classification = pclass.classify(vec_cc[i], objmask, oframe);
       
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
-          rectangle(frame, r, Scalar(0,0,255));
+          //rectangle(oframe, r, Scalar(0,0,255));
           instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
-          rectangle(frame, r, Scalar(0,0,255), 3);
+          rectangle(oframe, r, Scalar(0,0,255), 3);
           instCarCount++;
           break;
         case TYPE_PED:
-          rectangle(frame, r, Scalar(255,0,0));
+          //rectangle(oframe, r, Scalar(255,0,0));
           instPedCount++;
           break;
         case TYPE_PED_ONPATH:
-          rectangle(frame, r, Scalar(255,0,0), 3);
+          rectangle(oframe, r, Scalar(255,0,0), 3);
           instPedCount++;
           break;
         case TYPE_UNCLASS: 
-          //rectangle(frame, r, Scalar(0,255,0));
+          //rectangle(oframe, r, Scalar(0,255,0));
           break;
         default:
           break;
       }
 
       //display centroids
-      circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
-      circle(frame, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
+      //circle(oframe, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
+      //circle(oframe, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
     }
 
     vstats.updateFPS();
-    //vstats.displayStats();
+//    vstats.displayStats();
+    if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */
-    imshow("frame", frame);
+    imshow("frame", oframe);
     imshow("path", pclass.carPath);
     imshow("ppath", pclass.pedPath);
 
