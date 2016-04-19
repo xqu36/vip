@@ -250,15 +250,15 @@ int main(int argc, char** argv) {
 
     Mat editCarPath;
     merge(rgbSplit, 3, editCarPath);
-    editCarPath.convertTo(editCarPath, CV_8U);
-    //cout << editCarPath.rows << " " << editCarPath.cols << endl << pclass.carPath.rows << " " << pclass.carPath.cols << endl;
+	cvtColor(editCarPath, editCarPath, CV_BGR2GRAY);
+	//cout << editCarPath.rows << " " << editCarPath.cols << endl << pclass.carPath.rows << " " << pclass.carPath.cols << endl;
 
     //editCarPath = editCarPath & pclass.carPath;
 
     imshow("frame_r", frame_r);
 
     Mat dangerPath = pclass.carPath & pclass.pedPath;
-    //dangerPath = dangerPath & editCarPath;
+    dangerPath = dangerPath & editCarPath;
 
     /* OUT */
     imshow("frame", frame);
