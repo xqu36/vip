@@ -1,0 +1,4 @@
+wpa_supplicant Installation and Configuration
+=============================================
+
+This application install the pre-compiled wpa_supplicant and dependencies into the PetaLinux rootfs.
