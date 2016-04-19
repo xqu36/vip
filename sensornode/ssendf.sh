@@ -5,9 +5,12 @@ enckey="${filename}.enckey"
 enctxt="${filename}.enctxt"
 sendfile="${filename}.send"
 touch $sendfile
-printf '***BeginKey***\n' > $sendfile
+printf '***BeginEnc***\n' > $sendfile
 cat $enckey > $sendfile
 printf '\n***BeginTxt***\n' > $sendfile
 cat $enctxt > $sendfile
-curl -v -text title=$sendfile -F upl=@$sendfile localhost #change this to the server address once its ready
-
+curl -v -F enk=@$enckey localhost 
+curl -v -F ent=@$enctxt localhost #change this to the server address once its ready
+rm $enckey
+rm $enctxt
+rm $sendfile
