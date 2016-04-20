@@ -9,9 +9,9 @@
 # run as a cronjob that operates daily.
 
 # Web URL of the binary file (dummy file for now)
-WEB_URL="http://smartcities.gatech.edu/testFile.txt"
+WEB_URL="http://smartcities.gatech.edu/BOOT.bin"
 # Location of the target directory
-MOUNTED_DIRECTORY="/home/jude/"
+MOUNTED_DIRECTORY="/lib/firmware/"
 # Name for downloaded file
 OUTPUT_FILENAME="BOOT.bin"
 
