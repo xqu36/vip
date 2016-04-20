@@ -179,7 +179,7 @@ int main(int argc, char** argv) {
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
-          //rectangle(oframe, r, Scalar(0,0,255));
+          rectangle(oframe, r, Scalar(0,0,255));
           instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
@@ -187,7 +187,7 @@ int main(int argc, char** argv) {
           instCarCount++;
           break;
         case TYPE_PED:
-          //rectangle(oframe, r, Scalar(255,0,0));
+          rectangle(oframe, r, Scalar(255,0,0));
           instPedCount++;
           break;
         case TYPE_PED_ONPATH:
@@ -195,7 +195,7 @@ int main(int argc, char** argv) {
           instPedCount++;
           break;
         case TYPE_UNCLASS: 
-          //rectangle(oframe, r, Scalar(0,255,0));
+          rectangle(oframe, r, Scalar(0,255,0));
           break;
         default:
           break;
@@ -207,7 +207,7 @@ int main(int argc, char** argv) {
     }
 
     vstats.updateFPS();
-//    vstats.displayStats();
+    vstats.displayStats();
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */

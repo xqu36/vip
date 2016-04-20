@@ -26,8 +26,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 200;
-  carsInPath = 200;
+  pedsInPath = 300;
+  carsInPath = 400;
 
   bgValid = false;
 }
@@ -55,8 +55,8 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   else carVotes += 30;
   if(cc_pix > CAR_SIZE_THRESHOLD) carVotes += 0; // disabled
 
-  if(pedQueue.size() >= pedsInPath) pedPathIsValid = true;
-  if(carQueue.size() >= carsInPath) carPathIsValid = true;
+  if(pedQueue.size() >= pedsInPath/3) pedPathIsValid = true;
+  if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
 
   // second stage: Path Position
   if(bgValid) {
@@ -69,13 +69,15 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
       // reasonably sure this is a car; on path with more votes. Update path
       // TODO: assign weights with updating path?
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, outType, objmask, frame);
-      if(outType != TYPE_CAR_ONPATH) carVotes -= 20;
+      if(outType != TYPE_CAR_ONPATH) carVotes = 0;
     } else {
-      if(carVotes > 0) carVotes -= 20;
+      //if(carVotes > 0) carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
+      //if(outType != TYPE_CAR || outType != TYPE_CAR_ONPATH) carVotes = 0;
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
+      //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
     }
 
     // check intersections
@@ -85,15 +87,20 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
       // reasonably sure this is a ped; on path with more votes. Update path
       // TODO: assign weights with updating path?
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, outType, objmask, frame);
-      if(outType != TYPE_PED_ONPATH) pedVotes -= 20;
+      if(outType != TYPE_PED_ONPATH) pedVotes -= 0;
     } else {
-      if(pedVotes > 0) pedVotes -= 20;
+      //if(pedVotes > 0) pedVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
       if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
+      //if(outType != TYPE_CAR || outType != TYPE_CAR_ONPATH) carVotes = 0;
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
+      //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
     }
   } else ;
+
+  //if(!carPathIsValid) cout << "carPathIsValid = false" << endl;
+  //if(!pedPathIsValid) cout << "pedPathIsValid = false" << endl;
 
   if(pedVotes < 10 && carVotes < 10 || pedVotes == carVotes) 
     return TYPE_UNCLASS;
@@ -136,16 +143,19 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
     //cout << "Min Car Size: " << cardetect.getMinSize().width << ", " << cardetect.getMinSize().height << endl;
     //cout << "Max Car Size: " << cardetect.getMaxSize().width << ", " << cardetect.getMaxSize().height << endl;
 
-    int scaledMaxHeight = 0.8 * cardetect.getMaxSize().height;
-    int scaledMaxWidth = 0.8 * cardetect.getMaxSize().width;
-    int scaledMinHeight = 1.2 * cardetect.getMinSize().height;
-    int scaledMinWidth = 1.2 * cardetect.getMinSize().width;
+    int scaledMaxHeight = 1.2 * cardetect.getMaxSize().height;
+    int scaledMaxWidth = 1.2 * cardetect.getMaxSize().width;
+    int scaledMinHeight = 0.8 * cardetect.getMinSize().height;
+    int scaledMinWidth = 0.8 * cardetect.getMinSize().width;
     int avgHeight = scaledMaxHeight+scaledMinHeight / 2;
     int avgWidth = scaledMaxWidth+scaledMinWidth / 2;
 
-    if(rectMask.size().height < avgHeight || rectMask.size().width < avgWidth) {
-    //if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
-    //   rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth) {
+    //if(rectMask.size().height < avgHeight || rectMask.size().width < avgWidth) {
+    if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
+       rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
+       !carPathIsValid) {
+
+      //cout << "DOUBLE CHECKING: Car" << endl;
 
       if(cardetect.detectCar(objframe, rectMask.size())) {
         if (carQueue.size() < carsInPath) {
@@ -159,6 +169,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         outType = TYPE_CAR_ONPATH;
       } else outType = TYPE_UNCLASS;
     } else {
+      /*
       if (carQueue.size() < carsInPath) {
         carQueue.push_back(objmask);
         redrawMask();
@@ -167,6 +178,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         carQueue.push_back(objmask);
         redrawMask();
       }
+    */
     }
   } else if(type == TYPE_PED) {
 
@@ -195,12 +207,14 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
     }
   } else if(type == TYPE_PED_ONPATH) {
 
-    int scaledMaxHeight = 1.0 * peddetect.getMaxSize().height;
-    int scaledMaxWidth = 1.0 * peddetect.getMaxSize().width;
-    int scaledMinHeight = 1.0 * peddetect.getMinSize().height;
-    int scaledMinWidth = 1.0 * peddetect.getMinSize().width;
+    int scaledMaxHeight = 1.2 * peddetect.getMaxSize().height;
+    int scaledMaxWidth = 1.2 * peddetect.getMaxSize().width;
+    int scaledMinHeight = 0.8 * peddetect.getMinSize().height;
+    int scaledMinWidth = 0.8 * peddetect.getMinSize().width;
+
     if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
-       rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth) {
+       rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
+       !pedPathIsValid) {
 
     //if(rectMask.size().height > peddetect.getMaxSize().height || rectMask.size().width > peddetect.getMaxSize().width ||
     //   rectMask.size().height < peddetect.getMinSize().height || rectMask.size().width < peddetect.getMinSize().width) {
@@ -211,6 +225,8 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       if(rectMask.size().height < 128 || rectMask.size().width < 64) {
         resize(objframe, re_objframe, Size(64,128));
       }
+
+      //cout << "DOUBLE CHECKING: Pedestrian" << endl;
 
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
@@ -257,7 +273,7 @@ void PathClassifier::redrawMask() {
 
     distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
     normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
-    threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
+    threshold(pedPath, pedPath, 80, 255, THRESH_BINARY);
     dilate(pedPath, pedPath, Mat(), Point(-1,-1));
     pedPath.convertTo(pedPath, CV_8U);
 }
