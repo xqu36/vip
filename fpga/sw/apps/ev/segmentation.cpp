@@ -48,6 +48,8 @@ int main(int argc, char** argv) {
   Mat foregroundMask, backgroundModel;
   Mat foregroundMask_ed1, foregroundMask_ed2, foregroundMask_ed3;
   Mat dist;
+  Mat dangerPath;
+  bool ped;
 
   Mat prev_gradient = frame.clone();
   cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
@@ -169,6 +171,8 @@ int main(int argc, char** argv) {
 
       int classification = -1;
       classification = pclass.classify(vec_cc[i], dist, objmask, frame);
+
+      ped = false;
       
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
@@ -183,10 +187,12 @@ int main(int argc, char** argv) {
         case TYPE_PED:
           rectangle(frame, r, Scalar(255,0,0));
           instPedCount++;
+          ped = true;
           break;
         case TYPE_PED_ONPATH:
           rectangle(frame, r, Scalar(255,0,0), 3);
           instPedCount++;
+          ped = true;
           break;
         case TYPE_UNCLASS: 
           rectangle(frame, r, Scalar(0,255,0));
@@ -196,7 +202,11 @@ int main(int argc, char** argv) {
       }
 
       //display centroids
-      circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
+      Point centroid = vec_cc[i].getCentroidExact(objmask);
+      if(ped && !dangerPath.empty() && dangerPath.at<unsigned char>(centroid.x, centroid.y) != 0)
+      	circle(frame, centroid, 5, Scalar(255,0,0));
+      else
+      	circle(frame, centroid, 5, Scalar(0,80,80));
       circle(frame, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
     }
 
@@ -253,12 +263,12 @@ int main(int argc, char** argv) {
 	cvtColor(editCarPath, editCarPath, CV_BGR2GRAY);
 	//cout << editCarPath.rows << " " << editCarPath.cols << endl << pclass.carPath.rows << " " << pclass.carPath.cols << endl;
 
-    //editCarPath = editCarPath & pclass.carPath;
+    editCarPath = editCarPath & pclass.carPath;
 
     imshow("frame_r", frame_r);
 
-    Mat dangerPath = pclass.carPath & pclass.pedPath;
-    dangerPath = dangerPath & editCarPath;
+    dangerPath = editCarPath & pclass.pedPath;
+    //dangerPath = dangerPath & editCarPath;
 
     /* OUT */
     imshow("frame", frame);
