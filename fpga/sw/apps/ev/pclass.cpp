@@ -140,8 +140,6 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
   // already reasonably confident about car-ness
   } else if (type == TYPE_CAR_ONPATH) {
-    //cout << "Min Car Size: " << cardetect.getMinSize().width << ", " << cardetect.getMinSize().height << endl;
-    //cout << "Max Car Size: " << cardetect.getMaxSize().width << ", " << cardetect.getMaxSize().height << endl;
 
     int scaledMaxHeight = 1.2 * cardetect.getMaxSize().height;
     int scaledMaxWidth = 1.2 * cardetect.getMaxSize().width;
