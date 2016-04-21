@@ -218,7 +218,7 @@ int main(int argc, char** argv) {
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
-    if(waitKey(25) >= 0) break;
+    if(waitKey(30) >= 0) break;
   }
   return 0;
 }
