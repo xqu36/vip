@@ -113,7 +113,7 @@ while True:
 			strio.write(str(time.time()) + ",1,IR,%s" % IRAvg + "\r\n")
 		#	tempStr += "\nIR: %s" % IRAvg
 		if connectedUS:
-			strio.write(str(time.time()) + ",1,US,%s" % USAvg + "\r\n")
+			strio.write(str(time.time()) + ",2,US,%s" % USAvg + "\r\n")
 		#	tempStr += "\nUS: %s" % USAvg
 		#tempStr += "\n"
 		#print tempStr
@@ -127,9 +127,11 @@ while True:
 	time.sleep(interval)
 
 output = StringIO(strio.getvalue())
-data = json.dumps(list(csv.DictReader(output,fields)), indent=4)
+data = json.dumps(list(csv.DictReader(output,fields)))
 jsonf = open(initname, 'w')
+jsonf.write("{\"data\":")
 jsonf.write(data)
+jsonf.write{"}"}
 jsonf.close()
 output.close()
 strio.close()
