@@ -48,6 +48,8 @@ int main(int argc, char** argv) {
   Mat foregroundMask, backgroundModel;
   Mat foregroundMask_ed1, foregroundMask_ed2, foregroundMask_ed3;
   Mat dist;
+  Mat dangerPath;
+  bool ped = false, pedInDanger = false;
 
   Mat prev_gradient = frame.clone();
   cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
@@ -76,7 +78,64 @@ int main(int argc, char** argv) {
 
   // processing loop
   cout << endl;
+
   for(;;) {
+
+
+  	Mat rgbSplit[3], frame_r, frame_g, frame_b;
+    int rAve = 0, gAve = 0, bAve = 0, pixCount = 0;
+    split(frame, rgbSplit);
+    frame_r = rgbSplit[0] & pclass.carPath;
+    frame_g = rgbSplit[1] & pclass.carPath;
+    frame_b = rgbSplit[2] & pclass.carPath;
+
+    for(int r = 0; r < frame_r.rows; r++){
+    	for(int c = 0; c < frame_r.cols; c++){
+    		if(pclass.carPath.at<unsigned char>(r, c) != 0){
+    			pixCount++;
+    			rAve += (int) frame_r.at<unsigned char>(r, c);
+    			gAve += (int) frame_g.at<unsigned char>(r, c);
+    			bAve += (int) frame_b.at<unsigned char>(r, c);
+    		}
+    	}
+    }
+    if(pixCount != 0){
+    	rAve = rAve / pixCount;
+	    gAve = gAve / pixCount;
+	    bAve = bAve / pixCount;
+	    threshold(frame_r, frame_r, rAve - 30, 255, THRESH_TOZERO);
+		threshold(frame_r, frame_r, rAve + 30, 255, THRESH_TOZERO_INV);
+		threshold(frame_g, frame_g, gAve - 30, 255, THRESH_TOZERO);
+		threshold(frame_g, frame_g, gAve + 30, 255, THRESH_TOZERO_INV);
+		threshold(frame_b, frame_b, bAve - 30, 255, THRESH_TOZERO);
+		threshold(frame_b, frame_b, bAve + 30, 255, THRESH_TOZERO_INV);
+		for(int r = 0; r < frame_r.rows; r++){
+    		for(int c = 0; c < frame_r.cols; c++){
+		      if(frame_r.at<unsigned char>(r, c) == 0){
+		        frame_g.at<unsigned char>(r, c) = 0;
+		        frame_b.at<unsigned char>(r, c) = 0;
+		      }
+		      else if(frame_g.at<unsigned char>(r, c) == 0){
+		        frame_r.at<unsigned char>(r, c) = 0;
+		        frame_b.at<unsigned char>(r, c) = 0;
+		      }
+		      else if(frame_b.at<unsigned char>(r, c) == 0){
+		        frame_g.at<unsigned char>(r, c) = 0;
+		        frame_r.at<unsigned char>(r, c) = 0;
+		      }
+		    }
+		}
+    }
+
+    Mat editCarPath;
+    merge(rgbSplit, 3, editCarPath);
+	cvtColor(editCarPath, editCarPath, CV_BGR2GRAY);
+	//cout << editCarPath.rows << " " << editCarPath.cols << endl << pclass.carPath.rows << " " << pclass.carPath.cols << endl;
+
+    editCarPath = editCarPath & pclass.carPath;
+
+    dangerPath = editCarPath & pclass.pedPath;
+    //dangerPath = dangerPath & editCarPath;
 
     /* PRE-PROCESSING */
 
@@ -173,46 +232,64 @@ int main(int argc, char** argv) {
       dist.convertTo(dist, CV_8U);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], dist, oframe);
-      //classification = pclass.classify(vec_cc[i], objmask, oframe);
-      
+      //classification = pclass.classify(vec_cc[i], dist, oframe);
+      classification = pclass.classify(vec_cc[i], objmask, oframe);
+
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
           rectangle(frame, r, Scalar(0,0,255));
           instCarCount++;
+          ped = false;
           break;
         case TYPE_CAR_ONPATH:
           rectangle(frame, r, Scalar(0,0,255), 3);
           instCarCount++;
+          ped = false;
           break;
         case TYPE_PED:
           rectangle(frame, r, Scalar(255,0,0));
           instPedCount++;
+          ped = true;
           break;
         case TYPE_PED_ONPATH:
           rectangle(frame, r, Scalar(255,0,0), 3);
           instPedCount++;
+          ped = true;
           break;
         case TYPE_UNCLASS: 
           //rectangle(frame, r, Scalar(0,255,0));
+          ped = false;
           break;
         default:
+          ped = false;
           break;
       }
 
       //display centroids
-      circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
-      circle(frame, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
+      Point centroid = vec_cc[i].getCentroidBox();
+      //circle(frame, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
+      if(ped && dangerPath.at<int>(centroid.x, centroid.y) != 0){
+      	circle(frame, centroid, 5, Scalar(255,0,0));
+      	pedInDanger = true;
+      }
+      else{
+      	circle(frame, centroid, 5, Scalar(0,255,0));
+      	pedInDanger = false;
+      }
+
     }
 
     vstats.updateFPS();
     //vstats.displayStats();
 
+    
+
     /* OUT */
     imshow("frame", frame);
     imshow("path", pclass.carPath);
     imshow("ppath", pclass.pedPath);
+    imshow("danger", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
