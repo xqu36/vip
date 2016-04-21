@@ -26,7 +26,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 300;
+  pedsInPath = 400;
   carsInPath = 400;
 
   bgValid = false;
@@ -141,10 +141,10 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
   // already reasonably confident about car-ness
   } else if (type == TYPE_CAR_ONPATH) {
 
-    int scaledMaxHeight = 1.2 * cardetect.getMaxSize().height;
-    int scaledMaxWidth = 1.2 * cardetect.getMaxSize().width;
-    int scaledMinHeight = 0.8 * cardetect.getMinSize().height;
-    int scaledMinWidth = 0.8 * cardetect.getMinSize().width;
+    int scaledMaxHeight = 1.1 * cardetect.getMaxSize().height;
+    int scaledMaxWidth = 1.1 * cardetect.getMaxSize().width;
+    int scaledMinHeight = 0.9 * cardetect.getMinSize().height;
+    int scaledMinWidth = 0.9 * cardetect.getMinSize().width;
     int avgHeight = scaledMaxHeight+scaledMinHeight / 2;
     int avgWidth = scaledMaxWidth+scaledMinWidth / 2;
 
@@ -167,7 +167,6 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         outType = TYPE_CAR_ONPATH;
       } else outType = TYPE_UNCLASS;
     } else {
-      /*
       if (carQueue.size() < carsInPath) {
         carQueue.push_back(objmask);
         redrawMask();
@@ -176,7 +175,6 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         carQueue.push_back(objmask);
         redrawMask();
       }
-    */
     }
   } else if(type == TYPE_PED) {
 
@@ -240,6 +238,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         outType = TYPE_PED_ONPATH;
       } else outType = TYPE_UNCLASS;
     } else {
+      /*
       if(pedQueue.size() < pedsInPath) {
         pedQueue.push_back(objmask);
         redrawMask();
@@ -248,6 +247,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         pedQueue.push_back(objmask);
         redrawMask();
       }
+      */
     }
   }
 }
@@ -257,10 +257,14 @@ void PathClassifier::redrawMask() {
     for(int i = 0; i < carQueue.size(); i++) {
         carPath |= carQueue[i];
     }
+
+    Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+    dilate(pedPath, pedPath, sE_d, Point(-1,-1), 1);
+
     /*
     distanceTransform(carPath, carPath, CV_DIST_L2, 3);
     normalize(carPath, carPath, 0, 255, NORM_MINMAX);
-    threshold(carPath, carPath, 0, 255, THRESH_TOZERO);
+    threshold(carPath, carPath, 40, 255, THRESH_BINARY);
     carPath.convertTo(carPath, CV_8U);
     */
 
@@ -271,8 +275,10 @@ void PathClassifier::redrawMask() {
 
     distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
     normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
-    threshold(pedPath, pedPath, 80, 255, THRESH_BINARY);
-    dilate(pedPath, pedPath, Mat(), Point(-1,-1));
+    threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
+
+    dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
+
     pedPath.convertTo(pedPath, CV_8U);
 }
 

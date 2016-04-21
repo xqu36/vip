@@ -38,15 +38,15 @@ private:
   int carPathCount;
   int pedPathCount;
 
-  bool carPathIsValid;
-  bool pedPathIsValid;
-
   int carsInPath, pedsInPath;
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
 
 public:
   bool bgValid;
+
+  bool carPathIsValid;
+  bool pedPathIsValid;
 
   Mat carPath;
   Mat pedPath;

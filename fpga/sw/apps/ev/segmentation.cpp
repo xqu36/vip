@@ -46,8 +46,12 @@ int main(int argc, char** argv) {
 
   Mat oframe;
   Mat foregroundMask, backgroundModel;
-  Mat foregroundMask_ed1, foregroundMask_ed2, foregroundMask_ed3;
-  Mat dist;
+  Mat foregroundMask_ed3;
+
+  Mat dangerPath;
+
+  bool ped = false, pedInDanger = false;
+  //Mat dist;
 
   Mat prev_gradient = frame.clone();
   cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
@@ -91,6 +95,8 @@ int main(int argc, char** argv) {
         continue;
     }
 
+    dangerPath = pclass.carPath & pclass.pedPath;
+
     //medianBlur(frame, frame, 7);
     frame.copyTo(oframe);
     GaussianBlur(frame, frame, Size(5, 5), 0, 0);
@@ -114,6 +120,7 @@ int main(int argc, char** argv) {
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
+    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
 
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
@@ -155,34 +162,43 @@ int main(int argc, char** argv) {
       //classification = pclass.classify(vec_cc[i], dist, oframe);
       classification = pclass.classify(vec_cc[i], objmask, oframe);
       
+      ped = false;
+      bool draw = pclass.carPathIsValid && pclass.pedPathIsValid;
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
-          rectangle(oframe, r, Scalar(0,0,255));
+          if(draw) rectangle(oframe, r, Scalar(0,0,255));
           instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
-          rectangle(oframe, r, Scalar(0,0,255), 3);
+          if(draw) rectangle(oframe, r, Scalar(0,0,255), 3);
           instCarCount++;
           break;
         case TYPE_PED:
-          rectangle(oframe, r, Scalar(255,0,0));
+          if(draw) rectangle(oframe, r, Scalar(255,0,0));
           instPedCount++;
           break;
         case TYPE_PED_ONPATH:
-          rectangle(oframe, r, Scalar(255,0,0), 3);
+          if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
           instPedCount++;
+          ped = true;
           break;
         case TYPE_UNCLASS: 
-          //rectangle(oframe, r, Scalar(0,255,0));
+          if(draw) rectangle(oframe, r, Scalar(0,255,0));
           break;
         default:
           break;
       }
 
       //display centroids
-      circle(oframe, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
-      circle(oframe, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
+      Point centroid = vec_cc[i].getCentroidBox();
+      if(ped && dangerPath.at<unsigned char>(centroid) != 0 &&
+         pclass.pedPathIsValid && pclass.carPathIsValid){
+
+      	circle(oframe, centroid, 5, Scalar(0,0,255), 4);
+      	pedInDanger = true;
+      }
+      else pedInDanger = false;
     }
 
     vstats.updateFPS();
@@ -191,15 +207,16 @@ int main(int argc, char** argv) {
 
     /* OUT */
     imshow("frame", oframe);
-    imshow("path", pclass.carPath);
-    imshow("ppath", pclass.pedPath);
+    //imshow("path", pclass.carPath);
+    //imshow("ppath", pclass.pedPath);
+    imshow("dpath", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
-    if(waitKey(5) >= 0) break;
+    if(waitKey(10) >= 0) break;
   }
   return 0;
 }
