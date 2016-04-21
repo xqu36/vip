@@ -87,9 +87,7 @@ int main(int argc, char** argv) {
     // check if we need to restart the video
     if(frame.empty()) {
         // Looks like we've hit the end of our feed! Restart
-        cout << "Frame is empty, restarting..." << endl;
         capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
-        cout << "Done!" << endl;
         continue;
     }
 
@@ -111,30 +109,11 @@ int main(int argc, char** argv) {
     MOG(frame, foregroundMask, 0.005);
     MOG.getBackgroundImage(backgroundModel);
 
-    Mat shadowMask = Mat::zeros(frame.rows, frame.cols, CV_8U);
-
-	  //chr.removeShadows(frame, foregroundMask, backgroundModel, chrMask, shadowMask);
-	  //lrTex.removeShadows(frame, foregroundMask, backgroundModel, lrTexMask);
-
     // remove detected shadows
     threshold(foregroundMask, foregroundMask, 128, 255, THRESH_TOZERO);
-    //threshold(chrMask, chrMask, 128, 255, THRESH_TOZERO);
-    //threshold(lrTexMask, lrTexMask, 128, 255, THRESH_TOZERO);
-/*
-    erode(lrTexMask, lrTexMask, sE, Point(-1, -1), 1);
-    dilate(lrTexMask, lrTexMask, sE, Point(-1, -1), 3);
-    erode(lrTexMask, lrTexMask, sE, Point(-1, -1), 2);
-*/
-    //erode and dilate
-    /*
-    distanceTransform(foregroundMask, dist, CV_DIST_L1, 3);
-    threshold(dist, dist, 1, 255, THRESH_BINARY);
-    dist.convertTo(dist, CV_8U);
-    */
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
-    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
 
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
@@ -163,14 +142,14 @@ int main(int argc, char** argv) {
       dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
       erode(objmask, objmask, sE_d, Point(-1, -1), 2);
 
-      distanceTransform(objmask, dist, CV_DIST_L2, 3);
-      normalize(dist, dist, 0, 255, NORM_MINMAX);
-      threshold(dist, dist, 150, 255, THRESH_TOZERO);
-      dist.convertTo(dist, CV_8U);
+      //distanceTransform(objmask, dist, CV_DIST_L2, 3);
+      //normalize(dist, dist, 0, 255, NORM_MINMAX);
+      //threshold(dist, dist, 150, 255, THRESH_TOZERO);
+      //dist.convertTo(dist, CV_8U);
 
-      distanceTransform(dist, dist, CV_DIST_L2, 3);
-      normalize(dist, dist, 0, 255, NORM_MINMAX);
-      dist.convertTo(dist, CV_8U);
+      //distanceTransform(dist, dist, CV_DIST_L2, 3);
+      //normalize(dist, dist, 0, 255, NORM_MINMAX);
+      //dist.convertTo(dist, CV_8U);
 
       int classification = -1;
       //classification = pclass.classify(vec_cc[i], dist, oframe);
@@ -195,15 +174,15 @@ int main(int argc, char** argv) {
           instPedCount++;
           break;
         case TYPE_UNCLASS: 
-          rectangle(oframe, r, Scalar(0,255,0));
+          //rectangle(oframe, r, Scalar(0,255,0));
           break;
         default:
           break;
       }
 
       //display centroids
-      //circle(oframe, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
-      //circle(oframe, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
+      circle(oframe, vec_cc[i].getCentroidExact(objmask), 5, Scalar(0,80,80));
+      circle(oframe, vec_cc[i].getCentroidBox(), 5, Scalar(0,255,0));
     }
 
     vstats.updateFPS();
@@ -220,7 +199,7 @@ int main(int argc, char** argv) {
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
-    if(waitKey(30) >= 0) break;
+    if(waitKey(5) >= 0) break;
   }
   return 0;
 }
