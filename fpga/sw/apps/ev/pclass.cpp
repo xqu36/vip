@@ -257,10 +257,6 @@ void PathClassifier::redrawMask() {
     for(int i = 0; i < carQueue.size(); i++) {
         carPath |= carQueue[i];
     }
-
-    Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
-    dilate(pedPath, pedPath, sE_d, Point(-1,-1), 1);
-
     /*
     distanceTransform(carPath, carPath, CV_DIST_L2, 3);
     normalize(carPath, carPath, 0, 255, NORM_MINMAX);
@@ -277,6 +273,7 @@ void PathClassifier::redrawMask() {
     normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
     threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
 
+    Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 
     pedPath.convertTo(pedPath, CV_8U);

@@ -95,6 +95,7 @@ int main(int argc, char** argv) {
         continue;
     }
 
+    // update the danger path
     dangerPath = pclass.carPath & pclass.pedPath;
 
     //medianBlur(frame, frame, 7);
@@ -147,7 +148,7 @@ int main(int argc, char** argv) {
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
       dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
-      erode(objmask, objmask, sE_d, Point(-1, -1), 2);
+      //erode(objmask, objmask, sE_d, Point(-1, -1), 2);
 
       //distanceTransform(objmask, dist, CV_DIST_L2, 3);
       //normalize(dist, dist, 0, 255, NORM_MINMAX);
@@ -167,7 +168,7 @@ int main(int argc, char** argv) {
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
-          if(draw) rectangle(oframe, r, Scalar(0,0,255));
+          //if(draw) rectangle(oframe, r, Scalar(0,0,255));
           instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
@@ -175,7 +176,7 @@ int main(int argc, char** argv) {
           instCarCount++;
           break;
         case TYPE_PED:
-          if(draw) rectangle(oframe, r, Scalar(255,0,0));
+          //if(draw) rectangle(oframe, r, Scalar(255,0,0));
           instPedCount++;
           break;
         case TYPE_PED_ONPATH:
@@ -184,7 +185,7 @@ int main(int argc, char** argv) {
           ped = true;
           break;
         case TYPE_UNCLASS: 
-          if(draw) rectangle(oframe, r, Scalar(0,255,0));
+          //if(draw) rectangle(oframe, r, Scalar(0,255,0));
           break;
         default:
           break;
@@ -209,6 +210,7 @@ int main(int argc, char** argv) {
     imshow("frame", oframe);
     //imshow("path", pclass.carPath);
     //imshow("ppath", pclass.pedPath);
+    if(!pclass.pedPathIsValid || !pclass.carPathIsValid) dangerPath /= 2;
     imshow("dpath", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
@@ -216,7 +218,7 @@ int main(int argc, char** argv) {
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
-    if(waitKey(10) >= 0) break;
+    if(waitKey(25) >= 0) break;
   }
   return 0;
 }
