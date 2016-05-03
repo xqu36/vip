@@ -3,6 +3,8 @@
  * 
  * Main program with which to experiment with segmentation
  *
+ *  ZED-READY --> no references to imshow or anything needed visually
+ *
  */
 
 #include "segmentation.hpp"
@@ -77,6 +79,8 @@ int main(int argc, char** argv) {
 
   int instPedCount, instCarCount;
   int prevPedCount, prevCarCount;
+
+  int result = -1;
 
   // processing loop
   cout << endl;
@@ -174,7 +178,7 @@ int main(int argc, char** argv) {
           instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
-          if(draw) rectangle(oframe, r, Scalar(0,0,255), 3);
+          //if(draw) rectangle(oframe, r, Scalar(0,0,255), 3);
           instCarCount++;
           break;
         case TYPE_PED:
@@ -182,7 +186,7 @@ int main(int argc, char** argv) {
           instPedCount++;
           break;
         case TYPE_PED_ONPATH:
-          if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
+          //if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
           instPedCount++;
           ped = true;
           break;
@@ -204,24 +208,30 @@ int main(int argc, char** argv) {
       else pedInDanger = false;
     }
 
+    result = -1;
+    if(!pclass.pedPathIsValid || !pclass.carPathIsValid) {
+      result = 0; // CALIBRATING
+      //dangerPath /= 2;
+    }
+    if(pedInDanger) result = 1;
+
     vstats.updateAverageFPS();
     vstats.updateFPS();
-    vstats.displayStats("average");
+    vstats.displayStats("inst", result);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */
-    imshow("frame", oframe);
+    //imshow("frame", oframe);
     //imshow("path", pclass.carPath);
     //imshow("ppath", pclass.pedPath);
-    if(!pclass.pedPathIsValid || !pclass.carPathIsValid) dangerPath /= 2;
-    imshow("dpath", dangerPath);
+    //imshow("dpath", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
 
-    if(waitKey(30) >= 0) break;
+    if(waitKey(5) >= 0) break;
   }
   return 0;
 }

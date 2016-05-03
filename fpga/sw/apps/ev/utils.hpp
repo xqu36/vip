@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <cstdio>
 #include <climits>
@@ -39,7 +40,7 @@ public:
   void setHeight(int h);
   int getWidth();
   int getHeight();
-  void displayStats(string type);
+  void displayStats(string type, int result);
   int getCounter();
   double getUptime();
   void openLog();

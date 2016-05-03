@@ -57,18 +57,16 @@ int VideoStats::getHeight() {
   return height_res;
 }
 
-void VideoStats::displayStats(string type) {
-  if(type == "average") {
-    sprintf(display, "%.2f avg fps", fps);
-    cout << "\r[" 
-        << width_res << "x" << height_res << "] - " 
-        << display << "\tUptime: " << sec << flush;
-  } else if(type == "inst") {
-    sprintf(display, "%.2f inst fps", ifps);
-    cout << "\r[" 
-        << width_res << "x" << height_res << "] - " 
-        << display << "\tUptime: " << sec << flush;
-  }
+void VideoStats::displayStats(string type, int result) {
+
+  if(type == "average") sprintf(display, "%.2f average fps", fps);
+  else if(type == "inst")  sprintf(display, "%.2f instant fps", ifps);
+
+  cout << "\r[" 
+      << width_res << "x" << height_res << "] - " 
+      << setfill('0') << setw(17) << display
+      << "\tUptime: " << sec << "s"
+      << "\t[" << setfill('+') << setw(2) << result << "]" << flush;
 }
 
 int VideoStats::getCounter() {
