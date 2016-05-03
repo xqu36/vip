@@ -78,16 +78,13 @@ int main(int argc, char** argv) {
   int instPedCount, instCarCount;
   int prevPedCount, prevCarCount;
 
-  // instantenous FPS
-  time_t fstart, fend;
-
   // processing loop
   cout << endl;
   for(;;) {
 
-    time(&fstart);
-
     /* PRE-PROCESSING */
+
+    vstats.prepareFPS();
 
     // take new current frame
     prev_frame = frame.clone();
@@ -207,8 +204,9 @@ int main(int argc, char** argv) {
       else pedInDanger = false;
     }
 
+    vstats.updateAverageFPS();
     vstats.updateFPS();
-    vstats.displayStats();
+    vstats.displayStats("average");
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */
@@ -222,12 +220,6 @@ int main(int argc, char** argv) {
     if(prevCarCount > instCarCount) carCount++; 
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
-    
-    time(&fend);
-
-    double sec = difftime(fend, fstart);
-    cout << "\tSec: " << sec << endl;
-    //cout << "\tInstantaneous FPS: " << (double)1/sec << endl;
 
     if(waitKey(30) >= 0) break;
   }

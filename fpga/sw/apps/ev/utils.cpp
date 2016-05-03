@@ -9,6 +9,7 @@ VideoStats::VideoStats() {
   counter = 0;
   sec = 0.0;
   fps = 0.0;
+  ifps = 0.0;
 
   width_res = 0;
   height_res = 0;
@@ -17,7 +18,7 @@ VideoStats::VideoStats() {
   time(&end);
 }
 
-void VideoStats::updateFPS() {
+void VideoStats::updateAverageFPS() {
   time(&end);
   counter++;  
 
@@ -27,6 +28,17 @@ void VideoStats::updateFPS() {
   if(counter == (INT_MAX - 1000)){
     counter = 0;
   }
+}
+
+void VideoStats::prepareFPS() {
+  istart = clock();
+}
+
+// this current impl ignores imshow and waitKey as part of its calculations
+void VideoStats::updateFPS() {
+  iend = clock();
+
+  ifps = 1 / ((iend - istart) / (double)CLOCKS_PER_SEC);
 }
 
 void VideoStats::setWidth(int w) {
@@ -45,11 +57,18 @@ int VideoStats::getHeight() {
   return height_res;
 }
 
-void VideoStats::displayStats() {
-  sprintf(display, "%.2f fps", fps);
-  cout << "\r[" 
-       << width_res << "x" << height_res << "] - " 
-       << display << "\tUptime: " << sec << flush;
+void VideoStats::displayStats(string type) {
+  if(type == "average") {
+    sprintf(display, "%.2f avg fps", fps);
+    cout << "\r[" 
+        << width_res << "x" << height_res << "] - " 
+        << display << "\tUptime: " << sec << flush;
+  } else if(type == "inst") {
+    sprintf(display, "%.2f inst fps", ifps);
+    cout << "\r[" 
+        << width_res << "x" << height_res << "] - " 
+        << display << "\tUptime: " << sec << flush;
+  }
 }
 
 int VideoStats::getCounter() {
@@ -72,23 +91,23 @@ void VideoStats::closeLog() {
 }
 
 void VideoStats::prepareWriteLog() {
-  time(&_start);
+  _start = clock();
 }
 
 void VideoStats::writeLog(string func, int level) {
-  time(&_end);
+  _end = clock();
 
-  _sec = difftime(_end, _start);
+  msec = (double)_end - (double)_start;
 
   switch(level) {
     case 0:
-      log << func << ":\t\t" << _sec*1000 << "ms" << endl;
+      log << func << ":\t\t" << msec << "ms" << endl;
       break;
     case 1:
-      log << "--> " << func << ":\t\t" << _sec*1000 << "ms" << endl;
+      log << "--> " << func << ":\t\t" << msec << "ms" << endl;
       break;
     case 2:
-      log << "------> " << func << ":\t\t" << _sec*1000 << "ms" << endl;
+      log << "------> " << func << ":\t\t" << msec << "ms" << endl;
       break;
     default:
       break;

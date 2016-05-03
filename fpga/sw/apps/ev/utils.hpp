@@ -10,6 +10,7 @@
 #include <fstream>
 #include <cstdio>
 #include <climits>
+#include <time.h>
 
 using namespace std;
 
@@ -18,24 +19,27 @@ private:
   int counter; 
   int width_res, height_res;
 
-  double fps;
-  double sec, _sec;
+  double fps, ifps;
+  double sec, msec, imsec;
 
   char display[20];
 
   time_t start, end;
-  time_t _start, _end;  // for writing to log
+  clock_t _start, _end;
+  clock_t istart, iend;
 
   ofstream log;
 
 public:
   VideoStats();
+  void updateAverageFPS();
+  void prepareFPS();
   void updateFPS();
   void setWidth(int w);
   void setHeight(int h);
   int getWidth();
   int getHeight();
-  void displayStats();
+  void displayStats(string type);
   int getCounter();
   double getUptime();
   void openLog();
