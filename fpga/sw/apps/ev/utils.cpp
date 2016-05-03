@@ -53,7 +53,7 @@ void VideoStats::displayStats() {
 }
 
 int VideoStats::getCounter() {
-    return counter;
+  return counter;
 }
 
 double VideoStats::getUptime() {
@@ -61,4 +61,36 @@ double VideoStats::getUptime() {
 
   sec = difftime(end, start);
   return sec;
+}
+
+void VideoStats::openLog() {
+  log.open("perf.log", ios::out | ios::app);
+}
+
+void VideoStats::closeLog() {
+  log.close();
+}
+
+void VideoStats::prepareWriteLog() {
+  time(&_start);
+}
+
+void VideoStats::writeLog(string func, int level) {
+  time(&_end);
+
+  _sec = difftime(_end, _start);
+
+  switch(level) {
+    case 0:
+      log << func << ":\t\t" << _sec*1000 << "ms" << endl;
+      break;
+    case 1:
+      log << "--> " << func << ":\t\t" << _sec*1000 << "ms" << endl;
+      break;
+    case 2:
+      log << "------> " << func << ":\t\t" << _sec*1000 << "ms" << endl;
+      break;
+    default:
+      break;
+  }
 }

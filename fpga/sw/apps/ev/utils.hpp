@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include <climits>
 
@@ -18,11 +19,14 @@ private:
   int width_res, height_res;
 
   double fps;
-  double sec;
+  double sec, _sec;
 
   char display[20];
 
   time_t start, end;
+  time_t _start, _end;  // for writing to log
+
+  ofstream log;
 
 public:
   VideoStats();
@@ -34,6 +38,10 @@ public:
   void displayStats();
   int getCounter();
   double getUptime();
+  void openLog();
+  void closeLog();
+  void prepareWriteLog();
+  void writeLog(string func, int level);
 };
 
 #endif // UTILS_H

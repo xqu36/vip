@@ -78,9 +78,14 @@ int main(int argc, char** argv) {
   int instPedCount, instCarCount;
   int prevPedCount, prevCarCount;
 
+  // instantenous FPS
+  time_t fstart, fend;
+
   // processing loop
   cout << endl;
   for(;;) {
+
+    time(&fstart);
 
     /* PRE-PROCESSING */
 
@@ -218,6 +223,12 @@ int main(int argc, char** argv) {
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
     
+    time(&fend);
+
+    double sec = difftime(fend, fstart);
+    cout << "\tSec: " << sec << endl;
+    //cout << "\tInstantaneous FPS: " << (double)1/sec << endl;
+
     if(waitKey(30) >= 0) break;
   }
   return 0;

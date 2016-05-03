@@ -27,7 +27,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   pedPathIsValid = false;
 
   pedsInPath = 400;
-  carsInPath = 400;
+  carsInPath = 600;
 
   bgValid = false;
 }
