@@ -45,6 +45,7 @@ public:
   double getUptime();
   void openLog();
   void closeLog();
+  void seekLog(ios_base::seekdir p);
   void prepareWriteLog();
   void writeLog(string func, int level);
 };

@@ -81,11 +81,15 @@ double VideoStats::getUptime() {
 }
 
 void VideoStats::openLog() {
-  log.open("perf.log", ios::out | ios::app);
+  log.open("perf.log", ios::out);
 }
 
 void VideoStats::closeLog() {
   log.close();
+}
+
+void VideoStats::seekLog(ios_base::seekdir p) {
+  log.seekp(0, p);
 }
 
 void VideoStats::prepareWriteLog() {
@@ -95,17 +99,17 @@ void VideoStats::prepareWriteLog() {
 void VideoStats::writeLog(string func, int level) {
   _end = clock();
 
-  msec = (double)_end - (double)_start;
+  msec = (_end - _start) / (double)CLOCKS_PER_SEC;
 
   switch(level) {
     case 0:
-      log << func << ":\t\t" << msec << "ms" << endl;
+      log << func << ":" << setfill(' ') << setw(40 - func.size()) << msec << "ms" << endl;
       break;
     case 1:
-      log << "--> " << func << ":\t\t" << msec << "ms" << endl;
+      log << "-->" << func << ":" << setfill(' ') << setw(40 - func.size()) << msec << "ms" << endl;
       break;
     case 2:
-      log << "------> " << func << ":\t\t" << msec << "ms" << endl;
+      log << "---->" << func << ":" << setfill(' ') << setw(40 - func.size()) << msec << "ms" << endl;
       break;
     default:
       break;

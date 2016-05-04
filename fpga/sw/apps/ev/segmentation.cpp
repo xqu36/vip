@@ -35,6 +35,8 @@ int main(int argc, char** argv) {
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
   vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
 
+  vstats.openLog();
+
   if (!capture.isOpened()) { 
     cout << "Capture failed to open." << endl; 
     return -1; 
@@ -86,18 +88,23 @@ int main(int argc, char** argv) {
   cout << endl;
   for(;;) {
 
+vstats.seekLog(ios::beg);
+
     /* PRE-PROCESSING */
 
     vstats.prepareFPS();
 
+vstats.prepareWriteLog();
     // take new current frame
     prev_frame = frame.clone();
     capture >> frame;
 
     // check if we need to restart the video
     if(frame.empty()) {
+vstats.prepareWriteLog();
         // Looks like we've hit the end of our feed! Restart
         capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
+vstats.writeLog("restart source", 1);
         continue;
     }
 
@@ -108,38 +115,52 @@ int main(int argc, char** argv) {
     frame.copyTo(oframe);
     GaussianBlur(frame, frame, Size(5, 5), 0, 0);
 
+vstats.writeLog("preprocessing", 0);
+
     /* PROCESSING */
 
+vstats.prepareWriteLog();
     // remove camera jitter 
     if(STABILIZE) frame = estimateMotion(&frame,  &prev_gradient);
+vstats.writeLog("stabilize", 0);
     if(RIGID_STABILIZE) {
       Mat M = estimateRigidTransform(prev_frame, frame, 0);
       warpAffine(frame, frame, M, Size(vstats.getWidth(), vstats.getHeight()), INTER_NEAREST|WARP_INVERSE_MAP);
     }
     if(OPENCV_STABILIZE) {}
 
+vstats.prepareWriteLog();
     // update background model
     MOG(frame, foregroundMask, 0.005);
     MOG.getBackgroundImage(backgroundModel);
+vstats.writeLog("MoG", 0);
 
+vstats.prepareWriteLog();
     // remove detected shadows
     threshold(foregroundMask, foregroundMask, 128, 255, THRESH_TOZERO);
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
     erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
+vstats.writeLog("morphological ops", 0);
 
+vstats.prepareWriteLog();
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
+vstats.writeLog("connected components", 0);
 
     prevCarCount = instCarCount;
     prevPedCount = instPedCount;
 
     instPedCount = 0;
     instCarCount = 0;
+
+vstats.prepareWriteLog();
+
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
+//vstats.prepareWriteLog();
       Rect cc_bb = vec_cc[i].getBoundingBox();
       int currentSize = cc_bb.width*cc_bb.height;
       int pedSize = pclass.peddetect.getMinSize().area();
@@ -164,10 +185,12 @@ int main(int argc, char** argv) {
       //distanceTransform(dist, dist, CV_DIST_L2, 3);
       //normalize(dist, dist, 0, 255, NORM_MINMAX);
       //dist.convertTo(dist, CV_8U);
-
+//vstats.writeLog("masking", 1);
       int classification = -1;
       //classification = pclass.classify(vec_cc[i], dist, oframe);
+//vstats.prepareWriteLog();
       classification = pclass.classify(vec_cc[i], objmask, oframe);
+//vstats.writeLog("classify", 1);
       
       ped = false;
       bool draw = pclass.carPathIsValid && pclass.pedPathIsValid;
@@ -208,6 +231,8 @@ int main(int argc, char** argv) {
       else pedInDanger = false;
     }
 
+vstats.writeLog("iterate through ccomp", 0);
+
     result = -1;
     if(!pclass.pedPathIsValid || !pclass.carPathIsValid) {
       result = 0; // CALIBRATING
@@ -233,5 +258,6 @@ int main(int argc, char** argv) {
 
     if(waitKey(5) >= 0) break;
   }
+
   return 0;
 }
