@@ -178,6 +178,7 @@ int main(int argc, char** argv) {
         case TYPE_PED:
           //if(draw) rectangle(oframe, r, Scalar(255,0,0));
           instPedCount++;
+          ped = true;
           break;
         case TYPE_PED_ONPATH:
           if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
@@ -205,6 +206,63 @@ int main(int argc, char** argv) {
     vstats.updateFPS();
     vstats.displayStats();
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
+
+    Mat rgbSplit[3], frame_r, frame_g, frame_b;
+    int rAve = 0, gAve = 0, bAve = 0, pixCount = 0;
+    split(frame, rgbSplit);
+    frame_r = rgbSplit[0] & pclass.carPath;
+    frame_g = rgbSplit[1] & pclass.carPath;
+    frame_b = rgbSplit[2] & pclass.carPath;
+
+    for(int r = 0; r < frame_r.rows; r++){
+    	for(int c = 0; c < frame_r.cols; c++){
+    		if(pclass.carPath.at<unsigned char>(r, c) != 0){
+    			pixCount++;
+    			rAve += (int) frame_r.at<unsigned char>(r, c);
+    			gAve += (int) frame_g.at<unsigned char>(r, c);
+    			bAve += (int) frame_b.at<unsigned char>(r, c);
+    		}
+    	}
+    }
+    if(pixCount != 0){
+    	rAve = rAve / pixCount;
+	    gAve = gAve / pixCount;
+	    bAve = bAve / pixCount;
+	    threshold(frame_r, frame_r, rAve - 30, 255, THRESH_TOZERO);
+		threshold(frame_r, frame_r, rAve + 30, 255, THRESH_TOZERO_INV);
+		threshold(frame_g, frame_g, gAve - 30, 255, THRESH_TOZERO);
+		threshold(frame_g, frame_g, gAve + 30, 255, THRESH_TOZERO_INV);
+		threshold(frame_b, frame_b, bAve - 30, 255, THRESH_TOZERO);
+		threshold(frame_b, frame_b, bAve + 30, 255, THRESH_TOZERO_INV);
+		for(int r = 0; r < frame_r.rows; r++){
+    		for(int c = 0; c < frame_r.cols; c++){
+		      if(frame_r.at<unsigned char>(r, c) == 0){
+		        frame_g.at<unsigned char>(r, c) = 0;
+		        frame_b.at<unsigned char>(r, c) = 0;
+		      }
+		      else if(frame_g.at<unsigned char>(r, c) == 0){
+		        frame_r.at<unsigned char>(r, c) = 0;
+		        frame_b.at<unsigned char>(r, c) = 0;
+		      }
+		      else if(frame_b.at<unsigned char>(r, c) == 0){
+		        frame_g.at<unsigned char>(r, c) = 0;
+		        frame_r.at<unsigned char>(r, c) = 0;
+		      }
+		    }
+		}
+    }
+
+    Mat editCarPath;
+    merge(rgbSplit, 3, editCarPath);
+	cvtColor(editCarPath, editCarPath, CV_BGR2GRAY);
+	//cout << editCarPath.rows << " " << editCarPath.cols << endl << pclass.carPath.rows << " " << pclass.carPath.cols << endl;
+
+    editCarPath = editCarPath & pclass.carPath;
+
+    imshow("frame_r", frame_r);
+
+    dangerPath = editCarPath & pclass.pedPath;
+    //dangerPath = dangerPath & editCarPath;
 
     /* OUT */
     imshow("frame", oframe);
