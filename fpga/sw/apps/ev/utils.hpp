@@ -13,7 +13,7 @@
 using namespace std;
 
 class VideoStats {
-protected:
+private:
   int counter; 
   int width_res, height_res;
 
@@ -32,6 +32,8 @@ public:
   int getWidth();
   int getHeight();
   void displayStats();
+  int getCounter();
+  double getUptime();
 };
 
 #endif // UTILS_H
