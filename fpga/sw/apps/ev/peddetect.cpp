@@ -44,17 +44,17 @@ bool PedestrianDetector::detectCar(const Mat& objframe, const Size& objsize) {
     vector<Rect> detected;
 
     CascadeClassifier cascade;
-    if(!cascade.load("cars3.xml")) cout << "can't load xml file" << endl;
+    if(!cascade.load("cars3.xml")) cout << "can't load xml file for car detection" << endl;
 
     Mat frame_gray;
     cvtColor(objframe, frame_gray, CV_BGR2GRAY);
     equalizeHist(frame_gray, frame_gray);
 
-    cascade.detectMultiScale(frame_gray, detected, 1.05, 1, 0|CV_HAAR_SCALE_IMAGE, Size(20,20));
+    cascade.detectMultiScale(frame_gray, detected, 1.05, 1, 0|CV_HAAR_SCALE_IMAGE, Size(30,30));
 
     // car is detected 
     // TODO / FIXME: use non-maximal suppression to extrapolate small false positives as one box
-    if(detected.size() != 0 ) {
+    if(detected.size() == 1 ) {
         if(objsize.width < minWidth) minWidth = objsize.width;
         if(objsize.width > maxWidth) maxWidth = objsize.width;
         if(objsize.height < minHeight) minHeight = objsize.height;
