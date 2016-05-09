@@ -80,8 +80,8 @@ double VideoStats::getUptime() {
   return sec;
 }
 
-void VideoStats::openLog() {
-  log.open("perf.log", ios::out);
+void VideoStats::openLog(string name) {
+  log.open(name, ios::out);
 }
 
 void VideoStats::closeLog() {
@@ -103,13 +103,7 @@ void VideoStats::writeLog(string func, int level) {
 
   switch(level) {
     case 0:
-      log << func << ":" << setfill(' ') << setw(40 - func.size()) << msec << "ms" << endl;
-      break;
-    case 1:
-      log << "-->" << func << ":" << setfill(' ') << setw(40 - func.size()) << msec << "ms" << endl;
-      break;
-    case 2:
-      log << "---->" << func << ":" << setfill(' ') << setw(40 - func.size()) << msec << "ms" << endl;
+      log << func << ":" << setfill(' ') << setw(40 - func.size()) << msec*1000 << "ms" << endl;
       break;
     default:
       break;

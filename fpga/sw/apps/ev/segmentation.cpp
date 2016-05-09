@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
   vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
 
-  vstats.openLog();
+  vstats.openLog("segmentation.log");
 
   if (!capture.isOpened()) { 
     cout << "Capture failed to open." << endl; 
@@ -167,7 +167,7 @@ vstats.prepareWriteLog();
       int reqSize;
       if(!pclass.peddetect.pedSizeValid) reqSize = 400; // hardcoded for resolution/possible env
       else reqSize = pedSize * 0.10;
-      if(reqSize < 200) reqSize = 200;
+      if(reqSize < 400) reqSize = 400;
 
       if(currentSize < reqSize) continue;
 

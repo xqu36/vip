@@ -16,6 +16,7 @@
 #include "ccomp.hpp"
 #include "segmentation.hpp"
 #include "peddetect.hpp"
+#include "utils.hpp"
 #include "opencv2/objdetect/objdetect.hpp"
 
 using namespace std;
@@ -41,6 +42,8 @@ private:
   int carsInPath, pedsInPath;
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
+
+  VideoStats pstats;
 
 public:
   bool bgValid;

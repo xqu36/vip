@@ -43,7 +43,7 @@ public:
   void displayStats(string type, int result);
   int getCounter();
   double getUptime();
-  void openLog();
+  void openLog(string name);
   void closeLog();
   void seekLog(ios_base::seekdir p);
   void prepareWriteLog();

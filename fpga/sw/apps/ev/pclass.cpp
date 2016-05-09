@@ -30,6 +30,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carsInPath = 600;
 
   bgValid = false;
+
+  pstats.openLog("pclass.log");
 }
 
 int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame) {
@@ -125,6 +127,8 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
   if(type == TYPE_CAR) {
     if(!carPathIsValid) {
 
+pstats.prepareWriteLog();
+
       if(cardetect.detectCar(objframe, rectMask.size())) {
         if (carQueue.size() < carsInPath) {
           carQueue.push_back(objmask);
@@ -136,6 +140,9 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         }
         outType = TYPE_CAR_ONPATH;
       } else outType = TYPE_CAR;
+
+pstats.writeLog("Haar", 0);
+
     }
 
   // already reasonably confident about car-ness
@@ -176,10 +183,14 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         redrawMask();
       }
     }
+
   } else if(type == TYPE_PED) {
+
 
     if(!pedPathIsValid) {
       
+pstats.prepareWriteLog();
+
       // find cropped image of obj
       // HoG to determine if pedestrian
       Mat re_objframe = objframe.clone();
@@ -200,7 +211,11 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         }
         outType = TYPE_PED_ONPATH;
       } else outType = TYPE_PED;
+      
+pstats.writeLog("HoG", 0);
+
     }
+
   } else if(type == TYPE_PED_ONPATH) {
 
     int scaledMaxHeight = 1.2 * peddetect.getMaxSize().height;
@@ -250,6 +265,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       */
     }
   }
+
 }
 
 void PathClassifier::redrawMask() {
