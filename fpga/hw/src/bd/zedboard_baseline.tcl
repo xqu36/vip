@@ -165,11 +165,21 @@ proc create_root_design { parentCell } {
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
-  set_property -dict [ list CONFIG.GPIO_BOARD_INTERFACE {leds_8bits} CONFIG.USE_BOARD_FLOW {true}  ] $axi_gpio_0
+  set_property -dict [ list \
+CONFIG.C_ALL_INPUTS {0} \
+CONFIG.C_GPIO_WIDTH {32} \
+CONFIG.GPIO_BOARD_INTERFACE {sws_8bits} \
+CONFIG.USE_BOARD_FLOW {true} \
+ ] $axi_gpio_0
 
   # Create instance: axi_gpio_1, and set properties
   set axi_gpio_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1 ]
-  set_property -dict [ list CONFIG.GPIO_BOARD_INTERFACE {sws_8bits} CONFIG.USE_BOARD_FLOW {true}  ] $axi_gpio_1
+  set_property -dict [ list \
+CONFIG.C_ALL_OUTPUTS {0} \
+CONFIG.C_GPIO_WIDTH {32} \
+CONFIG.GPIO_BOARD_INTERFACE {leds_8bits} \
+CONFIG.USE_BOARD_FLOW {true} \
+ ] $axi_gpio_1
 
   # Create instance: axi_interconnect_0, and set properties
   set axi_interconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0 ]
@@ -198,7 +208,21 @@ proc create_root_design { parentCell } {
 
   # Create instance: processing_system7_0, and set properties
   set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
-  set_property -dict [ list CONFIG.PCW_I2C0_I2C0_IO {EMIO} CONFIG.PCW_I2C0_PERIPHERAL_ENABLE {1} CONFIG.PCW_IRQ_F2P_INTR {1} CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.PCW_USE_S_AXI_HP1 {0} CONFIG.PCW_WDT_PERIPHERAL_ENABLE {1} CONFIG.PCW_WDT_WDT_IO {MIO 50 .. 51} CONFIG.preset {ZedBoard*}  ] $processing_system7_0
+  set_property -dict [ list \
+CONFIG.PCW_I2C0_I2C0_IO {EMIO} \
+CONFIG.PCW_I2C0_PERIPHERAL_ENABLE {1} \
+CONFIG.PCW_IRQ_F2P_INTR {1} \
+CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} \
+CONFIG.PCW_UART0_GRP_FULL_ENABLE {0} \
+CONFIG.PCW_UART0_PERIPHERAL_ENABLE {1} \
+CONFIG.PCW_UART0_UART0_IO {MIO 14 .. 15} \
+CONFIG.PCW_USE_FABRIC_INTERRUPT {1} \
+CONFIG.PCW_USE_S_AXI_HP0 {1} \
+CONFIG.PCW_USE_S_AXI_HP1 {0} \
+CONFIG.PCW_WDT_PERIPHERAL_ENABLE {1} \
+CONFIG.PCW_WDT_WDT_IO {MIO 50 .. 51} \
+CONFIG.preset {ZedBoard} \
+ ] $processing_system7_0
 
   # Create instance: processing_system7_0_axi_periph, and set properties
   set processing_system7_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 processing_system7_0_axi_periph ]
@@ -266,9 +290,59 @@ proc create_root_design { parentCell } {
   create_bd_addr_seg -range 0x10000 -offset 0x40400000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] SEG_axi_dma_0_Reg
   create_bd_addr_seg -range 0x10000 -offset 0x41200000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
   create_bd_addr_seg -range 0x10000 -offset 0x41210000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_1/S_AXI/Reg] SEG_axi_gpio_1_Reg
-  create_bd_addr_seg -range 0x10000 -offset 0x43000000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_vdma_0/S_AXI_LITE/Reg] SEG_axi_vdma_0_Reg
-  create_bd_addr_seg -range 0x10000 -offset 0x43C10000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs sandbox_0/s_axi_CONTROL_BUS/Reg] SEG_sandbox_0_Reg
-  
+
+  # Perform GUI Layout
+  regenerate_bd_layout -layout_string {
+   guistr: "# # String gsaved with Nlview 6.5.5  2015-06-26 bk=1.3371 VDI=38 GEI=35 GUI=JA:1.8
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -y 100 -defaultsOSRD
+preplace port sws_8bits -pg 1 -y 300 -defaultsOSRD
+preplace port leds_8bits -pg 1 -y 390 -defaultsOSRD
+preplace port IIC_0 -pg 1 -y 140 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 120 -defaultsOSRD
+preplace inst axis_data_fifo_1 -pg 1 -lvl 2 -y 620 -defaultsOSRD
+preplace inst axi_dma_0 -pg 1 -lvl 5 -y 140 -defaultsOSRD
+preplace inst rst_processing_system7_0_100M -pg 1 -lvl 1 -y 580 -defaultsOSRD
+preplace inst xlconcat_0 -pg 1 -lvl 6 -y 450 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 7 -y 260 -defaultsOSRD
+preplace inst blk_mem_gen_0 -pg 1 -lvl 4 -y 170 -defaultsOSRD
+preplace inst axi_gpio_1 -pg 1 -lvl 7 -y 390 -defaultsOSRD
+preplace inst axi_interconnect_0 -pg 1 -lvl 6 -y 190 -defaultsOSRD
+preplace inst axi_bram_ctrl_0 -pg 1 -lvl 3 -y 200 -defaultsOSRD
+preplace inst axi4_stream_user_processing_core_0 -pg 1 -lvl 3 -y 420 -defaultsOSRD
+preplace inst processing_system7_0_axi_periph -pg 1 -lvl 2 -y 300 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 7 -y 50 -defaultsOSRD
+preplace inst axis_data_fifo_0 -pg 1 -lvl 4 -y 340 -defaultsOSRD
+preplace netloc processing_system7_0_DDR 1 7 1 NJ
+preplace netloc processing_system7_0_axi_periph_M03_AXI 1 2 3 NJ 80 NJ 80 NJ
+preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 5 NJ -40 NJ -40 NJ -40 NJ -40 NJ
+preplace netloc axi4_stream_user_processing_core_0_M_AXIS 1 3 1 1060
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 7 390 -90 NJ -90 NJ -90 NJ -90 NJ -90 NJ -90 2650
+preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 3 1 NJ
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 8 20 700 NJ 700 NJ 700 NJ 700 NJ 700 NJ 700 NJ 700 2640
+preplace netloc processing_system7_0_IIC_0 1 7 1 NJ
+preplace netloc axi_dma_0_M_AXI_SG 1 5 1 N
+preplace netloc processing_system7_0_axi_periph_M02_AXI 1 2 5 NJ -20 NJ -20 NJ -20 NJ -20 2170
+preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 6 380 100 740 270 1070 260 1430 260 1820 -10 NJ
+preplace netloc axi_dma_0_s2mm_introut 1 5 1 1790
+preplace netloc axi_dma_0_M_AXI_MM2S 1 5 1 N
+preplace netloc xlconcat_0_dout 1 6 1 2180
+preplace netloc processing_system7_0_FIXED_IO 1 7 1 NJ
+preplace netloc axi_dma_0_mm2s_introut 1 5 1 1800
+preplace netloc axi_gpio_0_GPIO 1 7 1 2670
+preplace netloc axi_interconnect_0_M00_AXI 1 6 1 2140
+preplace netloc axi_dma_0_M_AXI_S2MM 1 5 1 N
+preplace netloc axis_data_fifo_1_M_AXIS 1 2 1 780
+preplace netloc axis_data_fifo_0_M_AXIS 1 4 1 1410
+preplace netloc rst_processing_system7_0_100M_interconnect_aresetn 1 1 1 370
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 10 670 360 90 770 300 1050 250 1420 270 1810 10 2150 190 2650
+preplace netloc axi_gpio_1_GPIO 1 7 1 N
+preplace netloc axi_dma_0_M_AXIS_MM2S 1 1 5 400 20 NJ 20 NJ 20 NJ 20 1790
+preplace netloc processing_system7_0_axi_periph_M04_AXI 1 2 1 760
+preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 760
+levelinfo -pg 1 -10 190 570 920 1250 1620 1990 2420 2730 -top -100 -bot 750
+",
+}
 
   # Restore current instance
   current_bd_instance $oldCurInst
