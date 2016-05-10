@@ -1,4 +1,9 @@
 /dts-v1/;
+
+
+
+
+
 /include/ "system-conf.dtsi"
 / {
 	aliases {
@@ -16,6 +21,16 @@
 &usb0 {
 	usb-phy = <&usb_phy0>;
 };
+
+
+
+ 
+
+&uart0{
+
+		status = "disabled";
+};
+
 
 &gem0 {
     phy-handle = <&phy0>;
