@@ -35,7 +35,10 @@ public:
   VideoStats();
   void updateAverageFPS();
   void prepareFPS();
-  void updateFPS();
+  //void updateFPS();
+
+  double updateFPS();
+
   void setWidth(int w);
   void setHeight(int h);
   int getWidth();

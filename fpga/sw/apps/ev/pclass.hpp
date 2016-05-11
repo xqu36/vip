@@ -43,8 +43,6 @@ private:
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
 
-  VideoStats pstats;
-
 public:
   bool bgValid;
 
@@ -56,6 +54,8 @@ public:
 
   PedestrianDetector peddetect;
   PedestrianDetector cardetect;
+
+  VideoStats pstats;
 
   PathClassifier(int rows, int cols);
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);

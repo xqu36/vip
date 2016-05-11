@@ -17,6 +17,9 @@
 #include <iostream>
 #include <string>
 
+//#define MAX(x,y) (((x)>(y))?(x):(y))
+//#define MIN(x,y) (((x)<(y))?(x):(y))
+
 #define INFILE "img/klaus_high_320x240.mp4"
 
 #define DETECTSHADOWS 1

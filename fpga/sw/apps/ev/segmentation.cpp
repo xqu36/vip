@@ -83,6 +83,7 @@ int main(int argc, char** argv) {
   int prevPedCount, prevCarCount;
 
   int result = -1;
+  double curr_fps = 20.0;
 
   // processing loop
   cout << endl;
@@ -156,6 +157,8 @@ vstats.writeLog("connected components", 0);
     instCarCount = 0;
 
 vstats.prepareWriteLog();
+
+pclass.pstats.seekLog(ios::beg);
 
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
@@ -231,7 +234,9 @@ vstats.prepareWriteLog();
       else pedInDanger = false;
     }
 
-vstats.writeLog("iterate through ccomp", 0);
+char message[25];
+sprintf(message, "iterate though ccomp [%d]", (int)vec_cc.size());
+vstats.writeLog(message, 0);
 
     result = -1;
     if(!pclass.pedPathIsValid || !pclass.carPathIsValid) {
@@ -241,12 +246,19 @@ vstats.writeLog("iterate through ccomp", 0);
     if(pedInDanger) result = 1;
 
     vstats.updateAverageFPS();
-    vstats.updateFPS();
+
+    //vstats.updateFPS();
+    curr_fps = vstats.updateFPS();
+
     vstats.displayStats("inst", result);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
+    //if(curr_fps < 8.0) exit(0);
+    //if(vstats.getUptime() >= 16) exit(0);
+
     /* OUT */
     //imshow("frame", oframe);
+    //imshow("fg", foregroundMask_ed3);
     //imshow("path", pclass.carPath);
     //imshow("ppath", pclass.pedPath);
     //imshow("dpath", dangerPath);
@@ -256,7 +268,7 @@ vstats.writeLog("iterate through ccomp", 0);
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
 
-    if(waitKey(5) >= 0) break;
+    if(waitKey(10) >= 0) break;
   }
 
   return 0;

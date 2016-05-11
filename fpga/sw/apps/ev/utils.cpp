@@ -35,10 +35,19 @@ void VideoStats::prepareFPS() {
 }
 
 // this current impl ignores imshow and waitKey as part of its calculations
+/*
 void VideoStats::updateFPS() {
   iend = clock();
 
   ifps = 1 / ((iend - istart) / (double)CLOCKS_PER_SEC);
+}
+*/
+
+double VideoStats::updateFPS() {
+  iend = clock();
+
+  ifps = 1 / ((iend - istart) / (double)CLOCKS_PER_SEC);
+  return ifps;
 }
 
 void VideoStats::setWidth(int w) {
