@@ -23,6 +23,8 @@ void sig_handler(int s) {
 
 int main(int argc, char** argv) {
 
+  /* EXIT SAFELY */
+
   struct sigaction sigIntHandler;
 
   sigIntHandler.sa_handler = sig_handler;
@@ -43,8 +45,14 @@ int main(int argc, char** argv) {
   }
 
   //VideoCapture capture(infile);
-  VideoCapture capture(0);
+  VideoCapture capture(1);
   VideoStats vstats;
+
+  capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+  capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+
+  assert(capture.get(CV_CAP_PROP_FRAME_WIDTH) == 320);
+  assert(capture.get(CV_CAP_PROP_FRAME_HEIGHT) == 240);
 
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
   vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
@@ -271,7 +279,7 @@ vstats.writeLog(message, 0);
     //if(vstats.getUptime() >= 16) exit(0);
 
     /* OUT */
-    //imshow("frame", oframe);
+    imshow("frame", oframe);
     //imshow("fg", foregroundMask_ed3);
     //imshow("path", pclass.carPath);
     //imshow("ppath", pclass.pedPath);
@@ -282,7 +290,7 @@ vstats.writeLog(message, 0);
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
 
-    //if(waitKey(10) >= 0) break;
+    if(waitKey(10) >= 0) break;
   }
 
   return 0;
