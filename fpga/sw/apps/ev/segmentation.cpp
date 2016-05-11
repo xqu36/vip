@@ -16,7 +16,20 @@
 using namespace cv;
 using namespace std;
 
+void sig_handler(int s) {
+  cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
+  exit(0);
+}
+
 int main(int argc, char** argv) {
+
+  struct sigaction sigIntHandler;
+
+  sigIntHandler.sa_handler = sig_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+
+  sigaction(SIGINT, &sigIntHandler, NULL);
 
   /* IN */
 
@@ -29,7 +42,8 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  VideoCapture capture(infile);
+  //VideoCapture capture(infile);
+  VideoCapture capture(0);
   VideoStats vstats;
 
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
@@ -268,7 +282,7 @@ vstats.writeLog(message, 0);
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
 
-    if(waitKey(10) >= 0) break;
+    //if(waitKey(10) >= 0) break;
   }
 
   return 0;

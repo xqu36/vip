@@ -13,6 +13,7 @@
 #include <opencv2/video/video.hpp>
 #include <opencv2/video/background_segm.hpp>
 
+#include <signal.h>
 #include <stdio.h>
 #include <iostream>
 #include <string>
