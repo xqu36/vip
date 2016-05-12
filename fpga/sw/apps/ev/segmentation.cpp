@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
   int prevPedCount, prevCarCount;
 
   int result = -1;
-  double curr_fps = 20.0;
+  double curr_fps = 40.0;
 
   // processing loop
   cout << endl;
