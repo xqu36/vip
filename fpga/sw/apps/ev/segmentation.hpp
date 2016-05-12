@@ -26,7 +26,7 @@
 #define DETECTSHADOWS 1
 #define NMIXTURES 3
 
-#define STABILIZE 1
+#define STABILIZE 0
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
 

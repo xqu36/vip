@@ -104,6 +104,9 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   //if(!carPathIsValid) cout << "carPathIsValid = false" << endl;
   //if(!pedPathIsValid) cout << "pedPathIsValid = false" << endl;
 
+  pstats.prepareWriteLog();
+  pstats.writeLog("EXITING CLASS ITER", 0);
+
   if(pedVotes < 10 && carVotes < 10 || pedVotes == carVotes) 
     return TYPE_UNCLASS;
 
@@ -156,11 +159,17 @@ pstats.writeLog("Haar", 0);
     int avgWidth = scaledMaxWidth+scaledMinWidth / 2;
 
     //if(rectMask.size().height < avgHeight || rectMask.size().width < avgWidth) {
+    /*
     if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
        rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
        !carPathIsValid) {
+    */
+    if(rectMask.size().height > scaledMaxHeight && rectMask.size().width > scaledMaxWidth ||
+       rectMask.size().height < scaledMinHeight && rectMask.size().width < scaledMinWidth ||
+       !carPathIsValid) {
 
       //cout << "DOUBLE CHECKING: Car" << endl;
+pstats.prepareWriteLog();
 
       if(cardetect.detectCar(objframe, rectMask.size())) {
         if (carQueue.size() < carsInPath) {
@@ -183,6 +192,8 @@ pstats.writeLog("Haar", 0);
         redrawMask();
       }
     }
+
+pstats.writeLog("Haar confirm", 0);
 
   } else if(type == TYPE_PED) {
 
@@ -223,8 +234,13 @@ pstats.writeLog("HoG", 0);
     int scaledMinHeight = 0.8 * peddetect.getMinSize().height;
     int scaledMinWidth = 0.8 * peddetect.getMinSize().width;
 
+    /*
     if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
        rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
+       !pedPathIsValid) {
+    */
+    if(rectMask.size().height > scaledMaxHeight && rectMask.size().width > scaledMaxWidth ||
+       rectMask.size().height < scaledMinHeight && rectMask.size().width < scaledMinWidth ||
        !pedPathIsValid) {
 
     //if(rectMask.size().height > peddetect.getMaxSize().height || rectMask.size().width > peddetect.getMaxSize().width ||
@@ -238,7 +254,7 @@ pstats.writeLog("HoG", 0);
       }
 
       //cout << "DOUBLE CHECKING: Pedestrian" << endl;
-
+pstats.prepareWriteLog();
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
 
@@ -264,11 +280,15 @@ pstats.writeLog("HoG", 0);
       }
       */
     }
+pstats.writeLog("HoG confirm", 0);
   }
 
 }
 
 void PathClassifier::redrawMask() {
+
+pstats.prepareWriteLog();
+
     carPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < carQueue.size(); i++) {
         carPath |= carQueue[i];
@@ -293,5 +313,8 @@ void PathClassifier::redrawMask() {
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 
     pedPath.convertTo(pedPath, CV_8U);
+
+pstats.writeLog("redrawMask", 0);
+
 }
 

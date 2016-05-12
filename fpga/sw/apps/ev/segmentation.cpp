@@ -44,8 +44,8 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  //VideoCapture capture(infile);
-  VideoCapture capture(1);
+  VideoCapture capture(infile);
+  //VideoCapture capture(1);
   VideoStats vstats;
 
   capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
@@ -122,12 +122,12 @@ vstats.prepareWriteLog();
     prev_frame = frame.clone();
     capture >> frame;
 
+    //resize(frame, frame, Size(320,240));
+
     // check if we need to restart the video
     if(frame.empty()) {
-vstats.prepareWriteLog();
         // Looks like we've hit the end of our feed! Restart
         capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
-vstats.writeLog("restart source", 1);
         continue;
     }
 
@@ -180,6 +180,8 @@ vstats.writeLog("connected components", 0);
 
 vstats.prepareWriteLog();
 
+pclass.pstats.seekLog(ios::beg);
+for(int i=0; i<25; i++) pclass.pstats.writeLog(" - ",0);
 pclass.pstats.seekLog(ios::beg);
 
     // iterate through the found CCs
@@ -279,7 +281,7 @@ vstats.writeLog(message, 0);
     //if(vstats.getUptime() >= 16) exit(0);
 
     /* OUT */
-    imshow("frame", oframe);
+    //imshow("frame", oframe);
     //imshow("fg", foregroundMask_ed3);
     //imshow("path", pclass.carPath);
     //imshow("ppath", pclass.pedPath);
@@ -290,7 +292,7 @@ vstats.writeLog(message, 0);
 
     //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
 
-    if(waitKey(10) >= 0) break;
+    //if(waitKey(10) >= 0) break;
   }
 
   return 0;
