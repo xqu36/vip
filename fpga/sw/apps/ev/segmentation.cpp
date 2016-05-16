@@ -196,7 +196,7 @@ pclass.pstats.seekLog(ios::beg);
       int pedSize = pclass.peddetect.getMinSize().area();
       int reqSize;
       if(!pclass.peddetect.pedSizeValid) reqSize = 400; // hardcoded for resolution/possible env
-      else reqSize = pedSize * 0.10;
+      else reqSize = pedSize * 0.15;
       if(reqSize < 400) reqSize = 400;
 
       if(currentSize < reqSize) continue;
@@ -264,7 +264,7 @@ sprintf(message, "iterate though ccomp [%d]", (int)vec_cc.size());
 vstats.writeLog(message, 0);
 
     result = -1;
-    if(!pclass.pedPathIsValid || !pclass.carPathIsValid) {
+    if(!pclass.pedPathIsValid /* || !pclass.carPathIsValid */) {
       result = 0; // CALIBRATING
       //dangerPath /= 2;
     }

@@ -209,14 +209,31 @@ pstats.prepareWriteLog();
       if(rectMask.size().height < 128 || rectMask.size().width < 64) {
         resize(objframe, re_objframe, Size(64,128));
       }
+      /*
+      if(rectMask.size().height < 128) {
+        resize(objframe, re_objframe, Size(rectMask.size().width,128));
+        if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
+      }
+      if(rectMask.size().width < 64) {
+        resize(objframe, re_objframe, Size(64,rectMask.size().height));
+        if(rectMask.size().height < 128) resize(re_objframe, re_objframe, Size(rectMask.size().width,128));
+      }
+      */
+      //if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
 
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
         if(pedQueue.size() < pedsInPath) {
-          pedQueue.push_back(objmask);
+          //pedQueue.push_back(objmask);
+          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
-          pedQueue.push_back(objmask);
+          //pedQueue.push_back(objmask);
+          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
         outType = TYPE_PED_ONPATH;
@@ -252,6 +269,8 @@ pstats.writeLog("HoG", 0);
       if(rectMask.size().height < 128 || rectMask.size().width < 64) {
         resize(objframe, re_objframe, Size(64,128));
       }
+      //if(rectMask.size().height < 128) resize(re_objframe, re_objframe, Size(rectMask.size().width,128));
+      //if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
 
       //cout << "DOUBLE CHECKING: Pedestrian" << endl;
 pstats.prepareWriteLog();
@@ -259,11 +278,17 @@ pstats.prepareWriteLog();
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
 
         if(pedQueue.size() < pedsInPath) {
-          pedQueue.push_back(objmask);
+          //pedQueue.push_back(objmask);
+          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
-          pedQueue.push_back(objmask);
+          //pedQueue.push_back(objmask);
+          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
         outType = TYPE_PED_ONPATH;
@@ -305,14 +330,14 @@ pstats.prepareWriteLog();
         pedPath |= pedQueue[i];
     }
 
-    distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
-    normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
-    threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
+    //distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
+    //normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
+    //threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
 
-    Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
-    dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
+    //Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+    //dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 
-    pedPath.convertTo(pedPath, CV_8U);
+    //pedPath.convertTo(pedPath, CV_8U);
 
 pstats.writeLog("redrawMask", 0);
 
