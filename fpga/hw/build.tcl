@@ -166,9 +166,18 @@ make_wrapper -files [get_files $design_name.bd] -top -import
 validate_bd_design
 
 # generate all output products
-generate_target all [get_files $origin_dir/project/zedboard_baseline.srcs/sources_1/bd/zedboard_baseline/zedbaord_baseline.bd]
+generate_target all [get_files $origin_dir/project/zedboard_baseline.srcs/sources_1/bd/zedboard_baseline/zedboard_baseline.bd]
 
 # run synth
 launch_runs synth_1
+wait_on_run synth_1
+
+#Run impl
+launch_runs impl_1 -to_stetp write_bitstream
+wait_on_run impl_1
+
+#export hw
+file mkdir $origin_dir/project/zedboard_baseline.sdk
+file copy -force $origin_dir/project/zedboard_baseline.runs/impl_1/zedboard_baseline_wrapper.sysdef $origin_dir/project/zedboard_baseline.sdk/zedboard_baseline_wrapper.hdf
 
 puts "INFO: Project created:zedboard_baseline"
