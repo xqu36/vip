@@ -125,8 +125,6 @@ vstats.prepareWriteLog();
     prev_frame = frame.clone();
     capture >> frame;
 
-    //resize(frame, frame, Size(320,240));
-
     // check if we need to restart the video
     if(frame.empty()) {
         // Looks like we've hit the end of our feed! Restart
@@ -195,9 +193,9 @@ pclass.pstats.seekLog(ios::beg);
       int currentSize = cc_bb.width*cc_bb.height;
       int pedSize = pclass.peddetect.getMinSize().area();
       int reqSize;
-      if(!pclass.peddetect.pedSizeValid) reqSize = 400; // hardcoded for resolution/possible env
+      if(!pclass.peddetect.pedSizeValid) reqSize = 100; // hardcoded for resolution/possible env
       else reqSize = pedSize * 0.15;
-      if(reqSize < 400) reqSize = 400;
+      if(reqSize < 100) reqSize = 100;
 
       if(currentSize < reqSize) continue;
       if(currentSize > MAX_AREA) continue;  // can't be bigger than half the screen
@@ -251,7 +249,7 @@ pclass.pstats.seekLog(ios::beg);
       //display centroids
       Point centroid = vec_cc[i].getCentroidBox();
       if(ped && dangerPath.at<unsigned char>(centroid) != 0 &&
-         pclass.pedPathIsValid && pclass.carPathIsValid){
+         pclass.pedPathIsValid /* && pclass.carPathIsValid */){
 
       	circle(oframe, centroid, 5, Scalar(0,0,255), 4);
       	pedInDanger = true;
@@ -279,16 +277,16 @@ vstats.writeLog(message, 0);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */
-    imshow("frame", oframe);
-    imshow("fg", foregroundMask_ed3);
+    //imshow("frame", oframe);
+    //imshow("fg", foregroundMask_ed3);
     //imshow("path", pclass.carPath);
-    imshow("ppath", pclass.pedPath);
+    //imshow("ppath", pclass.pedPath);
     //imshow("dpath", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
-    if(waitKey(30) >= 0) break;
+    //if(waitKey(30) >= 0) break;
   }
 
   return 0;

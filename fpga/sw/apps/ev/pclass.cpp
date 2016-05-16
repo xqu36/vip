@@ -26,7 +26,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 400;
+  pedsInPath = 600;
   carsInPath = 600;
 
   bgValid = false;
@@ -56,7 +56,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) pedVotes += 30;
   else carVotes += 30;
 
-  if(pedQueue.size() >= pedsInPath/3) pedPathIsValid = true;
+  if(pedQueue.size() >= pedsInPath) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
 
   // second stage: Path Position
@@ -64,7 +64,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     Point cntd = ccomp.getCentroidBox();
 
     // check intersections
-    if(carPath.at<unsigned char>(cntd) > 128) {
+    if(carPath.at<unsigned char>(cntd) > 0) {
       if(carVotes > 0) carVotes += 20;
 
       // reasonably sure this is a car; on path with more votes. Update path
@@ -82,7 +82,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     }
 
     // check intersections
-    if(pedPath.at<unsigned char>(cntd) > 128) {
+    if(pedPath.at<unsigned char>(cntd) > 0) {
       if(pedVotes > 0) pedVotes += 20;
 
       // reasonably sure this is a ped; on path with more votes. Update path
@@ -121,6 +121,9 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame) {
 
   outType = type; 
+
+  int redrawValue = 25;
+  Scalar redrawColor = Scalar(redrawValue, redrawValue, redrawValue);
 
   Mat objframe;
   Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
@@ -225,14 +228,14 @@ pstats.prepareWriteLog();
         if(pedQueue.size() < pedsInPath) {
           //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
           //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
@@ -280,20 +283,34 @@ pstats.prepareWriteLog();
         if(pedQueue.size() < pedsInPath) {
           //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
           //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), 10, Scalar(255,255,255), CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
         outType = TYPE_PED_ONPATH;
       } else outType = TYPE_UNCLASS;
     } else {
+      if(pedQueue.size() < pedsInPath) {
+        //pedQueue.push_back(objmask);
+        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+        pedQueue.push_back(ctrd_mat);
+        redrawMask();
+      } else {
+        pedQueue.pop_front();
+        //pedQueue.push_back(objmask);
+        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+        pedQueue.push_back(ctrd_mat);
+        redrawMask();
+      }
       /*
       if(pedQueue.size() < pedsInPath) {
         pedQueue.push_back(objmask);
@@ -327,17 +344,20 @@ pstats.prepareWriteLog();
 
     pedPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < pedQueue.size(); i++) {
-        pedPath |= pedQueue[i];
+        pedPath += pedQueue[i];
     }
 
     //distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
     //normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
     //threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
 
-    //Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
-    //dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
+    Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5,5));
+    dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
+    //erode(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 
     //pedPath.convertTo(pedPath, CV_8U);
+
+    if(pedPathIsValid) threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
 
 pstats.writeLog("redrawMask", 0);
 
