@@ -277,16 +277,16 @@ vstats.writeLog(message, 0);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */
-    //imshow("frame", oframe);
+    imshow("frame", oframe);
     //imshow("fg", foregroundMask_ed3);
     //imshow("path", pclass.carPath);
     //imshow("ppath", pclass.pedPath);
-    //imshow("dpath", dangerPath);
+    imshow("dpath", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
-    //if(waitKey(30) >= 0) break;
+    if(waitKey(5) >= 0) break;
   }
 
   return 0;

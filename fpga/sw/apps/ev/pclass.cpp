@@ -122,7 +122,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
   outType = type; 
 
-  int redrawValue = 25;
+  int redrawValue = 10;
   Scalar redrawColor = Scalar(redrawValue, redrawValue, redrawValue);
 
   Mat objframe;
@@ -357,7 +357,7 @@ pstats.prepareWriteLog();
 
     //pedPath.convertTo(pedPath, CV_8U);
 
-    if(pedPathIsValid) threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
+    if(pedPathIsValid) threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
 
 pstats.writeLog("redrawMask", 0);
 
