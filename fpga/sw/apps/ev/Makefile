@@ -6,7 +6,7 @@ OBJDIR=.obj
 
 SOURCES=segmentation.cpp vidstab.cpp utils.cpp ccomp.cpp pclass.cpp peddetect.cpp
 
-TARGETS=segmentation xwalkdetect
+TARGETS=segmentation
 
 $(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(OBJDIR)
@@ -17,9 +17,6 @@ all: $(TARGETS)
 
 segmentation: $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(OBJDIR)/utils.o $(OBJDIR)/ccomp.o $(OBJDIR)/pclass.o $(OBJDIR)/peddetect.o
 	$(CC) $(CFLAGS) -o segmentation $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(OBJDIR)/utils.o $(OBJDIR)/ccomp.o $(OBJDIR)/pclass.o $(OBJDIR)/peddetect.o $(LIBS) $(LIBDIR)
-
-xwalkdetect: $(OBJDIR)/xwalkdetect.o $(OBJDIR)/rgrow.o
-	$(CC) $(CFLAGS) -o xwalkdetect $(OBJDIR)/xwalkdetect.o $(OBJDIR)/rgrow.o $(LIBS) $(LIBDIR)
 
 .PHONY: clean
 clean: ; rm -rf $(OBJDIR) $(TARGETS)

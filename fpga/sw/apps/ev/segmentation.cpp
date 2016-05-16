@@ -48,6 +48,11 @@ int main(int argc, char** argv) {
   //VideoCapture capture(1);
   VideoStats vstats;
 
+  if (!capture.isOpened()) { 
+    cout << "Capture failed to open." << endl; 
+    return -1; 
+  }
+
   capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
@@ -57,12 +62,10 @@ int main(int argc, char** argv) {
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
   vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
 
-  vstats.openLog("segmentation.log");
+  // set MAX_AREA for pedestrians
+  int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
 
-  if (!capture.isOpened()) { 
-    cout << "Capture failed to open." << endl; 
-    return -1; 
-  }
+  vstats.openLog("segmentation.log");
 
   Mat frame;
   capture >> frame;
@@ -104,8 +107,8 @@ int main(int argc, char** argv) {
   int instPedCount, instCarCount;
   int prevPedCount, prevCarCount;
 
+  int curr_fps = 20.0;
   int result = -1;
-  double curr_fps = 40.0;
 
   // processing loop
   cout << endl;
@@ -132,7 +135,8 @@ vstats.prepareWriteLog();
     }
 
     // update the danger path
-    dangerPath = pclass.carPath & pclass.pedPath;
+    //dangerPath = pclass.carPath & pclass.pedPath;
+    dangerPath = pclass.pedPath;
 
     //medianBlur(frame, frame, 7);
     frame.copyTo(oframe);
@@ -187,7 +191,6 @@ pclass.pstats.seekLog(ios::beg);
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
-//vstats.prepareWriteLog();
       Rect cc_bb = vec_cc[i].getBoundingBox();
       int currentSize = cc_bb.width*cc_bb.height;
       int pedSize = pclass.peddetect.getMinSize().area();
@@ -197,6 +200,7 @@ pclass.pstats.seekLog(ios::beg);
       if(reqSize < 400) reqSize = 400;
 
       if(currentSize < reqSize) continue;
+      if(currentSize > MAX_AREA) continue;  // can't be bigger than half the screen
 
       Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
@@ -212,15 +216,12 @@ pclass.pstats.seekLog(ios::beg);
       //distanceTransform(dist, dist, CV_DIST_L2, 3);
       //normalize(dist, dist, 0, 255, NORM_MINMAX);
       //dist.convertTo(dist, CV_8U);
-//vstats.writeLog("masking", 1);
+
       int classification = -1;
-      //classification = pclass.classify(vec_cc[i], dist, oframe);
-//vstats.prepareWriteLog();
       classification = pclass.classify(vec_cc[i], objmask, oframe);
-//vstats.writeLog("classify", 1);
       
       ped = false;
-      bool draw = pclass.carPathIsValid && pclass.pedPathIsValid;
+      bool draw = /* pclass.carPathIsValid && */ pclass.pedPathIsValid;
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
@@ -236,7 +237,7 @@ pclass.pstats.seekLog(ios::beg);
           instPedCount++;
           break;
         case TYPE_PED_ONPATH:
-          //if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
+          if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
           instPedCount++;
           ped = true;
           break;
@@ -277,22 +278,17 @@ vstats.writeLog(message, 0);
     vstats.displayStats("inst", result);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
-    //if(curr_fps < 8.0) exit(0);
-    //if(vstats.getUptime() >= 16) exit(0);
-
     /* OUT */
-    //imshow("frame", oframe);
-    //imshow("fg", foregroundMask_ed3);
+    imshow("frame", oframe);
+    imshow("fg", foregroundMask_ed3);
     //imshow("path", pclass.carPath);
-    //imshow("ppath", pclass.pedPath);
+    imshow("ppath", pclass.pedPath);
     //imshow("dpath", dangerPath);
 
     if(prevPedCount > instPedCount) pedCount++; 
     if(prevCarCount > instCarCount) carCount++; 
 
-    //cout << "\rPedestrians: " << pedCount << "\tCar Count: " << carCount;
-
-    //if(waitKey(10) >= 0) break;
+    if(waitKey(30) >= 0) break;
   }
 
   return 0;

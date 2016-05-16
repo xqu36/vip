@@ -55,7 +55,6 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 
   if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) pedVotes += 30;
   else carVotes += 30;
-  if(cc_pix > CAR_SIZE_THRESHOLD) carVotes += 0; // disabled
 
   if(pedQueue.size() >= pedsInPath/3) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
@@ -70,13 +69,13 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 
       // reasonably sure this is a car; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, outType, objmask, frame);
+      //if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, outType, objmask, frame);
       if(outType != TYPE_CAR_ONPATH) carVotes = 0;
     } else {
       //if(carVotes > 0) carVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
+      //if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
       //if(outType != TYPE_CAR || outType != TYPE_CAR_ONPATH) carVotes = 0;
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
       //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
@@ -94,7 +93,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
       //if(pedVotes > 0) pedVotes -= 20;
 
       // if not on the path, use Haar to more correctly determine car-ness & add to path
-      if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
+      //if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
       //if(outType != TYPE_CAR || outType != TYPE_CAR_ONPATH) carVotes = 0;
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
       //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
@@ -229,6 +228,7 @@ pstats.writeLog("HoG", 0);
 
   } else if(type == TYPE_PED_ONPATH) {
 
+    /* TODO: REPLACE WITH STD DEV */
     int scaledMaxHeight = 1.2 * peddetect.getMaxSize().height;
     int scaledMaxWidth = 1.2 * peddetect.getMaxSize().width;
     int scaledMinHeight = 0.8 * peddetect.getMinSize().height;
