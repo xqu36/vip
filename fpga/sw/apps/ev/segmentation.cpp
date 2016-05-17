@@ -252,12 +252,12 @@ vstats.writeLog(message, 0);
 
     /* OUT */
 
-    imshow("frame", oframe);
-    imshow("fg", foregroundMask_ed3);
-    imshow("dpath", dangerPath);
-    imshow("bg", backgroundModel);
+    //imshow("frame", oframe);
+    //imshow("fg", foregroundMask_ed3);
+    //imshow("dpath", dangerPath);
+    //imshow("bg", backgroundModel);
 
-    if(waitKey(30) >= 0) break;
+    //if(waitKey(30) >= 0) break;
   }
 
   return 0;

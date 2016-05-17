@@ -26,7 +26,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 200;
+  pedsInPath = 600;
   carsInPath = 600;
 
   bgValid = false;
@@ -53,8 +53,10 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   // first stage: Width/Height/Size
   int cc_pix = ccomp.getPixelCount();
 
-  if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) pedVotes += 30;
-  else carVotes += 30;
+  // pedestrian: ~1.618 PHI
+  if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) {
+    if(ccomp.getBoundingBoxHeight() / ccomp.getBoundingBoxWidth() > 1.25)  pedVotes += 30;
+  } else carVotes += 30;
 
   if(pedQueue.size() >= pedsInPath) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
