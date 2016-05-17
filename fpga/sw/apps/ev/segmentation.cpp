@@ -75,6 +75,7 @@ int main(int argc, char** argv) {
 
   Mat oframe;
   Mat foregroundMask, backgroundModel;
+  Mat foregroundMask_color;
   Mat foregroundMask_ed3;
 
   Mat dangerPath;
@@ -147,14 +148,21 @@ vstats.writeLog("stabilize", 0);
     if(OPENCV_STABILIZE) {}
 
 vstats.prepareWriteLog();
-    // update background model
-    MOG(frame, foregroundMask, 0.005);
-    MOG.getBackgroundImage(backgroundModel);
+    // TODO: optimizations?
+    if(!pclass.pedPathIsValid || 1) {
+      // update background model
+      MOG(frame, foregroundMask, 0.005);
+      MOG.getBackgroundImage(backgroundModel);
+    } else {
+      absdiff(frame, backgroundModel, foregroundMask_color);
+      cvtColor(foregroundMask_color, foregroundMask, CV_RGB2GRAY);
+    }// locked into same backgroundModel
 vstats.writeLog("MoG", 0);
 
 vstats.prepareWriteLog();
     // remove detected shadows
-    threshold(foregroundMask, foregroundMask, 128, 255, THRESH_TOZERO);
+    //threshold(foregroundMask, foregroundMask, 15, 255, THRESH_BINARY);
+    threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
@@ -220,7 +228,6 @@ pclass.pstats.seekLog(ios::beg);
       Point centroid = vec_cc[i].getCentroidBox();
       if(ped && dangerPath.at<unsigned char>(centroid) != 0 &&
          pclass.pedPathIsValid /* && pclass.carPathIsValid */){
-      	//circle(oframe, centroid, 5, Scalar(0,0,255), 4);
       	pedInDanger = true;
       } else pedInDanger = false;
     }
@@ -246,10 +253,11 @@ vstats.writeLog(message, 0);
     /* OUT */
 
     imshow("frame", oframe);
-    //imshow("fg", foregroundMask_ed3);
+    imshow("fg", foregroundMask_ed3);
     imshow("dpath", dangerPath);
+    imshow("bg", backgroundModel);
 
-    if(waitKey(5) >= 0) break;
+    if(waitKey(30) >= 0) break;
   }
 
   return 0;

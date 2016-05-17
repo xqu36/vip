@@ -26,7 +26,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 600;
+  pedsInPath = 200;
   carsInPath = 600;
 
   bgValid = false;
@@ -104,7 +104,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
   if(type == TYPE_PED) {
 
-    if(!pedPathIsValid || 1) {
+    if(!pedPathIsValid) {
       
 pstats.prepareWriteLog();
 
