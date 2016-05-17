@@ -64,24 +64,6 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     Point cntd = ccomp.getCentroidBox();
 
     // check intersections
-    if(carPath.at<unsigned char>(cntd) > 0) {
-      if(carVotes > 0) carVotes += 20;
-
-      // reasonably sure this is a car; on path with more votes. Update path
-      // TODO: assign weights with updating path?
-      //if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR_ONPATH, outType, objmask, frame);
-      if(outType != TYPE_CAR_ONPATH) carVotes = 0;
-    } else {
-      //if(carVotes > 0) carVotes -= 20;
-
-      // if not on the path, use Haar to more correctly determine car-ness & add to path
-      //if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
-      //if(outType != TYPE_CAR || outType != TYPE_CAR_ONPATH) carVotes = 0;
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
-      //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
-    }
-
-    // check intersections
     if(pedPath.at<unsigned char>(cntd) > 0) {
       if(pedVotes > 0) pedVotes += 20;
 
@@ -90,21 +72,10 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, outType, objmask, frame);
       if(outType != TYPE_PED_ONPATH) pedVotes -= 0;
     } else {
-      //if(pedVotes > 0) pedVotes -= 20;
-
-      // if not on the path, use Haar to more correctly determine car-ness & add to path
-      //if(carVotes > pedVotes) updatePath(ccomp, TYPE_CAR, outType, objmask, frame);
-      //if(outType != TYPE_CAR || outType != TYPE_CAR_ONPATH) carVotes = 0;
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
       //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
     }
   } else ;
-
-  //if(!carPathIsValid) cout << "carPathIsValid = false" << endl;
-  //if(!pedPathIsValid) cout << "pedPathIsValid = false" << endl;
-
-  pstats.prepareWriteLog();
-  pstats.writeLog("EXITING CLASS ITER", 0);
 
   if(pedVotes < 10 && carVotes < 10 || pedVotes == carVotes) 
     return TYPE_UNCLASS;
@@ -122,6 +93,8 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
   outType = type; 
 
+  int scale = 180;
+
   int redrawValue = 10;
   Scalar redrawColor = Scalar(redrawValue, redrawValue, redrawValue);
 
@@ -129,78 +102,9 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
   Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
   objframe = frame(rectMask);
 
-  if(type == TYPE_CAR) {
-    if(!carPathIsValid) {
+  if(type == TYPE_PED) {
 
-pstats.prepareWriteLog();
-
-      if(cardetect.detectCar(objframe, rectMask.size())) {
-        if (carQueue.size() < carsInPath) {
-          carQueue.push_back(objmask);
-          redrawMask();
-        } else {
-          carQueue.pop_front();
-          carQueue.push_back(objmask);
-          redrawMask();
-        }
-        outType = TYPE_CAR_ONPATH;
-      } else outType = TYPE_CAR;
-
-pstats.writeLog("Haar", 0);
-
-    }
-
-  // already reasonably confident about car-ness
-  } else if (type == TYPE_CAR_ONPATH) {
-
-    int scaledMaxHeight = 1.1 * cardetect.getMaxSize().height;
-    int scaledMaxWidth = 1.1 * cardetect.getMaxSize().width;
-    int scaledMinHeight = 0.9 * cardetect.getMinSize().height;
-    int scaledMinWidth = 0.9 * cardetect.getMinSize().width;
-    int avgHeight = scaledMaxHeight+scaledMinHeight / 2;
-    int avgWidth = scaledMaxWidth+scaledMinWidth / 2;
-
-    //if(rectMask.size().height < avgHeight || rectMask.size().width < avgWidth) {
-    /*
-    if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
-       rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
-       !carPathIsValid) {
-    */
-    if(rectMask.size().height > scaledMaxHeight && rectMask.size().width > scaledMaxWidth ||
-       rectMask.size().height < scaledMinHeight && rectMask.size().width < scaledMinWidth ||
-       !carPathIsValid) {
-
-      //cout << "DOUBLE CHECKING: Car" << endl;
-pstats.prepareWriteLog();
-
-      if(cardetect.detectCar(objframe, rectMask.size())) {
-        if (carQueue.size() < carsInPath) {
-          carQueue.push_back(objmask);
-          redrawMask();
-        } else {
-          carQueue.pop_front();
-          carQueue.push_back(objmask);
-          redrawMask();
-        }
-        outType = TYPE_CAR_ONPATH;
-      } else outType = TYPE_UNCLASS;
-    } else {
-      if (carQueue.size() < carsInPath) {
-        carQueue.push_back(objmask);
-        redrawMask();
-      } else {
-        carQueue.pop_front();
-        carQueue.push_back(objmask);
-        redrawMask();
-      }
-    }
-
-pstats.writeLog("Haar confirm", 0);
-
-  } else if(type == TYPE_PED) {
-
-
-    if(!pedPathIsValid) {
+    if(!pedPathIsValid || 1) {
       
 pstats.prepareWriteLog();
 
@@ -209,33 +113,25 @@ pstats.prepareWriteLog();
       Mat re_objframe = objframe.clone();
 
       // hog's defaultPeopleDetector needs a person of at least 64,128 size
-      if(rectMask.size().height < 128 || rectMask.size().width < 64) {
-        resize(objframe, re_objframe, Size(64,128));
+      if(objframe.size().height < 128) {
+        resize(objframe, re_objframe, Size(objframe.size().width,128));
+        if(re_objframe.size().width < 64) resize(re_objframe, re_objframe, Size(64,re_objframe.size().height));
       }
-      /*
-      if(rectMask.size().height < 128) {
-        resize(objframe, re_objframe, Size(rectMask.size().width,128));
-        if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
+      if(objframe.size().width < 64) {
+        resize(objframe, re_objframe, Size(64,objframe.size().height));
+        if(re_objframe.size().height < 128) resize(re_objframe, re_objframe, Size(re_objframe.size().width,128));
       }
-      if(rectMask.size().width < 64) {
-        resize(objframe, re_objframe, Size(64,rectMask.size().height));
-        if(rectMask.size().height < 128) resize(re_objframe, re_objframe, Size(rectMask.size().width,128));
-      }
-      */
-      //if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
 
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
         if(pedQueue.size() < pedsInPath) {
-          //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
-          //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
@@ -254,20 +150,13 @@ pstats.writeLog("HoG", 0);
     int scaledMinHeight = 0.8 * peddetect.getMinSize().height;
     int scaledMinWidth = 0.8 * peddetect.getMinSize().width;
 
-    /*
-    if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
-       rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
-       !pedPathIsValid) {
-    */
     if(rectMask.size().height > scaledMaxHeight && rectMask.size().width > scaledMaxWidth ||
        rectMask.size().height < scaledMinHeight && rectMask.size().width < scaledMinWidth ||
        !pedPathIsValid) {
 
-    //if(rectMask.size().height > peddetect.getMaxSize().height || rectMask.size().width > peddetect.getMaxSize().width ||
-    //   rectMask.size().height < peddetect.getMinSize().height || rectMask.size().width < peddetect.getMinSize().width) {
-
       Mat re_objframe = objframe.clone();
 
+      // FIXME
       // hog's defaultPeopleDetector needs a person of at least 64,128 size
       if(rectMask.size().height < 128 || rectMask.size().width < 64) {
         resize(objframe, re_objframe, Size(64,128));
@@ -275,22 +164,20 @@ pstats.writeLog("HoG", 0);
       //if(rectMask.size().height < 128) resize(re_objframe, re_objframe, Size(rectMask.size().width,128));
       //if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
 
-      //cout << "DOUBLE CHECKING: Pedestrian" << endl;
 pstats.prepareWriteLog();
+
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
 
         if(pedQueue.size() < pedsInPath) {
-          //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
-          //pedQueue.push_back(objmask);
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
@@ -298,29 +185,17 @@ pstats.prepareWriteLog();
       } else outType = TYPE_UNCLASS;
     } else {
       if(pedQueue.size() < pedsInPath) {
-        //pedQueue.push_back(objmask);
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
         pedQueue.push_back(ctrd_mat);
         redrawMask();
       } else {
         pedQueue.pop_front();
-        //pedQueue.push_back(objmask);
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / 180, redrawColor, CV_FILLED);
+        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
         pedQueue.push_back(ctrd_mat);
         redrawMask();
       }
-      /*
-      if(pedQueue.size() < pedsInPath) {
-        pedQueue.push_back(objmask);
-        redrawMask();
-      } else {
-        pedQueue.pop_front();
-        pedQueue.push_back(objmask);
-        redrawMask();
-      }
-      */
     }
 pstats.writeLog("HoG confirm", 0);
   }
@@ -335,27 +210,15 @@ pstats.prepareWriteLog();
     for(int i = 0; i < carQueue.size(); i++) {
         carPath |= carQueue[i];
     }
-    /*
-    distanceTransform(carPath, carPath, CV_DIST_L2, 3);
-    normalize(carPath, carPath, 0, 255, NORM_MINMAX);
-    threshold(carPath, carPath, 40, 255, THRESH_BINARY);
-    carPath.convertTo(carPath, CV_8U);
-    */
 
     pedPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < pedQueue.size(); i++) {
         pedPath += pedQueue[i];
     }
 
-    //distanceTransform(pedPath, pedPath, CV_DIST_L2, 3);
-    //normalize(pedPath, pedPath, 0, 255, NORM_MINMAX);
-    //threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
-
     Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5,5));
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
     //erode(pedPath, pedPath, sE_d, Point(-1,-1), 2);
-
-    //pedPath.convertTo(pedPath, CV_8U);
 
     if(pedPathIsValid) threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
 

@@ -101,13 +101,7 @@ int main(int argc, char** argv) {
 
   PathClassifier pclass(vstats.getHeight(), vstats.getWidth());
 
-  int pedCount = 0;
-  int carCount = 0;
-
-  int instPedCount, instCarCount;
-  int prevPedCount, prevCarCount;
-
-  int curr_fps = 20.0;
+  int curr_fps = INT_MAX;
   int result = -1;
 
   // processing loop
@@ -133,10 +127,8 @@ vstats.prepareWriteLog();
     }
 
     // update the danger path
-    //dangerPath = pclass.carPath & pclass.pedPath;
-    dangerPath = pclass.pedPath;
+    dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
-    //medianBlur(frame, frame, 7);
     frame.copyTo(oframe);
     GaussianBlur(frame, frame, Size(5, 5), 0, 0);
 
@@ -166,7 +158,6 @@ vstats.prepareWriteLog();
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
-    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
 vstats.writeLog("morphological ops", 0);
 
 vstats.prepareWriteLog();
@@ -174,12 +165,7 @@ vstats.prepareWriteLog();
     findCC(foregroundMask_ed3, vec_cc);
 vstats.writeLog("connected components", 0);
 
-    prevCarCount = instCarCount;
-    prevPedCount = instPedCount;
-
-    instPedCount = 0;
-    instCarCount = 0;
-
+/* CLEAR PCLASS LOG */
 vstats.prepareWriteLog();
 
 pclass.pstats.seekLog(ios::beg);
@@ -203,17 +189,8 @@ pclass.pstats.seekLog(ios::beg);
       Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
+      // FIXME
       dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
-      //erode(objmask, objmask, sE_d, Point(-1, -1), 2);
-
-      //distanceTransform(objmask, dist, CV_DIST_L2, 3);
-      //normalize(dist, dist, 0, 255, NORM_MINMAX);
-      //threshold(dist, dist, 150, 255, THRESH_TOZERO);
-      //dist.convertTo(dist, CV_8U);
-
-      //distanceTransform(dist, dist, CV_DIST_L2, 3);
-      //normalize(dist, dist, 0, 255, NORM_MINMAX);
-      //dist.convertTo(dist, CV_8U);
 
       int classification = -1;
       classification = pclass.classify(vec_cc[i], objmask, oframe);
@@ -223,24 +200,17 @@ pclass.pstats.seekLog(ios::beg);
       Rect r = vec_cc[i].getBoundingBox();
       switch(classification) {
         case TYPE_CAR:
-          //if(draw) rectangle(oframe, r, Scalar(0,0,255));
-          instCarCount++;
           break;
         case TYPE_CAR_ONPATH:
-          //if(draw) rectangle(oframe, r, Scalar(0,0,255), 3);
-          instCarCount++;
           break;
         case TYPE_PED:
-          //if(draw) rectangle(oframe, r, Scalar(255,0,0));
-          instPedCount++;
+          rectangle(oframe, r, Scalar(255,0,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          if(draw) rectangle(oframe, r, Scalar(255,0,0), 3);
-          instPedCount++;
+          rectangle(oframe, r, Scalar(255,0,0), 3);
           ped = true;
           break;
         case TYPE_UNCLASS: 
-          //if(draw) rectangle(oframe, r, Scalar(0,255,0));
           break;
         default:
           break;
@@ -250,11 +220,9 @@ pclass.pstats.seekLog(ios::beg);
       Point centroid = vec_cc[i].getCentroidBox();
       if(ped && dangerPath.at<unsigned char>(centroid) != 0 &&
          pclass.pedPathIsValid /* && pclass.carPathIsValid */){
-
-      	circle(oframe, centroid, 5, Scalar(0,0,255), 4);
+      	//circle(oframe, centroid, 5, Scalar(0,0,255), 4);
       	pedInDanger = true;
-      }
-      else pedInDanger = false;
+      } else pedInDanger = false;
     }
 
 char message[25];
@@ -270,21 +238,16 @@ vstats.writeLog(message, 0);
 
     vstats.updateAverageFPS();
 
-    //vstats.updateFPS();
     curr_fps = vstats.updateFPS();
 
     vstats.displayStats("inst", result);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     /* OUT */
+
     imshow("frame", oframe);
     //imshow("fg", foregroundMask_ed3);
-    //imshow("path", pclass.carPath);
-    //imshow("ppath", pclass.pedPath);
     imshow("dpath", dangerPath);
-
-    if(prevPedCount > instPedCount) pedCount++; 
-    if(prevCarCount > instCarCount) carCount++; 
 
     if(waitKey(5) >= 0) break;
   }

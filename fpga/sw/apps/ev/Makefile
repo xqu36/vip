@@ -19,4 +19,4 @@ segmentation: $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(OBJDIR)/utils.o $(O
 	$(CC) $(CFLAGS) -o segmentation $(OBJDIR)/segmentation.o $(OBJDIR)/vidstab.o $(OBJDIR)/utils.o $(OBJDIR)/ccomp.o $(OBJDIR)/pclass.o $(OBJDIR)/peddetect.o $(LIBS) $(LIBDIR)
 
 .PHONY: clean
-clean: ; rm -rf $(OBJDIR) $(TARGETS)
+clean: ; rm -rf $(OBJDIR) $(TARGETS) *.log
