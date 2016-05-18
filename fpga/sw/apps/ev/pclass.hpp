@@ -15,6 +15,8 @@
 #include "opencv2/opencv.hpp"
 #include "ccomp.hpp"
 #include "segmentation.hpp"
+#include "peddetect.hpp"
+#include "opencv2/objdetect/objdetect.hpp"
 
 using namespace std;
 using namespace cv;
@@ -36,21 +38,28 @@ private:
   int carPathCount;
   int pedPathCount;
 
-  int carPathIsValid;
-  int pedPathIsValid;
-
-  int carsInPath;
+  int carsInPath, pedsInPath;
   deque<Mat> carQueue;
+  deque<Mat> pedQueue;
+
+  //CascadeClassifier cascade;
 
 public:
+  bool bgValid;
+
+  bool carPathIsValid;
+  bool pedPathIsValid;
+
   Mat carPath;
   Mat pedPath;
 
-  PathClassifier(int rows, int cols);
+  PedestrianDetector peddetect;
+  PedestrianDetector cardetect;
 
-  int classify(ConnectedComponent& ccomp, const Mat& objmask);
-  void updatePath(ConnectedComponent& ccomp, int type, const Mat& objmask);
-  void redrawMask(deque<Mat> carQueue);
+  PathClassifier(int rows, int cols);
+  int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
+  void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame);
+  void redrawMask();
 };
 
 #endif // PCLASS_H

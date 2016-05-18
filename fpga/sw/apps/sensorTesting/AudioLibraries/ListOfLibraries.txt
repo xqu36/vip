@@ -1,0 +1,3 @@
+Libraries List:
+1. Audio Analyzer
+2. Pyaudio

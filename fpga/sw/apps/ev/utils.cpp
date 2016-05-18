@@ -49,5 +49,16 @@ void VideoStats::displayStats() {
   sprintf(display, "%.2f fps", fps);
   cout << "\r[" 
        << width_res << "x" << height_res << "] - " 
-       << display << flush;
+       << display << "\tUptime: " << sec << flush;
+}
+
+int VideoStats::getCounter() {
+    return counter;
+}
+
+double VideoStats::getUptime() {
+  time(&end);
+
+  sec = difftime(end, start);
+  return sec;
 }

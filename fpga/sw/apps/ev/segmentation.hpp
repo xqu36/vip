@@ -9,6 +9,7 @@
  */
 
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/video/video.hpp>
 #include <opencv2/video/background_segm.hpp>
@@ -26,8 +27,6 @@
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
 
-#define MIN_NUM_PIXELS 400
 #define CAR_SIZE_THRESHOLD 700 
-#define MIN_AREA 250
 
 #endif // SEGMENTATION_H
