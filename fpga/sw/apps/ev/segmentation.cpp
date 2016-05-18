@@ -7,6 +7,7 @@
  *
  */
 
+#include <unistd.h>
 #include "segmentation.hpp"
 #include "vidstab.hpp"
 #include "utils.hpp"
@@ -23,7 +24,9 @@ void sig_handler(int s) {
 
 int main(int argc, char** argv) {
 
+  /////////////////
   /* EXIT SAFELY */
+  /////////////////
 
   struct sigaction sigIntHandler;
 
@@ -33,7 +36,9 @@ int main(int argc, char** argv) {
 
   sigaction(SIGINT, &sigIntHandler, NULL);
 
+  ////////
   /* IN */
+  ////////
 
   string infile = "";
 
@@ -59,8 +64,14 @@ int main(int argc, char** argv) {
   assert(capture.get(CV_CAP_PROP_FRAME_WIDTH) == 320);
   assert(capture.get(CV_CAP_PROP_FRAME_HEIGHT) == 240);
 
+  ////////////////////
+  /* INITIALIZATION */
+  ////////////////////
+
   vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
   vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
+
+  int loop_count = 0;
 
   // set MAX_AREA for pedestrians
   int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
@@ -73,7 +84,9 @@ int main(int argc, char** argv) {
   Mat prev_frame;
   prev_frame = frame.clone();
 
-  Mat oframe;
+  Mat oframe, sec_frame;
+  capture >> sec_frame;
+
   Mat foregroundMask, backgroundModel;
   Mat foregroundMask_color;
   Mat foregroundMask_ed3;
@@ -81,7 +94,14 @@ int main(int argc, char** argv) {
   Mat dangerPath;
 
   bool ped = false, pedInDanger = false;
-  //Mat dist;
+  bool pedPerSec = false; // updated once a second
+  int instPedCount = 0;
+  int prev_PedCount = instPedCount;
+  int sec_PedCount = 0;
+
+  int curr_fps = INT_MAX;
+  double pre_uptime = 0.0;
+  int result = -1;  // calibrating [0], no ped [-1], ped [+1]
 
   Mat prev_gradient = frame.clone();
   cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
@@ -89,7 +109,6 @@ int main(int argc, char** argv) {
 
   // initialize MoG background subtractor
   BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2(1000, 64, true);
-  //BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2();
   MOG.set("detectShadows", 1);
   MOG.set("nmixtures", NMIXTURES);
   MOG.set("fTau", 0.65);
@@ -102,8 +121,6 @@ int main(int argc, char** argv) {
 
   PathClassifier pclass(vstats.getHeight(), vstats.getWidth());
 
-  int curr_fps = INT_MAX;
-  int result = -1;
 
   // processing loop
   cout << endl;
@@ -111,19 +128,25 @@ int main(int argc, char** argv) {
 
 vstats.seekLog(ios::beg);
 
+    ////////////////////
     /* PRE-PROCESSING */
+    ////////////////////
 
     vstats.prepareFPS();
+    pre_uptime = vstats.getUptime();
 
 vstats.prepareWriteLog();
     // take new current frame
     prev_frame = frame.clone();
     capture >> frame;
 
+    int curr_frameIndex = capture.get(CV_CAP_PROP_POS_FRAMES);
+
     // check if we need to restart the video
     if(frame.empty()) {
         // Looks like we've hit the end of our feed! Restart
         capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
+        loop_count++;
         continue;
     }
 
@@ -135,7 +158,9 @@ vstats.prepareWriteLog();
 
 vstats.writeLog("preprocessing", 0);
 
+    ////////////////
     /* PROCESSING */
+    ////////////////
 
 vstats.prepareWriteLog();
     // remove camera jitter 
@@ -180,6 +205,8 @@ pclass.pstats.seekLog(ios::beg);
 for(int i=0; i<25; i++) pclass.pstats.writeLog(" - ",0);
 pclass.pstats.seekLog(ios::beg);
 
+    prev_PedCount = instPedCount;
+    instPedCount = 0;
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
@@ -197,7 +224,7 @@ pclass.pstats.seekLog(ios::beg);
       Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
-      // FIXME
+      // FIXME - four times too much?
       dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
 
       int classification = -1;
@@ -212,11 +239,12 @@ pclass.pstats.seekLog(ios::beg);
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          rectangle(oframe, r, Scalar(255,0,0), 1);
+          //rectangle(oframe, r, Scalar(255,0,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          rectangle(oframe, r, Scalar(255,0,0), 3);
+          //rectangle(oframe, r, Scalar(255,0,0), 3);
           ped = true;
+          instPedCount++;
           break;
         case TYPE_UNCLASS: 
           break;
@@ -236,10 +264,13 @@ char message[25];
 sprintf(message, "iterate though ccomp [%d]", (int)vec_cc.size());
 vstats.writeLog(message, 0);
 
+    /////////
+    /* OUT */
+    /////////
+
     result = -1;
     if(!pclass.pedPathIsValid /* || !pclass.carPathIsValid */) {
       result = 0; // CALIBRATING
-      //dangerPath /= 2;
     }
     if(pedInDanger) result = 1;
 
@@ -247,17 +278,38 @@ vstats.writeLog(message, 0);
 
     curr_fps = vstats.updateFPS();
 
-    vstats.displayStats("inst", result);
+    if(ped) pedPerSec = true;
+    instPedCount = MAX(prev_PedCount,instPedCount);
+
+    //vstats.displayStats("inst", result);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
-    /* OUT */
-
-    //imshow("frame", oframe);
+    imshow("frame", oframe);
+    imshow("sec_frame", sec_frame);
     //imshow("fg", foregroundMask_ed3);
-    //imshow("dpath", dangerPath);
+    imshow("dpath", dangerPath);
     //imshow("bg", backgroundModel);
 
-    //if(waitKey(30) >= 0) break;
+    if(waitKey(350) >= 0) break;
+
+    if(vstats.getUptime() >= pre_uptime+1) {
+      //cout << "\tTime:\t" << vstats.getUptime() << " - [" << pedPerSec << "]" << endl;
+      frame.copyTo(sec_frame);
+      cvtColor(sec_frame, sec_frame, CV_RGB2GRAY);
+      sec_PedCount = instPedCount;
+
+      if(pedPerSec) {
+        oframe.copyTo(sec_frame);
+      }
+      if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "]" << endl;
+      pedPerSec = false;
+      prev_PedCount = instPedCount =  0;
+    }
+
+    //if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
+
+    capture.set(CV_CAP_PROP_POS_FRAMES, curr_frameIndex+4);
+
   }
 
   return 0;

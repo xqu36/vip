@@ -26,7 +26,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 600;
+  pedsInPath = 400;
   carsInPath = 600;
 
   bgValid = false;
@@ -222,7 +222,7 @@ pstats.prepareWriteLog();
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
     //erode(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 
-    if(pedPathIsValid) threshold(pedPath, pedPath, 100, 255, THRESH_BINARY);
+    if(pedPathIsValid) threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
 
 pstats.writeLog("redrawMask", 0);
 
