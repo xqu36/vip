@@ -95,13 +95,14 @@ int main(int argc, char** argv) {
 
   bool ped = false, pedInDanger = false;
   bool pedPerSec = false; // updated once a second
-  int instPedCount = 0;
-  int prev_PedCount = instPedCount;
-  int sec_PedCount = 0;
+  int inst_PedCount = 0;
+  int prev_PedCount = inst_PedCount;
+  int sec_PedCount, prev_sec_PedCount = 0;
+  int totalPed = 0;
 
   int curr_fps = INT_MAX;
   double pre_uptime = 0.0;
-  int result = -1;  // calibrating [0], no ped [-1], ped [+1]
+  int result = 0;  // calibrating [0], no ped [-1], ped [+1]
 
   Mat prev_gradient = frame.clone();
   cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
@@ -145,8 +146,9 @@ vstats.prepareWriteLog();
     // check if we need to restart the video
     if(frame.empty()) {
         // Looks like we've hit the end of our feed! Restart
-        capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
-        loop_count++;
+        capture.set(CV_CAP_PROP_POS_FRAMES, 0.0);
+        if(result != 0) loop_count++;
+        totalPed = 0;
         continue;
     }
 
@@ -205,8 +207,8 @@ pclass.pstats.seekLog(ios::beg);
 for(int i=0; i<25; i++) pclass.pstats.writeLog(" - ",0);
 pclass.pstats.seekLog(ios::beg);
 
-    prev_PedCount = instPedCount;
-    instPedCount = 0;
+    prev_PedCount = inst_PedCount;
+    inst_PedCount = 0;
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
@@ -244,7 +246,7 @@ pclass.pstats.seekLog(ios::beg);
         case TYPE_PED_ONPATH:
           //rectangle(oframe, r, Scalar(255,0,0), 3);
           ped = true;
-          instPedCount++;
+          inst_PedCount++;
           break;
         case TYPE_UNCLASS: 
           break;
@@ -279,9 +281,9 @@ vstats.writeLog(message, 0);
     curr_fps = vstats.updateFPS();
 
     if(ped) pedPerSec = true;
-    instPedCount = MAX(prev_PedCount,instPedCount);
+    inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
-    //vstats.displayStats("inst", result);
+    vstats.displayStats("inst", result);
     if(vstats.getUptime() > 3.0) pclass.bgValid = true;
 
     imshow("frame", oframe);
@@ -290,25 +292,31 @@ vstats.writeLog(message, 0);
     imshow("dpath", dangerPath);
     //imshow("bg", backgroundModel);
 
-    if(waitKey(350) >= 0) break;
+    if(waitKey(35) >= 0) break;
 
     if(vstats.getUptime() >= pre_uptime+1) {
       //cout << "\tTime:\t" << vstats.getUptime() << " - [" << pedPerSec << "]" << endl;
       frame.copyTo(sec_frame);
       cvtColor(sec_frame, sec_frame, CV_RGB2GRAY);
-      sec_PedCount = instPedCount;
+      prev_sec_PedCount = sec_PedCount;
+      sec_PedCount = inst_PedCount;
+
+      if(sec_PedCount < prev_sec_PedCount) totalPed += prev_sec_PedCount - sec_PedCount;
 
       if(pedPerSec) {
         oframe.copyTo(sec_frame);
       }
-      if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "]" << endl;
+      if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "][" << totalPed << "]" << endl;
       pedPerSec = false;
-      prev_PedCount = instPedCount =  0;
+      prev_PedCount = inst_PedCount =  0;
     }
 
-    //if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
+    if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
 
-    capture.set(CV_CAP_PROP_POS_FRAMES, curr_frameIndex+4);
+    int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
+    int iter = curr_frameIndex+0;
+
+    if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
 
   }
 
