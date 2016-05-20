@@ -30,8 +30,8 @@ bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsi
 
     // pedestrian is detected 
     // TODO / FIXME: use non-maximal suppression to extrapolate small false positives as one box
-    //if(detected.size() != 0 ) {
-    if(detected.size() == 1 ) {
+    if(detected.size() != 0 ) {
+    //if(detected.size() == 1 ) {
         if(objsize.width < minWidth) minWidth = objsize.width;
         if(objsize.width > maxWidth) maxWidth = objsize.width;
         if(objsize.height < minHeight) minHeight = objsize.height;

@@ -191,8 +191,9 @@ vstats.prepareWriteLog();
     //threshold(foregroundMask, foregroundMask, 15, 255, THRESH_BINARY);
     threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
 
-    erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
-    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
+    erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
+    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 4);
+    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 2);
 vstats.writeLog("morphological ops", 0);
 
 vstats.prepareWriteLog();
@@ -241,10 +242,10 @@ pclass.pstats.seekLog(ios::beg);
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          //rectangle(oframe, r, Scalar(255,0,0), 1);
+          rectangle(oframe, r, Scalar(255,0,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          //rectangle(oframe, r, Scalar(255,0,0), 3);
+          rectangle(oframe, r, Scalar(255,0,0), 3);
           ped = true;
           inst_PedCount++;
           break;
@@ -288,7 +289,7 @@ vstats.writeLog(message, 0);
 
     imshow("frame", oframe);
     imshow("sec_frame", sec_frame);
-    //imshow("fg", foregroundMask_ed3);
+    imshow("fg", foregroundMask_ed3);
     imshow("dpath", dangerPath);
     //imshow("bg", backgroundModel);
 
@@ -316,7 +317,7 @@ vstats.writeLog(message, 0);
     int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
     int iter = curr_frameIndex+0;
 
-    if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
+    //if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
 
   }
 
