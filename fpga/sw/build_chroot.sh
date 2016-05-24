@@ -29,6 +29,8 @@ sudo apt-get -y install perl
 sudo apt-get -y install wpasupplicant
 sudo apt-get -y install linux-firmware
 sudo apt-get -y install linux-firmware-nonfree
+sudo apt-get -y install udhcpc
+sudo apt-get -y install libopencv-dev
 
 
 ## Python libraries ##
