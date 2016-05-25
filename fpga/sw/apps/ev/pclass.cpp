@@ -26,7 +26,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 400;
+  pedsInPath = 1000;
   carsInPath = 600;
 
   bgValid = false;
@@ -60,7 +60,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     if(ratio > 1.25)  pedVotes += 30;
   } else carVotes += 30;
 
-  if(pedQueue.size() >= pedsInPath) pedPathIsValid = true;
+  if(pedQueue.size() >= pedsInPath/2) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
 
   // second stage: Path Position
@@ -189,7 +189,6 @@ pstats.prepareWriteLog();
         outType = TYPE_PED_ONPATH;
       } else outType = TYPE_PED;
     } else {
-      /*
       if(pedQueue.size() < pedsInPath) {
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
         circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
@@ -202,7 +201,6 @@ pstats.prepareWriteLog();
         pedQueue.push_back(ctrd_mat);
         redrawMask();
       }
-      */
     }
 pstats.writeLog("HoG confirm", 0);
   }
@@ -229,8 +227,8 @@ pstats.prepareWriteLog();
 
     // normalize the path and update
     if(pedPathIsValid) {
-      threshold(pedPath, pedPath, 50, 255, THRESH_TOZERO);
-      normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
+      //normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
+      threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
     }
 
 pstats.writeLog("redrawMask", 0);

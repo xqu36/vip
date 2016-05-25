@@ -109,10 +109,11 @@ int main(int argc, char** argv) {
   prev_gradient.convertTo(prev_gradient, CV_32FC1);
 
   // initialize MoG background subtractor
-  BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2(1000, 64, true);
-  MOG.set("detectShadows", 1);
+  //BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2(1000, 64, true);
+  BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2();
+  MOG.set("detectShadows", DETECTSHADOWS);
   MOG.set("nmixtures", NMIXTURES);
-  MOG.set("fTau", 0.65);
+  //MOG.set("fTau", 0.65);
 
   Mat sE_e = getStructuringElement(MORPH_ELLIPSE, Size(3, 3));
   Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
@@ -155,8 +156,9 @@ vstats.prepareWriteLog();
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
+    //frame.copyTo(oframe);
+    GaussianBlur(frame, frame, Size(1, 1), 0, 0);
     frame.copyTo(oframe);
-    GaussianBlur(frame, frame, Size(5, 5), 0, 0);
 
 vstats.writeLog("preprocessing", 0);
 
@@ -176,13 +178,15 @@ vstats.writeLog("stabilize", 0);
 
 vstats.prepareWriteLog();
     // TODO: optimizations?
-    if(!pclass.pedPathIsValid || 1) {
+    if(!pclass.pedPathIsValid || true) {
       // update background model
-      MOG(frame, foregroundMask, 0.005);
+      //MOG(frame, foregroundMask, 0.005);
+      MOG(frame, foregroundMask);
       MOG.getBackgroundImage(backgroundModel);
     } else {
       absdiff(frame, backgroundModel, foregroundMask_color);
       cvtColor(foregroundMask_color, foregroundMask, CV_RGB2GRAY);
+      threshold(foregroundMask, foregroundMask, 5, 255, THRESH_BINARY);
     }// locked into same backgroundModel
 vstats.writeLog("MoG", 0);
 
@@ -192,7 +196,7 @@ vstats.prepareWriteLog();
     //threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
-    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 1);
+    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
     erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
 vstats.writeLog("morphological ops", 0);
 
@@ -242,7 +246,7 @@ pclass.pstats.seekLog(ios::beg);
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          rectangle(oframe, r, Scalar(255,0,0), 1);
+          //rectangle(oframe, r, Scalar(255,0,0), 1);
           break;
         case TYPE_PED_ONPATH:
           rectangle(oframe, r, Scalar(255,0,0), 3);
@@ -250,7 +254,7 @@ pclass.pstats.seekLog(ios::beg);
           inst_PedCount++;
           break;
         case TYPE_UNCLASS: 
-          rectangle(oframe, r, Scalar(0,255,0), 1);
+          //rectangle(oframe, r, Scalar(0,255,0), 1);
           break;
         default:
           break;
@@ -303,7 +307,9 @@ vstats.writeLog(message, 0);
       prev_sec_PedCount = sec_PedCount;
       sec_PedCount = inst_PedCount;
 
-      if(sec_PedCount < prev_sec_PedCount) totalPed += prev_sec_PedCount - sec_PedCount;
+      if(pclass.pedPathIsValid) {
+        if(sec_PedCount < prev_sec_PedCount) totalPed += prev_sec_PedCount - sec_PedCount;
+      }
 
       if(pedPerSec) {
         oframe.copyTo(sec_frame);
