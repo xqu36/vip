@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cstdio>
 #include <climits>
+#include <math.h>
 
 using namespace std;
 
@@ -34,6 +35,7 @@ public:
   void displayStats();
   int getCounter();
   double getUptime();
+  void getHeatMapColor(float value, float* red, float* green, float* blue);
 };
 
 #endif // UTILS_H
