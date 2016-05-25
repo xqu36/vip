@@ -68,7 +68,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     Point cntd = ccomp.getCentroidBox();
 
     // check intersections
-    if(pedPath.at<unsigned char>(cntd) > 0) {
+    if(pedPath.at<unsigned char>(cntd) > 100) {
       if(pedVotes > 0) pedVotes += 20;
 
       // reasonably sure this is a ped; on path with more votes. Update path
@@ -178,12 +178,14 @@ pstats.prepareWriteLog();
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
           circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
+          //pedQueue.push_back(objframe);
           redrawMask();
         } else {
           pedQueue.pop_front();
           Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
           circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
+          //pedQueue.push_back(objframe);
           redrawMask();
         }
         outType = TYPE_PED_ONPATH;
@@ -193,12 +195,14 @@ pstats.prepareWriteLog();
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
         circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
         pedQueue.push_back(ctrd_mat);
+        //pedQueue.push_back(objframe);
         redrawMask();
       } else {
         pedQueue.pop_front();
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
         circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
         pedQueue.push_back(ctrd_mat);
+        //pedQueue.push_back(objframe);
         redrawMask();
       }
     }
@@ -227,8 +231,8 @@ pstats.prepareWriteLog();
 
     // normalize the path and update
     if(pedPathIsValid) {
-      //normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
-      threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
+      normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
+      //threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
     }
 
 pstats.writeLog("redrawMask", 0);
