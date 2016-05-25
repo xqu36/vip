@@ -54,8 +54,10 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   int cc_pix = ccomp.getPixelCount();
 
   // pedestrian: ~1.618 PHI
-  if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) {
-    if(ccomp.getBoundingBoxHeight() / ccomp.getBoundingBoxWidth() > 1.25)  pedVotes += 30;
+  if(ccomp.getBoundingBoxHeight() > ccomp.getBoundingBoxWidth()) { 
+    //if(ccomp.getBoundingBoxHeight() / ccomp.getBoundingBoxWidth() > 1.25)  pedVotes += 300;
+    double ratio = (double)ccomp.getBoundingBoxHeight() / (double)ccomp.getBoundingBoxWidth();
+    if(ratio > 1.25)  pedVotes += 30;
   } else carVotes += 30;
 
   if(pedQueue.size() >= pedsInPath) pedPathIsValid = true;
@@ -158,13 +160,14 @@ pstats.writeLog("HoG", 0);
 
       Mat re_objframe = objframe.clone();
 
-      // FIXME
-      // hog's defaultPeopleDetector needs a person of at least 64,128 size
-      if(rectMask.size().height < 128 || rectMask.size().width < 64) {
-        resize(objframe, re_objframe, Size(64,128));
+      if(objframe.size().height < 128) {
+        resize(objframe, re_objframe, Size(objframe.size().width,128));
+        if(re_objframe.size().width < 64) resize(re_objframe, re_objframe, Size(64,re_objframe.size().height));
       }
-      //if(rectMask.size().height < 128) resize(re_objframe, re_objframe, Size(rectMask.size().width,128));
-      //if(rectMask.size().width < 64) resize(re_objframe, re_objframe, Size(64,rectMask.size().height));
+      if(objframe.size().width < 64) {
+        resize(objframe, re_objframe, Size(64,objframe.size().height));
+        if(re_objframe.size().height < 128) resize(re_objframe, re_objframe, Size(re_objframe.size().width,128));
+      }
 
 pstats.prepareWriteLog();
 
@@ -184,8 +187,9 @@ pstats.prepareWriteLog();
           redrawMask();
         }
         outType = TYPE_PED_ONPATH;
-      } else outType = TYPE_UNCLASS;
+      } else outType = TYPE_PED;
     } else {
+      /*
       if(pedQueue.size() < pedsInPath) {
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
         circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
@@ -198,6 +202,7 @@ pstats.prepareWriteLog();
         pedQueue.push_back(ctrd_mat);
         redrawMask();
       }
+      */
     }
 pstats.writeLog("HoG confirm", 0);
   }
@@ -215,14 +220,18 @@ pstats.prepareWriteLog();
 
     pedPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < pedQueue.size(); i++) {
+        // TODO: actual probabilities? +10 is too rigid
         pedPath += pedQueue[i];
     }
 
     Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5,5));
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
-    //erode(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 
-    if(pedPathIsValid) threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
+    // normalize the path and update
+    if(pedPathIsValid) {
+      threshold(pedPath, pedPath, 50, 255, THRESH_TOZERO);
+      normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
+    }
 
 pstats.writeLog("redrawMask", 0);
 

@@ -188,12 +188,12 @@ vstats.writeLog("MoG", 0);
 
 vstats.prepareWriteLog();
     // remove detected shadows
-    //threshold(foregroundMask, foregroundMask, 15, 255, THRESH_BINARY);
-    threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
+    //threshold(foregroundMask, foregroundMask, 0, 255, THRESH_BINARY);
+    //threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
 
-    erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
-    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 4);
-    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 2);
+    erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
+    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 1);
+    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
 vstats.writeLog("morphological ops", 0);
 
 vstats.prepareWriteLog();
@@ -228,7 +228,7 @@ pclass.pstats.seekLog(ios::beg);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
       // FIXME - four times too much?
-      dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
+      //dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
 
       int classification = -1;
       classification = pclass.classify(vec_cc[i], objmask, oframe);
@@ -250,6 +250,7 @@ pclass.pstats.seekLog(ios::beg);
           inst_PedCount++;
           break;
         case TYPE_UNCLASS: 
+          rectangle(oframe, r, Scalar(0,255,0), 1);
           break;
         default:
           break;

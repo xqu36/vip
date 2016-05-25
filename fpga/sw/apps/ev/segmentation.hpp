@@ -23,10 +23,10 @@
 
 #define INFILE "img/klaus_high_320x240.mp4"
 
-#define DETECTSHADOWS 1
+#define DETECTSHADOWS 0
 #define NMIXTURES 3
 
-#define STABILIZE 1
+#define STABILIZE 0
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
 
