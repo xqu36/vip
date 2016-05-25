@@ -290,7 +290,7 @@ vstats.writeLog(message, 0);
     inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
     vstats.displayStats("inst", result);
-    if(vstats.getUptime() > 3.0) pclass.bgValid = true;
+    if(vstats.getUptime() > 4.0) pclass.bgValid = true;
 
     imshow("frame", oframe);
     imshow("sec_frame", sec_frame);
@@ -319,7 +319,7 @@ vstats.writeLog(message, 0);
       prev_PedCount = inst_PedCount =  0;
     }
 
-    if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
+    //if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
 
     int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
     int iter = curr_frameIndex+0;

@@ -68,7 +68,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     Point cntd = ccomp.getCentroidBox();
 
     // check intersections
-    if(pedPath.at<unsigned char>(cntd) > 100) {
+    if(pedPath.at<unsigned char>(cntd) > 50) {
       if(pedVotes > 0) pedVotes += 20;
 
       // reasonably sure this is a ped; on path with more votes. Update path
@@ -231,8 +231,8 @@ pstats.prepareWriteLog();
 
     // normalize the path and update
     if(pedPathIsValid) {
+      threshold(pedPath, pedPath, 20, 255, THRESH_TOZERO);
       normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
-      //threshold(pedPath, pedPath, 50, 255, THRESH_BINARY);
     }
 
 pstats.writeLog("redrawMask", 0);
