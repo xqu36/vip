@@ -292,6 +292,28 @@ vstats.writeLog(message, 0);
     vstats.displayStats("inst", result);
     if(vstats.getUptime() > 4.0) pclass.bgValid = true;
 
+    Mat temp_path;
+    Mat heatmap(dangerPath.size(), CV_8UC3); 
+    float val;
+    float r, g, b;
+
+    dangerPath.convertTo(temp_path, CV_32F);
+    for(int y=0; y<temp_path.rows; y++) {
+      for(int x=0; x<temp_path.cols; x++) {
+        val = dangerPath.at<unsigned char>(y,x);
+        val =  (float)val/255;
+        vstats.getHeatMapColor(val, r, g, b);
+        //cout << "(" << r << "," << g << "," << b << ")" << endl;
+
+        //heatmap.at<Vec3f>(x, y) = Vec3f(r,g,b);
+        heatmap.at<Scalar>(y,x) = Scalar(255*r,255*g,255*b);
+        //heatmap.at<float>(x,y,0) = r;
+        //heatmap.at<float>(x,y,1) = g;
+        //heatmap.at<float>(x,y,2) = b;
+      }
+    }
+
+
     imshow("frame", oframe);
     imshow("sec_frame", sec_frame);
     imshow("fg", foregroundMask_ed3);

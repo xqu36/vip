@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <climits>
 #include <time.h>
+#include <math.h>
 
 using namespace std;
 
@@ -51,6 +52,7 @@ public:
   void seekLog(ios_base::seekdir p);
   void prepareWriteLog();
   void writeLog(string func, int level);
+  void getHeatMapColor(float value, float& red, float& green, float& blue);
 };
 
 #endif // UTILS_H
