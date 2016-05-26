@@ -289,7 +289,7 @@ vstats.writeLog(message, 0);
     if(ped) pedPerSec = true;
     inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
-    vstats.displayStats("inst", result);
+    //vstats.displayStats("inst", result);
     if(vstats.getUptime() > 4.0) pclass.bgValid = true;
 
     Mat temp_path;
@@ -311,10 +311,6 @@ vstats.writeLog(message, 0);
         rgb[2] = r*255;
 
         heatmap.at<Vec3b>(y,x) = rgb;
-        //heatmap.at<Scalar>(y,x) = Scalar(255*r,255*g,255*b);
-        //heatmap.at<float>(y,x,0) = r;
-        //heatmap.at<float>(y,x,1) = g;
-        //heatmap.at<float>(y,x,2) = b;
       }
     }
 
@@ -324,7 +320,7 @@ vstats.writeLog(message, 0);
     imshow("fg", foregroundMask_ed3);
     imshow("dpath", dangerPath);
     imshow("heatmap", heatmap);
-    //imshow("bg", backgroundModel);
+    imshow("bg", backgroundModel);
 
     if(waitKey(35) >= 0) break;
 
@@ -343,16 +339,17 @@ vstats.writeLog(message, 0);
         oframe.copyTo(sec_frame);
       }
       if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "][" << totalPed << "]" << endl;
+      //cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;
     }
 
-    //if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
+    if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
 
     int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
     int iter = curr_frameIndex+0;
 
-    //if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
+    if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
 
   }
 
