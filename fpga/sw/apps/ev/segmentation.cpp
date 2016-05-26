@@ -18,7 +18,7 @@ using namespace cv;
 using namespace std;
 
 void sig_handler(int s) {
-  cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
+  //cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
   exit(0);
 }
 
@@ -45,12 +45,12 @@ int main(int argc, char** argv) {
   if(argc > 1) {
     infile = argv[1];
   } else {
-    cout << "Please input video => ./segmentation [.mp4]" << endl;
-    exit(0);
+    //cout << "Please input video => ./segmentation [.mp4]" << endl;
+    //exit(0);
   }
 
-  VideoCapture capture(infile);
-  //VideoCapture capture(1);
+  //VideoCapture capture(infile);
+  VideoCapture capture(-1);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -75,8 +75,6 @@ int main(int argc, char** argv) {
 
   // set MAX_AREA for pedestrians
   int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
-
-  vstats.openLog("segmentation.log");
 
   Mat frame;
   capture >> frame;
@@ -128,8 +126,6 @@ int main(int argc, char** argv) {
   cout << endl;
   for(;;) {
 
-vstats.seekLog(ios::beg);
-
     ////////////////////
     /* PRE-PROCESSING */
     ////////////////////
@@ -137,19 +133,18 @@ vstats.seekLog(ios::beg);
     vstats.prepareFPS();
     pre_uptime = vstats.getUptime();
 
-vstats.prepareWriteLog();
     // take new current frame
     prev_frame = frame.clone();
     capture >> frame;
 
-    int curr_frameIndex = capture.get(CV_CAP_PROP_POS_FRAMES);
+    //int curr_frameIndex = capture.get(CV_CAP_PROP_POS_FRAMES);
 
     // check if we need to restart the video
     if(frame.empty()) {
         // Looks like we've hit the end of our feed! Restart
-        capture.set(CV_CAP_PROP_POS_FRAMES, 0.0);
+        //capture.set(CV_CAP_PROP_POS_FRAMES, 0.0);
         if(result != 0) loop_count++;
-        totalPed = 0;
+        //totalPed = 0;
         continue;
     }
 
@@ -160,23 +155,18 @@ vstats.prepareWriteLog();
     GaussianBlur(frame, frame, Size(1, 1), 0, 0);
     frame.copyTo(oframe);
 
-vstats.writeLog("preprocessing", 0);
-
     ////////////////
     /* PROCESSING */
     ////////////////
 
-vstats.prepareWriteLog();
     // remove camera jitter 
     if(STABILIZE) frame = estimateMotion(&frame,  &prev_gradient);
-vstats.writeLog("stabilize", 0);
     if(RIGID_STABILIZE) {
       Mat M = estimateRigidTransform(prev_frame, frame, 0);
       warpAffine(frame, frame, M, Size(vstats.getWidth(), vstats.getHeight()), INTER_NEAREST|WARP_INVERSE_MAP);
     }
     if(OPENCV_STABILIZE) {}
 
-vstats.prepareWriteLog();
     // TODO: optimizations?
     if(!pclass.pedPathIsValid || true) {
       // update background model
@@ -188,9 +178,7 @@ vstats.prepareWriteLog();
       cvtColor(foregroundMask_color, foregroundMask, CV_RGB2GRAY);
       threshold(foregroundMask, foregroundMask, 5, 255, THRESH_BINARY);
     }// locked into same backgroundModel
-vstats.writeLog("MoG", 0);
 
-vstats.prepareWriteLog();
     // remove detected shadows
     //threshold(foregroundMask, foregroundMask, 0, 255, THRESH_BINARY);
     //threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
@@ -198,19 +186,9 @@ vstats.prepareWriteLog();
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
     erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
-vstats.writeLog("morphological ops", 0);
 
-vstats.prepareWriteLog();
     // find CCs in foregroundMask
     findCC(foregroundMask_ed3, vec_cc);
-vstats.writeLog("connected components", 0);
-
-/* CLEAR PCLASS LOG */
-vstats.prepareWriteLog();
-
-pclass.pstats.seekLog(ios::beg);
-for(int i=0; i<25; i++) pclass.pstats.writeLog(" - ",0);
-pclass.pstats.seekLog(ios::beg);
 
     prev_PedCount = inst_PedCount;
     inst_PedCount = 0;
@@ -268,10 +246,6 @@ pclass.pstats.seekLog(ios::beg);
       } else pedInDanger = false;
     }
 
-char message[25];
-sprintf(message, "iterate though ccomp [%d]", (int)vec_cc.size());
-vstats.writeLog(message, 0);
-
     /////////
     /* OUT */
     /////////
@@ -314,7 +288,7 @@ vstats.writeLog(message, 0);
       }
     }
 
-
+/*
     imshow("frame", oframe);
     imshow("sec_frame", sec_frame);
     imshow("fg", foregroundMask_ed3);
@@ -323,6 +297,7 @@ vstats.writeLog(message, 0);
     imshow("bg", backgroundModel);
 
     if(waitKey(35) >= 0) break;
+*/
 
     if(vstats.getUptime() >= pre_uptime+1) {
       //cout << "\tTime:\t" << vstats.getUptime() << " - [" << pedPerSec << "]" << endl;
@@ -338,18 +313,18 @@ vstats.writeLog(message, 0);
       if(pedPerSec) {
         oframe.copyTo(sec_frame);
       }
-      if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "][" << totalPed << "]" << endl;
-      //cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
+      //if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "][" << totalPed << "]" << endl;
+      cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;
     }
 
-    if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
+    //if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
 
-    int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
-    int iter = curr_frameIndex+0;
+    //int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
+    //int iter = curr_frameIndex+0;
 
-    if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
+    //if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
 
   }
 

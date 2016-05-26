@@ -26,12 +26,10 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathIsValid = false;
   pedPathIsValid = false;
 
-  pedsInPath = 1000;
+  pedsInPath = 2000;
   carsInPath = 600;
 
   bgValid = false;
-
-  pstats.openLog("pclass.log");
 }
 
 int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame) {
@@ -110,8 +108,6 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
     if(!pedPathIsValid) {
       
-pstats.prepareWriteLog();
-
       // find cropped image of obj
       // HoG to determine if pedestrian
       Mat re_objframe = objframe.clone();
@@ -141,9 +137,6 @@ pstats.prepareWriteLog();
         }
         outType = TYPE_PED_ONPATH;
       } else outType = TYPE_PED;
-      
-pstats.writeLog("HoG", 0);
-
     }
 
   } else if(type == TYPE_PED_ONPATH) {
@@ -168,8 +161,6 @@ pstats.writeLog("HoG", 0);
         resize(objframe, re_objframe, Size(64,objframe.size().height));
         if(re_objframe.size().height < 128) resize(re_objframe, re_objframe, Size(re_objframe.size().width,128));
       }
-
-pstats.prepareWriteLog();
 
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
@@ -206,14 +197,11 @@ pstats.prepareWriteLog();
         redrawMask();
       }
     }
-pstats.writeLog("HoG confirm", 0);
   }
 
 }
 
 void PathClassifier::redrawMask() {
-
-pstats.prepareWriteLog();
 
     carPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < carQueue.size(); i++) {
@@ -234,8 +222,5 @@ pstats.prepareWriteLog();
       threshold(pedPath, pedPath, 20, 255, THRESH_TOZERO);
       normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
     }
-
-pstats.writeLog("redrawMask", 0);
-
 }
 
