@@ -18,7 +18,7 @@ using namespace cv;
 using namespace std;
 
 void sig_handler(int s) {
-  //cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
+  cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
   exit(0);
 }
 
@@ -49,8 +49,8 @@ int main(int argc, char** argv) {
     //exit(0);
   }
 
-  //VideoCapture capture(infile);
-  VideoCapture capture(-1);
+  VideoCapture capture("img/pedxing_seq1.mp4");
+  //VideoCapture capture(-1);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
     // check if we need to restart the video
     if(frame.empty()) {
         // Looks like we've hit the end of our feed! Restart
-        //capture.set(CV_CAP_PROP_POS_FRAMES, 0.0);
+        capture.set(CV_CAP_PROP_POS_FRAMES, 0.0);
         if(result != 0) loop_count++;
         //totalPed = 0;
         continue;
