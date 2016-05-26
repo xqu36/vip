@@ -121,9 +121,8 @@ void VideoStats::writeLog(string func, int level) {
 
 void VideoStats::getHeatMapColor(float value, float& red, float& green, float& blue)
 {
-  const int NUM_COLORS = 4;
-  static float color[NUM_COLORS][3] = { {0,0,1}, {0,1,0}, {1,1,0}, {1,0,0} };
-    // A static array of 4 colors:  (blue,   green,  yellow,  red) using {r,g,b} for each.
+  const int NUM_COLORS = 5;
+  static float color[NUM_COLORS][3] = { {0,0,1}, {0,1,1}, {0,1,0}, {1,1,0}, {1,0,0} };
  
   int idx1;        // |-- Our desired color will be between these two indexes in "color".
   int idx2;        // |

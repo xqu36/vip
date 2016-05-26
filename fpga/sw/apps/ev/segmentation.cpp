@@ -305,11 +305,16 @@ vstats.writeLog(message, 0);
         vstats.getHeatMapColor(val, r, g, b);
         //cout << "(" << r << "," << g << "," << b << ")" << endl;
 
-        //heatmap.at<Vec3f>(x, y) = Vec3f(r,g,b);
-        heatmap.at<Scalar>(y,x) = Scalar(255*r,255*g,255*b);
-        //heatmap.at<float>(x,y,0) = r;
-        //heatmap.at<float>(x,y,1) = g;
-        //heatmap.at<float>(x,y,2) = b;
+        Vec3b rgb;
+        rgb[0] = b*255;
+        rgb[1] = g*255;
+        rgb[2] = r*255;
+
+        heatmap.at<Vec3b>(y,x) = rgb;
+        //heatmap.at<Scalar>(y,x) = Scalar(255*r,255*g,255*b);
+        //heatmap.at<float>(y,x,0) = r;
+        //heatmap.at<float>(y,x,1) = g;
+        //heatmap.at<float>(y,x,2) = b;
       }
     }
 
@@ -318,6 +323,7 @@ vstats.writeLog(message, 0);
     imshow("sec_frame", sec_frame);
     imshow("fg", foregroundMask_ed3);
     imshow("dpath", dangerPath);
+    imshow("heatmap", heatmap);
     //imshow("bg", backgroundModel);
 
     if(waitKey(35) >= 0) break;
