@@ -12,6 +12,8 @@
 #include <cstdio>
 #include <climits>
 #include <time.h>
+#include <sys/time.h>
+#include <ctime>
 #include <math.h>
 
 using namespace std;
@@ -22,13 +24,14 @@ private:
   int width_res, height_res;
 
   double fps, ifps;
-  double sec, msec, imsec;
+  double sec, msec, imsec, uptime_msec;
 
   char display[20];
 
   time_t start, end;
   clock_t _start, _end;
   clock_t istart, iend;
+  timeval mstart, mend;
 
   ofstream log;
 
@@ -47,6 +50,7 @@ public:
   void displayStats(string type, int result);
   int getCounter();
   double getUptime();
+  double getMillisecUptime();
   void openLog(string name);
   void closeLog();
   void seekLog(ios_base::seekdir p);

@@ -100,6 +100,7 @@ int main(int argc, char** argv) {
 
   int curr_fps = INT_MAX;
   double pre_uptime = 0.0;
+  bool updatetimer = true;
   int result = 0;  // calibrating [0], no ped [-1], ped [+1]
 
   Mat prev_gradient = frame.clone();
@@ -123,7 +124,6 @@ int main(int argc, char** argv) {
 
 
   // processing loop
-  cout << endl;
   for(;;) {
 
     ////////////////////
@@ -131,7 +131,10 @@ int main(int argc, char** argv) {
     ////////////////////
 
     vstats.prepareFPS();
-    pre_uptime = vstats.getUptime();
+    if(updatetimer){
+      pre_uptime = vstats.getMillisecUptime();
+      updatetimer = !updatetimer;
+    }
 
     // take new current frame
     prev_frame = frame.clone();
@@ -299,8 +302,10 @@ int main(int argc, char** argv) {
     if(waitKey(35) >= 0) break;
 */
 
-    if(vstats.getUptime() >= pre_uptime+1) {
+    if(vstats.getMillisecUptime() >= pre_uptime+250) {
       //cout << "\tTime:\t" << vstats.getUptime() << " - [" << pedPerSec << "]" << endl;
+
+      updatetimer = true;
       frame.copyTo(sec_frame);
       cvtColor(sec_frame, sec_frame, CV_RGB2GRAY);
       prev_sec_PedCount = sec_PedCount;

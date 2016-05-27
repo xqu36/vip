@@ -7,15 +7,20 @@
 
 VideoStats::VideoStats() {
   counter = 0;
-  sec = 0.0;
+  sec = 0;
+  uptime_msec = 0;
   fps = 0.0;
   ifps = 0.0;
 
   width_res = 0;
   height_res = 0;
 
+  // start Uptime timers
   time(&start);
   time(&end);
+
+  // start msec Uptime timers
+  gettimeofday(&mstart, 0);
 }
 
 void VideoStats::updateAverageFPS() {
@@ -83,10 +88,21 @@ int VideoStats::getCounter() {
 }
 
 double VideoStats::getUptime() {
-  time(&end);
+  //time(&end);
+  gettimeofday(&mend, 0);
 
-  sec = difftime(end, start);
+  //sec = difftime(end, start);
+  sec = mend.tv_sec - mstart.tv_sec;
   return sec;
+}
+
+double VideoStats::getMillisecUptime() {
+  gettimeofday(&mend, 0);
+
+  long seconds = mend.tv_sec - mstart.tv_sec;
+  long useconds = mend.tv_usec - mstart.tv_usec;
+  uptime_msec = ((seconds)*1000 + useconds/1000.0);
+  return uptime_msec;
 }
 
 void VideoStats::openLog(string name) {
