@@ -31,7 +31,8 @@ sudo apt-get -y install linux-firmware
 sudo apt-get -y install linux-firmware-nonfree
 sudo apt-get -y install udhcpc
 sudo apt-get -y install libopencv-dev
-
+sudo apt-get -y install gpsd
+sudo apt-get -y install python-GPS
 
 ## Python libraries ##
 sudo pip install Adafruit_Libraries
