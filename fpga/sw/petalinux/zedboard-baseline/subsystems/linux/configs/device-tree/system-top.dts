@@ -1,5 +1,30 @@
 /dts-v1/;
 /include/ "system-conf.dtsi"
 / {
+	aliases {
+		serial1 = &uart0;
+	};
+	usb_phy0: usb_phy@0 {
+		compatible = "ulpi-phy";
+		#phy-cells = <0>;
+		reg = <0xe0002000 0x1000>;
+		view-port = <0x170>;
+		drv-vbus;
+	};
 };
 
+&usb0 {
+	usb-phy = <&usb_phy0>;
+};
+
+&gem0 {
+    phy-handle = <&phy0>;
+    phy-mode="rgmii-id";
+    ps7_ethernet_0_mdio: mdio {
+        phy0: phy@0 {
+            compatible = "marvell,88e1510";
+            device_type = "ethernet-phy";
+            reg = <0>;
+        };
+    };
+};

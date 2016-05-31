@@ -1,0 +1,52 @@
+# Michael Capone, 3/24/2016
+#
+# This is the upgrade script that will be used in conjuncture with the cron job
+# UpdateCheck.sh script. At every boot, the script will check to see if there is
+# a new version of firmware. If there is a new version, the script will move the
+# new binary file from the specified mounting point to the QSPI. Once completed,
+# the script will restart the device.
+# NOTE: Instructions to compile the script into an image is in the README.txt
+
+# Script Variables
+DDR_ADDR=0x100000
+IMG_SIZE=0
+OFFSET=0
+DEVICE=0
+PARTITION=3
+
+echo ================================================
+echo ======= EXECUTING FIRMWARE UPDATE SCRIPT =======
+echo ================================================
+
+# Ensure that the SD card is initialized and setup
+if mmcinfo; then
+	# Load Update Image from specified SD card partition
+	if fatload mmc $DEVICE:$PARTITION $DDR_ADDR BOOT.BIN; then
+		IMG_SIZE=${filesize}
+		# Initialize QSPI
+		if sf probe 0 0 0; then
+			# Write BOOT.BIN to QSPI
+			if sf write $DDR_ADDR $OFFSET $IMG_SIZE; then
+				# Load Image.ub from specified SD card partition
+				if fatload mmc $DEVICE:$PARTITION $DDR_ADDR image.ub; then
+					# Write image.ub to QSPI
+					if sf write $DDR_ADDR $IMG_SIZE ${filesize}; then
+						echo Success!!!!!!! Restart the board
+					else
+						echo ERROR: Unable to write image.ub to QSPI!!!
+					fi
+				else
+					echo ERROR: Unable to load update image from SD card!!!
+				fi
+			else
+				echo ERROR: Unable to write BOOT.BIN to QSPI!!!
+			fi
+		else
+			echo ERROR: Unable to Initialize QSPI!!!
+		fi
+	else
+		echo ERROR: Unable to load update image from SD card!!!
+	fi
+else
+	echo ERROR: SD card not successfully setup!!!
+fi

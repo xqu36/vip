@@ -43,6 +43,8 @@ private:
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
 
+  //CascadeClassifier cascade;
+
 public:
   bool bgValid;
 

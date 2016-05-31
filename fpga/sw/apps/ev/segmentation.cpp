@@ -209,11 +209,13 @@ int main(int argc, char** argv) {
           //rectangle(oframe, r, Scalar(0,255,0), 1);
           break;
         default:
+          ped = false;
           break;
       }
 
       //display centroids
       Point centroid = vec_cc[i].getCentroidBox();
+
       if(ped && dangerPath.at<unsigned char>(centroid) != 0 &&
          pclass.pedPathIsValid /* && pclass.carPathIsValid */){
       	pedInDanger = true;

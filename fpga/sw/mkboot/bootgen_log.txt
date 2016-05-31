@@ -1,0 +1,56 @@
+[WARNING]: '-debug' option will be deprecated, please use '-log' option
+[INFO]   : Command line parsing completed successfully
+[INFO]   : Filename: zynq_fsbl.elf
+[INFO]   : Parsing Partition Data
+[INFO]   : Filename: zedboard_baseline_wrapper.bit
+[INFO]   : Parsing Partition Data
+[INFO]   : Filename: u-boot.elf
+[INFO]   : Parsing Partition Data
+[INFO]   : BIF file parsing completed successfully
+[INFO]   : Building image - image
+[INFO]   : Building the Partition Header Table
+[INFO]   : After build 
+           -- Dump of Binary Image ----
+           00000000 Len: 000008a0 Res: 00000000 "BootHeader"
+           00000000 Len: 00000040 Res: 00000000 "ImageHeaderTable"
+           00000000 Len: 00000024 Res: 00000000 "ImageHeader zynq_fsbl.elf"
+           00000000 Len: 00000034 Res: 00000000 "ImageHeader zedboard_baseline_wrapper.bit"
+           00000000 Len: 00000020 Res: 00000300 "ImageHeader u-boot.elf"
+           00000000 Len: 00000040 Res: 00000000 "PartitionHeader zynq_fsbl.elf.0"
+           00000000 Len: 00000040 Res: 00000000 "PartitionHeader zedboard_baseline_wrapper.bit.0"
+           00000000 Len: 00000040 Res: 00000000 "PartitionHeader u-boot.elf.0"
+           00000000 Len: 00000040 Res: 000009c0 "PartitionHeader Null"
+           00000000 Len: 0001800c Res: 00000000 "zynq_fsbl.elf.0"
+           00000000 Len: 003dbb00 Res: 00000000 "zedboard_baseline_wrapper.bit.0"
+           00000000 Len: 00043040 Res: 00000000 "u-boot.elf.0"
+           -- End of Dump
+[INFO]   : After align 
+           -- Dump of Binary Image ----
+           00000000 Len: 000008a0 Res: 00000000 "BootHeader"
+           000008c0 Len: 00000040 Res: 00000000 "ImageHeaderTable"
+           00000900 Len: 00000024 Res: 00000000 "ImageHeader zynq_fsbl.elf"
+           00000940 Len: 00000034 Res: 00000000 "ImageHeader zedboard_baseline_wrapper.bit"
+           00000980 Len: 00000020 Res: 00000300 "ImageHeader u-boot.elf"
+           00000c80 Len: 00000040 Res: 00000000 "PartitionHeader zynq_fsbl.elf.0"
+           00000cc0 Len: 00000040 Res: 00000000 "PartitionHeader zedboard_baseline_wrapper.bit.0"
+           00000d00 Len: 00000040 Res: 00000000 "PartitionHeader u-boot.elf.0"
+           00000d40 Len: 00000040 Res: 000009c0 "PartitionHeader Null"
+           00001700 Len: 0001800c Res: 00000000 "zynq_fsbl.elf.0"
+           00019740 Len: 003dbb00 Res: 00000000 "zedboard_baseline_wrapper.bit.0"
+           003f5240 Len: 00043040 Res: 00000000 "u-boot.elf.0"
+           -- End of Dump
+[INFO]   : After Link 
+           -- Dump of Binary Image ----
+           00000000 Len: 000008a0 Res: 00000000 "BootHeader"
+           000008c0 Len: 00000040 Res: 00000000 "ImageHeaderTable"
+           00000900 Len: 00000024 Res: 00000000 "ImageHeader zynq_fsbl.elf"
+           00000940 Len: 00000034 Res: 00000000 "ImageHeader zedboard_baseline_wrapper.bit"
+           00000980 Len: 00000020 Res: 00000300 "ImageHeader u-boot.elf"
+           00000c80 Len: 00000040 Res: 00000000 "PartitionHeader zynq_fsbl.elf.0"
+           00000cc0 Len: 00000040 Res: 00000000 "PartitionHeader zedboard_baseline_wrapper.bit.0"
+           00000d00 Len: 00000040 Res: 00000000 "PartitionHeader u-boot.elf.0"
+           00000d40 Len: 00000040 Res: 000009c0 "PartitionHeader Null"
+           00001700 Len: 0001800c Res: 00000000 "zynq_fsbl.elf.0"
+           00019740 Len: 003dbb00 Res: 00000000 "zedboard_baseline_wrapper.bit.0"
+           003f5240 Len: 00043040 Res: 00000000 "u-boot.elf.0"
+           -- End of Dump
