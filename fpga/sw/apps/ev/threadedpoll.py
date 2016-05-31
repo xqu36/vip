@@ -32,11 +32,15 @@ windowUV=[0]*10
 
 # Initialize Sensor Set
 sensor_id = 3
-#interval = 0.25
+interval = 0.25
+
+global data
+data = {}
+mutex = threading.Lock()
 
 # Utility Functions
 def exitall(signal, frame):
-  print "Took a 'kill [pid]' right to the face."
+  print "exiting"
   sys.exit(0)
 
 def start_proc(cmd):
@@ -49,7 +53,10 @@ def kill_child():
   if child_pid is None:
     pass
   else:
-    os.kill(child_pid, signal.SIGINT)
+    try:
+      os.kill(child_pid, signal.SIGINT)
+    except OSError:
+      print "Proc is already dead; killed by threads?"
 
 def movingAvg(values,window): 
 	weights = np.repeat(1.0,window)/window
@@ -59,8 +66,16 @@ def movingAvg(values,window):
 # Polling Threads 
 def poll_proc(process):
   for line in iter(process.stdout.readline, ''):
-    sys.stdout.write(line)
+    splitline = line.strip('\n').split(',')
+
     # put in dict here
+    mutex.acquire()
+    try:
+      data["Calibration"]=splitline[0]
+      data["Pedestrians"]=splitline[1]
+      data["TotalPedestrians"]=splitline[2]
+    finally:
+      mutex.release()
 
 def poll_sensors():
   for i in window:
@@ -77,18 +92,38 @@ def poll_sensors():
   PSAvg = movingAvg(windowPS,10)
   UVAvg = movingAvg(windowUV,10)
 
-  print "Infrared = %d ultrasonic = %d pressure = %d ultraviolet = %d" % (IRAvg, USAvg, PSAvg, UVAvg)
-
   # put in dict here
+  mutex.acquire()
+  try:
+    data["IRAvg"]=IRAvg
+    data["USAvg"]=USAvg
+    data["PSAvg"]=PSAvg
+    data["UVAvg"]=UVAvg
+  finally:
+    mutex.release()
 
-	#time.sleep(interval)
+  time.sleep(interval)
  
 def main():
   process = start_proc("./segmentation")
   atexit.register(kill_child)
   
-  t1 = threading.Thread(target=poll_proc, args = (process,)).start()
-  t2 = threading.Thread(target=poll_sensors).start()
+  t1 = threading.Thread(target=poll_proc, args = (process,))
+  t1.daemon = True
+  t1.start()
+
+  t2 = threading.Thread(target=poll_sensors)
+  t2.daemon = True
+  t2.start()
+
+  try:
+    while True:
+      print data
+      time.sleep(1)
+  except KeyboardInterrupt:
+    print "Closing active threads..."
+    t1.join()
+    t2.join()
 
 if __name__ == "__main__":
   signal.signal(signal.SIGTERM, exitall)

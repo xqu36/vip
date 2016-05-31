@@ -18,7 +18,7 @@ using namespace cv;
 using namespace std;
 
 void sig_handler(int s) {
-  cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
+  //cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
   exit(0);
 }
 
