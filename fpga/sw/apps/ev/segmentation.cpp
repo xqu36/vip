@@ -40,21 +40,12 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  string infile = "";
-
-  if(argc > 1) {
-    infile = argv[1];
-  } else {
-    //cout << "Please input video => ./segmentation [.mp4]" << endl;
-    //exit(0);
-  }
-
-  VideoCapture capture("img/pedxing_seq1.mp4");
-  //VideoCapture capture(-1);
+  //VideoCapture capture("img/pedxing_seq1.mp4");
+  VideoCapture capture(-1);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
-    cout << "Capture failed to open." << endl; 
+    //cout << "Capture failed to open." << endl; 
     return -1; 
   }
 
@@ -108,11 +99,10 @@ int main(int argc, char** argv) {
   prev_gradient.convertTo(prev_gradient, CV_32FC1);
 
   // initialize MoG background subtractor
-  //BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2(1000, 64, true);
   BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2();
   MOG.set("detectShadows", DETECTSHADOWS);
   MOG.set("nmixtures", NMIXTURES);
-  //MOG.set("fTau", 0.65);
+  MOG.set("fTau", 0.65);
 
   Mat sE_e = getStructuringElement(MORPH_ELLIPSE, Size(3, 3));
   Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
@@ -121,7 +111,6 @@ int main(int argc, char** argv) {
   vector<ConnectedComponent> vec_cc;
 
   PathClassifier pclass(vstats.getHeight(), vstats.getWidth());
-
 
   // processing loop
   for(;;) {
@@ -140,22 +129,11 @@ int main(int argc, char** argv) {
     prev_frame = frame.clone();
     capture >> frame;
 
-    //int curr_frameIndex = capture.get(CV_CAP_PROP_POS_FRAMES);
-
-    // check if we need to restart the video
-    if(frame.empty()) {
-        // Looks like we've hit the end of our feed! Restart
-        capture.set(CV_CAP_PROP_POS_FRAMES, 0.0);
-        if(result != 0) loop_count++;
-        //totalPed = 0;
-        continue;
-    }
-
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
     //frame.copyTo(oframe);
-    GaussianBlur(frame, frame, Size(1, 1), 0, 0);
+    //GaussianBlur(frame, frame, Size(1, 1), 0, 0);
     frame.copyTo(oframe);
 
     ////////////////
@@ -171,16 +149,9 @@ int main(int argc, char** argv) {
     if(OPENCV_STABILIZE) {}
 
     // TODO: optimizations?
-    if(!pclass.pedPathIsValid || true) {
-      // update background model
-      //MOG(frame, foregroundMask, 0.005);
-      MOG(frame, foregroundMask);
-      MOG.getBackgroundImage(backgroundModel);
-    } else {
-      absdiff(frame, backgroundModel, foregroundMask_color);
-      cvtColor(foregroundMask_color, foregroundMask, CV_RGB2GRAY);
-      threshold(foregroundMask, foregroundMask, 5, 255, THRESH_BINARY);
-    }// locked into same backgroundModel
+    // update background model
+    MOG(frame, foregroundMask);
+    MOG.getBackgroundImage(backgroundModel);
 
     // remove detected shadows
     //threshold(foregroundMask, foregroundMask, 0, 255, THRESH_BINARY);
@@ -213,7 +184,7 @@ int main(int argc, char** argv) {
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
       // FIXME - four times too much?
-      //dilate(objmask, objmask, sE_d, Point(-1, -1), 4);
+      dilate(objmask, objmask, sE_d, Point(-1, -1), 2);
 
       int classification = -1;
       classification = pclass.classify(vec_cc[i], objmask, oframe);
@@ -230,7 +201,7 @@ int main(int argc, char** argv) {
           //rectangle(oframe, r, Scalar(255,0,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          rectangle(oframe, r, Scalar(255,0,0), 3);
+          //rectangle(oframe, r, Scalar(255,0,0), 3);
           ped = true;
           inst_PedCount++;
           break;
@@ -269,41 +240,8 @@ int main(int argc, char** argv) {
     //vstats.displayStats("inst", result);
     if(vstats.getUptime() > 4.0) pclass.bgValid = true;
 
-    Mat temp_path;
-    Mat heatmap(dangerPath.size(), CV_8UC3); 
-    float val;
-    float r, g, b;
-
-    dangerPath.convertTo(temp_path, CV_32F);
-    for(int y=0; y<temp_path.rows; y++) {
-      for(int x=0; x<temp_path.cols; x++) {
-        val = dangerPath.at<unsigned char>(y,x);
-        val =  (float)val/255;
-        vstats.getHeatMapColor(val, r, g, b);
-        //cout << "(" << r << "," << g << "," << b << ")" << endl;
-
-        Vec3b rgb;
-        rgb[0] = b*255;
-        rgb[1] = g*255;
-        rgb[2] = r*255;
-
-        heatmap.at<Vec3b>(y,x) = rgb;
-      }
-    }
-
-/*
-    imshow("frame", oframe);
-    imshow("sec_frame", sec_frame);
-    imshow("fg", foregroundMask_ed3);
-    imshow("dpath", dangerPath);
-    imshow("heatmap", heatmap);
-    imshow("bg", backgroundModel);
-
-    if(waitKey(35) >= 0) break;
-*/
-
+    // update every quarter second
     if(vstats.getMillisecUptime() >= pre_uptime+250) {
-      //cout << "\tTime:\t" << vstats.getUptime() << " - [" << pedPerSec << "]" << endl;
 
       updatetimer = true;
       frame.copyTo(sec_frame);
@@ -318,20 +256,13 @@ int main(int argc, char** argv) {
       if(pedPerSec) {
         oframe.copyTo(sec_frame);
       }
-      //if(result != 0) cout << "{" << result << "} Time:\t" << vstats.getUptime() << " - [" << sec_PedCount << "][" << totalPed << "]" << endl;
+
+      // output to python script-piped stdout
       cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
+
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;
     }
-
-    //if(loop_count >= 3) { cout << "Exiting..." << endl; break; }
-
-    //int num_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
-    //int iter = curr_frameIndex+0;
-
-    //if(iter < num_frames) capture.set(CV_CAP_PROP_POS_FRAMES, iter);
-
   }
-
   return 0;
 }
