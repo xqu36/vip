@@ -7,6 +7,7 @@ import atexit
 import time
 import datetime
 from Adafruit_ADS1x15.Adafruit_ADS1x15 import ADS1x15 
+import Adafruit_BMP.BMP085 as BMP085
 import numpy as np
 try:
     from cStringIO import StringIO
@@ -23,12 +24,12 @@ ADS1115 = 0x01 # chip identifier for ADC library
 sensorADC = ADS1x15(ic=ADS1115)
 gain = 4096 # May have to change this
 sps = 250 # May have to change this
+sensor = BMP085.BMP085(busnum=1)
 
 window = range(0,10)
 windowIR=[0]*10
 windowUS=[0]*10
-windowPS=[0]*10
-windowUV=[0]*10
+windowCO=[0]*10
 
 # Initialize Sensor Set
 sensor_id = 3
@@ -83,22 +84,27 @@ def poll_sensors():
   for i in window:
 	  windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
   for i in window:
-    windowPS[i] = sensorADC.readADCSingleEnded(2, gain, sps)
-  for i in window:
-    windowUV[i] = sensorADC.readADCSingleEnded(3, gain, sps)
+    windowCO[i] = sensorADC.readADCSingleEnded(3, gain, sps)
 
   IRAvg = movingAvg(windowIR,10)
   USAvg = movingAvg(windowUS,10)
-  PSAvg = movingAvg(windowPS,10)
-  UVAvg = movingAvg(windowUV,10)
+  COAvg = movingAvg(windowCO,10)
+
+  Temp = sensor.read_temperature()
+  Pressure = sensor.read_pressure()
+  Altitude = sensor.read_altitude()
+  Sealevel = sensor.read_sealevel_pressure()
 
   # put in dict here
   mutex.acquire()
   try:
     data["IRAvg"]=IRAvg
     data["USAvg"]=USAvg
-    data["PSAvg"]=PSAvg
-    data["UVAvg"]=UVAvg
+    data["COAvg"]=COAvg
+    data["Temp"]=Temp
+    data["Pressure"]=Pressure
+    data["Altitude"]=Altitude
+    data["Sealevel"]=Sealevel
   finally:
     mutex.release()
 
