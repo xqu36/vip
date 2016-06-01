@@ -61,13 +61,13 @@ def kill_child():
 
 def movingAvg(values,window): 
 	weights = np.repeat(1.0,window)/window
-	smas = np.convolve(values,weights,'valid')
+	smas = np.convolve(values,weights,"valid")
 	return smas
 
 # Polling Threads 
 def poll_proc(process):
-  for line in iter(process.stdout.readline, ''):
-    splitline = line.strip('\n').split(',')
+  for line in iter(process.stdout.readline, ""):
+    splitline = line.strip("\n").split(",")
 
     # put in dict here
     mutex.acquire()
@@ -111,6 +111,7 @@ def poll_sensors():
   time.sleep(interval)
  
 def main():
+  #process = start_proc("/home/ubuntu/ev/segmentation")
   process = start_proc("./segmentation")
   atexit.register(kill_child)
   
@@ -121,6 +122,9 @@ def main():
   t2 = threading.Thread(target=poll_sensors)
   t2.daemon = True
   t2.start()
+
+  #filename = time.strftime("%x").replace(" ","_")
+  #print filename
 
   try:
     while True:
