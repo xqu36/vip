@@ -15,6 +15,7 @@ echo "deb http://ports.ubuntu.com/ trusty-updates main restricted universe multi
 echo "deb http://ports.ubuntu.com/ trusty-backports main restricted universe multiverse" >> /etc/apt/sources.list
 apt-get -y dist-upgrade
 apt-get -y update
+sudo apt-get -f install #fix broken dependencies (may need this for installing python-smbus)
 
 ## Packages for installation ##
 ## Add addtional packages here and to the wiki page ##
@@ -37,6 +38,8 @@ sudo apt-get -y install python-GPS
 ## Python libraries ##
 sudo pip install Adafruit_Libraries
 sudo pip install python-smbus
+sudo apt-get -y install python-smbus
+sudo apt-get -y install python-numpy
 
 echo "#####################"
 echo "   EXITING CHROOT"

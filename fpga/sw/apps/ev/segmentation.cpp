@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  //VideoCapture capture("img/pedxing_seq1.mp4");
-  VideoCapture capture(-1);
+  VideoCapture capture("img/pedxing_seq1.mp4");
+  //VideoCapture capture(-1);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -128,6 +128,11 @@ int main(int argc, char** argv) {
     // take new current frame
     prev_frame = frame.clone();
     capture >> frame;
+
+    if(frame.empty()) {
+      capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
+      continue;
+    }
 
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
