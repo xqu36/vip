@@ -115,6 +115,13 @@ sudo mv etc/resolv.conf.saved etc/resolv.conf
 sudo rm /media/$name/rootfs/build_chroot.sh
 sudo mkdir /media/$name/rootfs/lib/firmware
 sudo mkdir /media/$name/rootfs/lib/firmware/rtlwifi
-sudo cp $BUILDPATH/apps/modules/rtl8192cufw_TMSC.bin /media/$name/rootfs/rootfs/lib/firmware/rtlwifi
+sudo cp $BUILDPATH/apps/modules/rtl8192cufw_TMSC.bin /media/$name/rootfs/lib/firmware/rtlwifi
+cd /media/$name/rootfs/home/ubuntu/sensorTesting/Adafruit_Python_BMP-master
+sudo python setup.py install
+
+sudo cp $BUILDPATH/apps/modules/interfaces /media/$name/rootfs/etc/network/
+sudo cp $BUILDPATH/apps/modules/wpa_supplicant.conf /media/$name/rootfs/etc/
+
+
 
 echo "END OF BUILD SCRIPT"
