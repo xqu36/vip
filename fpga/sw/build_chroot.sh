@@ -20,7 +20,7 @@ apt-get -y update
 ## Add addtional packages here and to the wiki page ##
 sudo apt-get -y install i2c-tools
 sudo apt-get -y install python-dev
-sudo apt-get -y python-pip
+sudo apt-get -y install python-pip
 sudo apt-get -y install ntp
 sudo apt-get -y install ssh
 sudo apt-get -y install numpy
