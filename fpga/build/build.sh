@@ -15,8 +15,8 @@ TARGETS=all
 CLEAN=0
 VERBOSE=0
 SECURE=0
-BIF=boot_test
-
+SEPARATE=0
+BIF=boot_packaged
 BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HWPATH=$BUILDPATH/../hw
 SWPATH=$BUILDPATH/../sw
@@ -35,6 +35,7 @@ function usage() {
     echo -e "\t -hlsp|--hlspath: Path to /hls/. [Default fpga/hw/src/hls]"
     echo -e "\t -h|--help: Display this menu."
     echo -e "\t -s|--secure: build with secure boot functionality [defaults to non-secure]"
+	echo -e "\t -sep|--separate: break the combined image into system.ub and BOOT.bin [defaults to single BOOT.bin]"  
     echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
@@ -87,6 +88,10 @@ case $i in
     SECURE=1
     shift
     ;;
+	-sep|--separate)
+	SEPARATE=1
+	shift
+	;;
     *)
     echo "Unknown option $i, exiting"
     exit 1
@@ -307,6 +312,13 @@ case $a in
     # $SWPATH/mkboot has all the files it needs (keyfile, bitstream, FSBL, and U-Boot) so let's package it up
     # BootGen gets confused with .bif references
     cd $SWPATH/mkboot
+
+	# Is this a single output BOOT.bin or two outputs (BOOT.bin & image.ub)
+	if [ $SEPARATE -eq 1 ]
+	then
+		BIF=boot_test
+	fi
+
     # Is this a secure build?
     if [ $SECURE -eq 1 ]
     then
@@ -330,8 +342,15 @@ case $a in
         echo "Removing temporary keyfile: rm $SWPATH/mkboot/keyfile.nky"
         rm $SWPATH/mkboot/keyfile.nky
     fi
-    echo "cp $SWPATH/petalinux/$PROJNAME/images/image.ub $BUILDPATH/boot"
-    cp $SWPATH/petalinux/$PROJNAME/images/linux/image.ub $BUILDPATH/boot
+
+	if [ $SEPARATE -eq 1 ]
+	then
+    	echo "cp $SWPATH/petalinux/$PROJNAME/images/image.ub $BUILDPATH/boot"
+    	cp $SWPATH/petalinux/$PROJNAME/images/linux/image.ub $BUILDPATH/boot
+	else
+		echo "removing old image.ub..."
+		rm -f $BUILDPATH/boot/image.ub
+	fi
 
     if [ -f "$BUILDPATH/BOOT.bin" ]
     then

@@ -1,0 +1,11 @@
+image: {
+// first partition must be the first stage bootloader
+[bootloader] zynq_fsbl.elf
+// second partition is bitstream
+zedboard_baseline_wrapper.bit
+// third partition is U-Boot
+u-boot.elf
+// Made alterations to U-boot not to load the image.ub and the system.dtb, thus configuring the bif file to load the files into RAM automagically. This also allows for a single boot image BOOT.bin
+[load=0x3000000, offset=0x500000] ../petalinux/zedboard-baseline/images/linux/image.ub
+[load=0x2A00000, offset=0xD00000] ../petalinux/zedboard-baseline/images/linux/system.dtb
+}
