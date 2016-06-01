@@ -79,36 +79,37 @@ def poll_proc(process):
       mutex.release()
 
 def poll_sensors():
-  for i in window:
-    windowIR[i] = sensorADC.readADCSingleEnded(0, gain, sps)
-  for i in window:
-	  windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
-  for i in window:
-    windowCO[i] = sensorADC.readADCSingleEnded(3, gain, sps)
+  while True:
+    for i in window:
+      windowIR[i] = sensorADC.readADCSingleEnded(0, gain, sps)
+    for i in window:
+	    windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
+    for i in window:
+      windowCO[i] = sensorADC.readADCSingleEnded(3, gain, sps)
 
-  IRAvg = movingAvg(windowIR,10)
-  USAvg = movingAvg(windowUS,10)
-  COAvg = movingAvg(windowCO,10)
+    IRAvg = movingAvg(windowIR,10)
+    USAvg = movingAvg(windowUS,10)
+    COAvg = movingAvg(windowCO,10)
 
-  Temp = sensor.read_temperature()
-  Pressure = sensor.read_pressure()
-  Altitude = sensor.read_altitude()
-  Sealevel = sensor.read_sealevel_pressure()
+    Temp = sensor.read_temperature()
+    Pressure = sensor.read_pressure()
+    Altitude = sensor.read_altitude()
+    Sealevel = sensor.read_sealevel_pressure()
 
-  # put in dict here
-  mutex.acquire()
-  try:
-    data["IRAvg"]=IRAvg
-    data["USAvg"]=USAvg
-    data["COAvg"]=COAvg
-    data["Temp"]=Temp
-    data["Pressure"]=Pressure
-    data["Altitude"]=Altitude
-    data["Sealevel"]=Sealevel
-  finally:
-    mutex.release()
+    # put in dict here
+    mutex.acquire()
+    try:
+      data["IRAvg"]=IRAvg
+      data["USAvg"]=USAvg
+      data["COAvg"]=COAvg
+      data["Temp"]=Temp
+      data["Pressure"]=Pressure
+      data["Altitude"]=Altitude
+      data["Sealevel"]=Sealevel
+    finally:
+      mutex.release()
 
-  time.sleep(interval)
+    time.sleep(interval)
  
 def main():
   #process = start_proc("/home/ubuntu/ev/segmentation")
