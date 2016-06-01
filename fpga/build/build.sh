@@ -304,7 +304,7 @@ case $a in
 
     echo "cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/"
     cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/
-
+	cp $SWPATH/petalinux/$PROJNAME/images/linux/u-boot.elf $SWPATH/mkboot/.
     # Let's make a copy of the key for a local reference from the .bif file
     cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky
     echo "cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky"
