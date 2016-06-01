@@ -14,19 +14,21 @@
 #include <opencv2/video/video.hpp>
 #include <opencv2/video/background_segm.hpp>
 
+#include <signal.h>
 #include <stdio.h>
 #include <iostream>
 #include <string>
 
+//#define MAX(x,y) (((x)>(y))?(x):(y))
+//#define MIN(x,y) (((x)<(y))?(x):(y))
+
 #define INFILE "img/klaus_high_320x240.mp4"
 
-#define DETECTSHADOWS 1
+#define DETECTSHADOWS 0
 #define NMIXTURES 3
 
-#define STABILIZE 1
+#define STABILIZE 0
 #define RIGID_STABILIZE 0
 #define OPENCV_STABILIZE 0
-
-#define CAR_SIZE_THRESHOLD 700 
 
 #endif // SEGMENTATION_H

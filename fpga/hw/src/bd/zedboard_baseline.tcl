@@ -147,6 +147,7 @@ proc create_root_design { parentCell } {
   set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
   set IIC_0 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 IIC_0 ]
+  set IIC_1 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 IIC_1 ]
   set leds_8bits [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 leds_8bits ]
   set sws_8bits [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 sws_8bits ]
 
@@ -206,6 +207,7 @@ CONFIG.NUM_SI {3} \
   set_property -dict [ list \
 CONFIG.PCW_I2C0_I2C0_IO {EMIO} \
 CONFIG.PCW_I2C0_PERIPHERAL_ENABLE {1} \
+CONFIG.PCW_I2C1_PERIPHERAL_ENABLE {1} \
 CONFIG.PCW_IRQ_F2P_INTR {1} \
 CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} \
 CONFIG.PCW_UART0_GRP_FULL_ENABLE {0} \
@@ -246,6 +248,7 @@ CONFIG.NUM_MI {5} \
   connect_bd_intf_net -intf_net processing_system7_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins processing_system7_0/DDR]
   connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins processing_system7_0/FIXED_IO]
   connect_bd_intf_net -intf_net processing_system7_0_IIC_0 [get_bd_intf_ports IIC_0] [get_bd_intf_pins processing_system7_0/IIC_0]
+  connect_bd_intf_net -intf_net processing_system7_0_IIC_1 [get_bd_intf_ports IIC_1] [get_bd_intf_pins processing_system7_0/IIC_1]
   connect_bd_intf_net -intf_net processing_system7_0_M_AXI_GP0 [get_bd_intf_pins processing_system7_0/M_AXI_GP0] [get_bd_intf_pins processing_system7_0_axi_periph/S00_AXI]
   connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M00_AXI [get_bd_intf_pins axi_gpio_0/S_AXI] [get_bd_intf_pins processing_system7_0_axi_periph/M00_AXI]
   connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M01_AXI [get_bd_intf_pins axi_bram_ctrl_0/S_AXI] [get_bd_intf_pins processing_system7_0_axi_periph/M01_AXI]
@@ -281,13 +284,14 @@ preplace port sws_8bits -pg 1 -y 300 -defaultsOSRD
 preplace port leds_8bits -pg 1 -y 390 -defaultsOSRD
 preplace port IIC_0 -pg 1 -y 140 -defaultsOSRD
 preplace port FIXED_IO -pg 1 -y 120 -defaultsOSRD
+preplace port IIC_1 -pg 1 -y 170 -defaultsOSRD
 preplace inst axis_data_fifo_1 -pg 1 -lvl 2 -y 620 -defaultsOSRD
 preplace inst axi_dma_0 -pg 1 -lvl 5 -y 140 -defaultsOSRD
 preplace inst rst_processing_system7_0_100M -pg 1 -lvl 1 -y 580 -defaultsOSRD
 preplace inst xlconcat_0 -pg 1 -lvl 6 -y 450 -defaultsOSRD
-preplace inst axi_gpio_0 -pg 1 -lvl 7 -y 260 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 7 -y 270 -defaultsOSRD
 preplace inst blk_mem_gen_0 -pg 1 -lvl 4 -y 170 -defaultsOSRD
-preplace inst axi_gpio_1 -pg 1 -lvl 7 -y 390 -defaultsOSRD
+preplace inst axi_gpio_1 -pg 1 -lvl 7 -y 400 -defaultsOSRD
 preplace inst axi_interconnect_0 -pg 1 -lvl 6 -y 190 -defaultsOSRD
 preplace inst axi_bram_ctrl_0 -pg 1 -lvl 3 -y 200 -defaultsOSRD
 preplace inst axi4_stream_user_processing_core_0 -pg 1 -lvl 3 -y 420 -defaultsOSRD
@@ -296,32 +300,33 @@ preplace inst processing_system7_0 -pg 1 -lvl 7 -y 50 -defaultsOSRD
 preplace inst axis_data_fifo_0 -pg 1 -lvl 4 -y 340 -defaultsOSRD
 preplace netloc processing_system7_0_DDR 1 7 1 NJ
 preplace netloc processing_system7_0_axi_periph_M03_AXI 1 2 3 NJ 80 NJ 80 NJ
-preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 5 NJ -40 NJ -40 NJ -40 NJ -40 NJ
-preplace netloc axi4_stream_user_processing_core_0_M_AXIS 1 3 1 1060
-preplace netloc processing_system7_0_M_AXI_GP0 1 1 7 390 -90 NJ -90 NJ -90 NJ -90 NJ -90 NJ -90 2650
+preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 5 NJ -30 NJ -30 NJ -30 NJ -30 NJ
+preplace netloc axi4_stream_user_processing_core_0_M_AXIS 1 3 1 1070
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 7 390 -100 NJ -100 NJ -100 NJ -100 NJ -100 NJ -100 2650
 preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 3 1 NJ
 preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 8 20 700 NJ 700 NJ 700 NJ 700 NJ 700 NJ 700 NJ 700 2640
 preplace netloc processing_system7_0_IIC_0 1 7 1 NJ
 preplace netloc axi_dma_0_M_AXI_SG 1 5 1 N
+preplace netloc processing_system7_0_IIC_1 1 7 1 2660
 preplace netloc processing_system7_0_axi_periph_M02_AXI 1 2 5 NJ -20 NJ -20 NJ -20 NJ -20 2170
-preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 6 380 100 740 270 1070 260 1430 260 1820 -10 NJ
+preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 6 380 100 750 280 1050 240 1430 260 1820 10 NJ
 preplace netloc axi_dma_0_s2mm_introut 1 5 1 1790
 preplace netloc axi_dma_0_M_AXI_MM2S 1 5 1 N
 preplace netloc xlconcat_0_dout 1 6 1 2180
 preplace netloc processing_system7_0_FIXED_IO 1 7 1 NJ
 preplace netloc axi_dma_0_mm2s_introut 1 5 1 1800
 preplace netloc axi_gpio_0_GPIO 1 7 1 2670
-preplace netloc axi_interconnect_0_M00_AXI 1 6 1 2140
+preplace netloc axi_interconnect_0_M00_AXI 1 6 1 2160
 preplace netloc axi_dma_0_M_AXI_S2MM 1 5 1 N
 preplace netloc axis_data_fifo_1_M_AXIS 1 2 1 780
 preplace netloc axis_data_fifo_0_M_AXIS 1 4 1 1410
 preplace netloc rst_processing_system7_0_100M_interconnect_aresetn 1 1 1 370
-preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 10 670 360 90 770 300 1050 250 1420 270 1810 10 2150 190 2650
-preplace netloc axi_gpio_1_GPIO 1 7 1 N
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 10 670 360 90 770 270 1060 260 1420 270 1810 0 2150 200 2650
+preplace netloc axi_gpio_1_GPIO 1 7 1 2670
 preplace netloc axi_dma_0_M_AXIS_MM2S 1 1 5 400 20 NJ 20 NJ 20 NJ 20 1790
 preplace netloc processing_system7_0_axi_periph_M04_AXI 1 2 1 760
-preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 760
-levelinfo -pg 1 -10 190 570 920 1250 1620 1990 2420 2730 -top -100 -bot 750
+preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 740
+levelinfo -pg 1 -10 190 570 920 1250 1620 1990 2420 2730 -top -110 -bot 750
 ",
 }
 

@@ -195,6 +195,13 @@ set_property IOSTANDARD LVCMOS33 [get_ports iic_0_sda_io]
 set_property PACKAGE_PIN Y11 [get_ports iic_0_scl_io]
 set_property PACKAGE_PIN AA11 [get_ports iic_0_sda_io]
 
+#manually entering I2C_1
+set_property IOSTANDARD LVCMOS33 [get_ports iic_1_scl_io]
+set_property IOSTANDARD LVCMOS33 [get_ports iic_1_sda_io]
+
+set_property PACKAGE_PIN AB11 [get_ports iic_1_scl_io]
+set_property PACKAGE_PIN AB10 [get_ports iic_1_sda_io] 
+
 # ----------------------------------------------------------------------------
 # VGA Output - Bank 33
 # ---------------------------------------------------------------------------- 

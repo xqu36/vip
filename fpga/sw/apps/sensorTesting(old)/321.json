@@ -1,0 +1,614 @@
+[
+    {
+        "data1": "[ 848.475]", 
+        "timestamp": "321.223253", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 837.4125]", 
+        "timestamp": "321.522641", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 859.275]", 
+        "timestamp": "321.821259", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 849.9625]", 
+        "timestamp": "322.119896", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 808.75]", 
+        "timestamp": "322.418513", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 847.7875]", 
+        "timestamp": "322.717137", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 932.075]", 
+        "timestamp": "323.015715", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2062.975]", 
+        "timestamp": "323.31431", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2733.85]", 
+        "timestamp": "323.612849", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2026.8875]", 
+        "timestamp": "323.911413", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3069.7875]", 
+        "timestamp": "324.209981", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 131.6625]", 
+        "timestamp": "324.508663", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1069.0375]", 
+        "timestamp": "324.807271", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1116.5375]", 
+        "timestamp": "325.105873", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1197.6375]", 
+        "timestamp": "325.404471", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1522.65]", 
+        "timestamp": "325.703031", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1575.475]", 
+        "timestamp": "326.001571", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1545.675]", 
+        "timestamp": "326.300213", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1575.1125]", 
+        "timestamp": "326.598796", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1562.5875]", 
+        "timestamp": "326.897381", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1569.1625]", 
+        "timestamp": "327.196021", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2100.425]", 
+        "timestamp": "327.494629", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2951.5375]", 
+        "timestamp": "327.793182", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3075.9875]", 
+        "timestamp": "328.091746", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2059.95]", 
+        "timestamp": "328.390365", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 838.55]", 
+        "timestamp": "328.688919", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 545.3375]", 
+        "timestamp": "328.987548", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 606.425]", 
+        "timestamp": "329.286244", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3061.0125]", 
+        "timestamp": "329.584862", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1424.85]", 
+        "timestamp": "329.883426", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2068.25]", 
+        "timestamp": "330.182033", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1449.725]", 
+        "timestamp": "330.480599", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 137.4]", 
+        "timestamp": "330.779143", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3058.9375]", 
+        "timestamp": "331.077794", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3058.075]", 
+        "timestamp": "331.376379", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2994.575]", 
+        "timestamp": "331.674933", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2996.8875]", 
+        "timestamp": "331.973483", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2306.85]", 
+        "timestamp": "332.272079", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1321.025]", 
+        "timestamp": "332.570681", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 675.8]", 
+        "timestamp": "332.869282", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1202.4875]", 
+        "timestamp": "333.167976", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1349.85]", 
+        "timestamp": "333.466602", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1591.2375]", 
+        "timestamp": "333.765128", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1717.8375]", 
+        "timestamp": "334.063784", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2961.8625]", 
+        "timestamp": "334.362525", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3080.825]", 
+        "timestamp": "334.661293", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3079.25]", 
+        "timestamp": "334.959954", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1332.225]", 
+        "timestamp": "335.258663", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 469.375]", 
+        "timestamp": "335.557311", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 592.2875]", 
+        "timestamp": "335.855853", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 420.15]", 
+        "timestamp": "336.154473", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 432.5875]", 
+        "timestamp": "336.453076", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2453.1125]", 
+        "timestamp": "336.751626", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3011.675]", 
+        "timestamp": "337.050261", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1964.7375]", 
+        "timestamp": "337.348858", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1645.3375]", 
+        "timestamp": "337.647492", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1312.1625]", 
+        "timestamp": "337.946045", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1290.1625]", 
+        "timestamp": "338.244619", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1540.6375]", 
+        "timestamp": "338.543193", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1578.1875]", 
+        "timestamp": "338.84176", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1595.125]", 
+        "timestamp": "339.140447", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1601.95]", 
+        "timestamp": "339.439056", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1583.9]", 
+        "timestamp": "339.737672", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1577.0125]", 
+        "timestamp": "340.036228", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1602.8875]", 
+        "timestamp": "340.334815", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1646.7625]", 
+        "timestamp": "340.633372", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1619.9875]", 
+        "timestamp": "340.931917", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1645.2875]", 
+        "timestamp": "341.230535", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1659.875]", 
+        "timestamp": "341.529122", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1644.825]", 
+        "timestamp": "341.827757", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1653.8125]", 
+        "timestamp": "342.126368", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1604.7875]", 
+        "timestamp": "342.424945", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1625.7125]", 
+        "timestamp": "342.723514", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1625.7]", 
+        "timestamp": "343.022089", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1595.8375]", 
+        "timestamp": "343.320677", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1613.3375]", 
+        "timestamp": "343.619227", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1608.025]", 
+        "timestamp": "343.917884", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1614.225]", 
+        "timestamp": "344.21651", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1608.5875]", 
+        "timestamp": "344.515146", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 1667.45]", 
+        "timestamp": "344.813726", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 166.7125]", 
+        "timestamp": "345.112356", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3074.075]", 
+        "timestamp": "345.41096", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 3080.3]", 
+        "timestamp": "345.709519", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2985.975]", 
+        "timestamp": "346.008128", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2411.475]", 
+        "timestamp": "346.30676", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2429.95]", 
+        "timestamp": "346.605322", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2456.75]", 
+        "timestamp": "346.903846", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2492.25]", 
+        "timestamp": "347.202427", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2492.2875]", 
+        "timestamp": "347.501026", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2494.3875]", 
+        "timestamp": "347.799581", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2498.5]", 
+        "timestamp": "348.098205", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2498.475]", 
+        "timestamp": "348.396824", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2511.55]", 
+        "timestamp": "348.695378", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2513.0125]", 
+        "timestamp": "348.993888", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2510.25]", 
+        "timestamp": "349.292571", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2524.375]", 
+        "timestamp": "349.591196", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2525.0875]", 
+        "timestamp": "349.889754", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2527.4]", 
+        "timestamp": "350.188424", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2525.7]", 
+        "timestamp": "350.487073", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2531.575]", 
+        "timestamp": "350.785631", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2537.975]", 
+        "timestamp": "351.08425", 
+        "valid": "1", 
+        "sensor": "IR"
+    }, 
+    {
+        "data1": "[ 2537.75]", 
+        "timestamp": "351.382851", 
+        "valid": "1", 
+        "sensor": "IR"
+    }
+]

@@ -7,17 +7,23 @@
 
 VideoStats::VideoStats() {
   counter = 0;
-  sec = 0.0;
+  sec = 0;
+  uptime_msec = 0;
   fps = 0.0;
+  ifps = 0.0;
 
   width_res = 0;
   height_res = 0;
 
+  // start Uptime timers
   time(&start);
   time(&end);
+
+  // start msec Uptime timers
+  gettimeofday(&mstart, 0);
 }
 
-void VideoStats::updateFPS() {
+void VideoStats::updateAverageFPS() {
   time(&end);
   counter++;  
 
@@ -27,6 +33,26 @@ void VideoStats::updateFPS() {
   if(counter == (INT_MAX - 1000)){
     counter = 0;
   }
+}
+
+void VideoStats::prepareFPS() {
+  istart = clock();
+}
+
+// this current impl ignores imshow and waitKey as part of its calculations
+/*
+void VideoStats::updateFPS() {
+  iend = clock();
+
+  ifps = 1 / ((iend - istart) / (double)CLOCKS_PER_SEC);
+}
+*/
+
+double VideoStats::updateFPS() {
+  iend = clock();
+
+  ifps = 1 / ((iend - istart) / (double)CLOCKS_PER_SEC);
+  return ifps;
 }
 
 void VideoStats::setWidth(int w) {
@@ -45,30 +71,74 @@ int VideoStats::getHeight() {
   return height_res;
 }
 
-void VideoStats::displayStats() {
-  sprintf(display, "%.2f fps", fps);
+void VideoStats::displayStats(string type, int result) {
+
+  if(type == "average") sprintf(display, "%.2f average fps", fps);
+  else if(type == "inst")  sprintf(display, "%.2f instant fps", ifps);
+
   cout << "\r[" 
-       << width_res << "x" << height_res << "] - " 
-       << display << "\tUptime: " << sec << flush;
+      << width_res << "x" << height_res << "] - " 
+      << setfill('0') << setw(17) << display
+      << "\tUptime: " << sec << "s"
+      << "\t[" << setfill('+') << setw(2) << result << "]" << flush;
 }
 
 int VideoStats::getCounter() {
-    return counter;
+  return counter;
 }
 
 double VideoStats::getUptime() {
-  time(&end);
+  //time(&end);
+  gettimeofday(&mend, 0);
 
-  sec = difftime(end, start);
+  //sec = difftime(end, start);
+  sec = mend.tv_sec - mstart.tv_sec;
   return sec;
 }
 
-// calculations in float 0-1
-void getHeatMapColor(float value, float *red, float *green, float *blue)
+double VideoStats::getMillisecUptime() {
+  gettimeofday(&mend, 0);
+
+  long seconds = mend.tv_sec - mstart.tv_sec;
+  long useconds = mend.tv_usec - mstart.tv_usec;
+  uptime_msec = ((seconds)*1000 + useconds/1000.0);
+  return uptime_msec;
+}
+
+void VideoStats::openLog(string name) {
+  log.open(name, ios::out);
+}
+
+void VideoStats::closeLog() {
+  log.close();
+}
+
+void VideoStats::seekLog(ios_base::seekdir p) {
+  log.seekp(0, p);
+}
+
+void VideoStats::prepareWriteLog() {
+  _start = clock();
+}
+
+void VideoStats::writeLog(string func, int level) {
+  _end = clock();
+
+  msec = (_end - _start) / (double)CLOCKS_PER_SEC;
+
+  switch(level) {
+    case 0:
+      log << func << ":" << setfill(' ') << setw(40 - func.size()) << msec*1000 << "ms" << endl;
+      break;
+    default:
+      break;
+  }
+}
+
+void VideoStats::getHeatMapColor(float value, float& red, float& green, float& blue)
 {
-  const int NUM_COLORS = 4;
-  static float color[NUM_COLORS][3] = { {0,0,1}, {0,1,0}, {1,1,0}, {1,0,0} };
-    // A static array of 4 colors:  (blue,   green,  yellow,  red) using {r,g,b} for each.
+  const int NUM_COLORS = 5;
+  static float color[NUM_COLORS][3] = { {0,0,1}, {0,1,1}, {0,1,0}, {1,1,0}, {1,0,0} };
  
   int idx1;        // |-- Our desired color will be between these two indexes in "color".
   int idx2;        // |
@@ -84,7 +154,7 @@ void getHeatMapColor(float value, float *red, float *green, float *blue)
     fractBetween = value - float(idx1);    // Distance between the two indexes (0-1).
   }
  
-  *red   = (color[idx2][0] - color[idx1][0])*fractBetween + color[idx1][0];
-  *green = (color[idx2][1] - color[idx1][1])*fractBetween + color[idx1][1];
-  *blue  = (color[idx2][2] - color[idx1][2])*fractBetween + color[idx1][2];
+  red   = (color[idx2][0] - color[idx1][0])*fractBetween + color[idx1][0];
+  green = (color[idx2][1] - color[idx1][1])*fractBetween + color[idx1][1];
+  blue  = (color[idx2][2] - color[idx1][2])*fractBetween + color[idx1][2];
 }

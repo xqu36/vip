@@ -16,6 +16,7 @@
 #include "ccomp.hpp"
 #include "segmentation.hpp"
 #include "peddetect.hpp"
+#include "utils.hpp"
 #include "opencv2/objdetect/objdetect.hpp"
 
 using namespace std;
@@ -55,6 +56,8 @@ public:
 
   PedestrianDetector peddetect;
   PedestrianDetector cardetect;
+
+  VideoStats pstats;
 
   PathClassifier(int rows, int cols);
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
