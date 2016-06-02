@@ -96,6 +96,10 @@ double VideoStats::getUptime() {
   return sec;
 }
 
+void VideoStats::resetUptime() {
+  time(&start);
+}
+
 double VideoStats::getMillisecUptime() {
   gettimeofday(&mend, 0);
 

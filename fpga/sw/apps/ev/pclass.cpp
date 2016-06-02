@@ -23,6 +23,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathCount = 0;
   pedPathCount = 0;
 
+  recalibrate = false;
+
   carPathIsValid = false;
   pedPathIsValid = false;
 
@@ -57,6 +59,12 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     double ratio = (double)ccomp.getBoundingBoxHeight() / (double)ccomp.getBoundingBoxWidth();
     if(ratio > 1.25)  pedVotes += 30;
   } else carVotes += 30;
+
+  if(recalibrate) {
+    pedPathIsValid = false;
+    pedQueue.clear();
+    recalibrate = !recalibrate;
+  }
 
   if(pedQueue.size() >= pedsInPath/2) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;

@@ -270,6 +270,12 @@ int main(int argc, char** argv) {
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;
     }
+
+    // recalibrate every 6 hrs
+    if(vstats.getUptime() > 21600) {
+      pclass.recalibrate = true;
+      vstats.resetUptime();
+    }
   }
   return 0;
 }
