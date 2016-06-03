@@ -33,7 +33,6 @@ windowCO=[0]*10
 
 # Initialize Sensor Set
 sensor_id = 3
-interval = 0.25
 
 global data
 data = {}
@@ -41,7 +40,7 @@ mutex = threading.Lock()
 
 # Utility Functions
 def exitall(signal, frame):
-  print "exiting"
+  print "Exiting..."
   sys.exit(0)
 
 def start_proc(cmd):
@@ -57,7 +56,7 @@ def kill_child():
     try:
       os.kill(child_pid, signal.SIGINT)
     except OSError:
-      print "Proc is already dead; killed by threads?"
+      print "No such proc is running."
 
 def movingAvg(values,window): 
 	weights = np.repeat(1.0,window)/window
@@ -78,7 +77,7 @@ def poll_proc(process):
     finally:
       mutex.release()
 
-def poll_sensors():
+def poll_sensors_0():
   while True:
     for i in window:
       windowIR[i] = sensorADC.readADCSingleEnded(0, gain, sps)
@@ -91,6 +90,19 @@ def poll_sensors():
     USAvg = movingAvg(windowUS,10)
     COAvg = movingAvg(windowCO,10)
 
+    # put in dict here
+    mutex.acquire()
+    try:
+      data["IRAvg"]=IRAvg
+      data["USAvg"]=USAvg
+      data["COAvg"]=COAvg
+    finally:
+      mutex.release()
+
+    time.sleep(.50)
+
+def poll_sensors_1():
+  
     Temp = sensor.read_temperature()
     Pressure = sensor.read_pressure()
     Altitude = sensor.read_altitude()
@@ -99,9 +111,6 @@ def poll_sensors():
     # put in dict here
     mutex.acquire()
     try:
-      data["IRAvg"]=IRAvg
-      data["USAvg"]=USAvg
-      data["COAvg"]=COAvg
       data["Temp"]=Temp
       data["Pressure"]=Pressure
       data["Altitude"]=Altitude
@@ -109,20 +118,31 @@ def poll_sensors():
     finally:
       mutex.release()
 
-    time.sleep(interval)
+    time.sleep(180)
+
+def hold_data():
+  # low-priority thread: does not need to perform @ real time
+  # store recent data and keep a queue
+  # upon losing wifi signal, store info in RAM to disk
+  #
+  # look for flag WIFI_UP=NO
+  # write X number of packets, close file, encrypt
  
 def main():
-  #process = start_proc("/home/ubuntu/ev/segmentation")
-  process = start_proc("./segmentation")
+  process = start_proc("/home/ubuntu/ev/segmentation")
   atexit.register(kill_child)
   
   t1 = threading.Thread(target=poll_proc, args = (process,))
   t1.daemon = True
   t1.start()
 
-  t2 = threading.Thread(target=poll_sensors)
+  t2 = threading.Thread(target=poll_sensors_0)
   t2.daemon = True
   t2.start()
+
+  t3 = threading.Thread(target=poll_sensors_1)
+  t3.daemon = True
+  t3.start()
 
   #filename = time.strftime("%x").replace(" ","_")
   #print filename
@@ -135,6 +155,7 @@ def main():
     print "Closing active threads..."
     t1.join()
     t2.join()
+    t3.join()
 
 if __name__ == "__main__":
   signal.signal(signal.SIGTERM, exitall)

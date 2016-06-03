@@ -50,6 +50,7 @@ public:
   void displayStats(string type, int result);
   int getCounter();
   double getUptime();
+  void resetUptime();
   double getMillisecUptime();
   void openLog(string name);
   void closeLog();

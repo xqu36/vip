@@ -18,7 +18,10 @@ PedestrianDetector::PedestrianDetector() {
     carSizeValid = false;
 }
 
-bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsize) {
+bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsize, vector<Point>& cntd_vec) {
+
+    // determine centroid of objframe
+    Point cntd_objframe = Point(objframe.cols/2, objframe.rows/2);
 
     vector<Rect> detected;
 
@@ -26,7 +29,7 @@ bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsi
     hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
 
     // FIXME
-    hog.detectMultiScale(objframe, detected, 0, Size(2,2), Size(8,8), 1.05, 2);
+    hog.detectMultiScale(objframe, detected, 0, Size(4,4), Size(16,16), 1.05, 2);
 
     // pedestrian is detected 
     // TODO / FIXME: use non-maximal suppression to extrapolate small false positives as one box
@@ -37,6 +40,15 @@ bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsi
         if(objsize.height < minHeight) minHeight = objsize.height;
         if(objsize.height > maxHeight) maxHeight = objsize.height;
         pedSizeValid = true;
+
+        // return centroids of detected people, in terms of offset to objframe
+        for(int i = 0; i < detected.size(); i++) {
+          // determine centroid of detected
+          Point cntd_detected = Point(detected[i].x+(detected[i].width/2), detected[i].y+(detected[i].height/2));
+
+          cntd_vec.push_back(cntd_detected - cntd_objframe);
+        }
+
         return true;
     } else return false;
 }

@@ -23,6 +23,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
   carPathCount = 0;
   pedPathCount = 0;
 
+  recalibrate = false;
+
   carPathIsValid = false;
   pedPathIsValid = false;
 
@@ -57,6 +59,12 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     double ratio = (double)ccomp.getBoundingBoxHeight() / (double)ccomp.getBoundingBoxWidth();
     if(ratio > 1.25)  pedVotes += 30;
   } else carVotes += 30;
+
+  if(recalibrate) {
+    pedPathIsValid = false;
+    pedQueue.clear();
+    recalibrate = !recalibrate;
+  }
 
   if(pedQueue.size() >= pedsInPath/2) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
@@ -122,16 +130,24 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         if(re_objframe.size().height < 128) resize(re_objframe, re_objframe, Size(re_objframe.size().width,128));
       }
 
-      if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
+      // need to find the centroids in image
+      vector<Point> cntd_vec;
+
+      if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
+
+        // prepare ctrd_mat
+        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+
+        for(int i = 0; i < cntd_vec.size(); i++) {
+          // add the offsets for the centroid
+          circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+        }
+
         if(pedQueue.size() < pedsInPath) {
-          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         } else {
           pedQueue.pop_front();
-          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
           redrawMask();
         }
@@ -162,21 +178,26 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         if(re_objframe.size().height < 128) resize(re_objframe, re_objframe, Size(re_objframe.size().width,128));
       }
 
+      // need to find the centroids in image
+      vector<Point> cntd_vec;
+
       // check to make sure
-      if(peddetect.detectPedestrian(re_objframe, rectMask.size())) {
+      if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
+
+        // prepare ctrd_mat
+        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
+
+        for(int i = 0; i < cntd_vec.size(); i++) {
+          // add the offsets for the centroid
+          circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+        }
 
         if(pedQueue.size() < pedsInPath) {
-          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
-          //pedQueue.push_back(objframe);
           redrawMask();
         } else {
           pedQueue.pop_front();
-          Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-          circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
           pedQueue.push_back(ctrd_mat);
-          //pedQueue.push_back(objframe);
           redrawMask();
         }
         outType = TYPE_PED_ONPATH;
@@ -184,16 +205,14 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
     } else {
       if(pedQueue.size() < pedsInPath) {
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
+        circle(ctrd_mat, ccomp.getCentroidBox(), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(redrawValue/2,redrawValue/2,redrawValue/2), CV_FILLED);
         pedQueue.push_back(ctrd_mat);
-        //pedQueue.push_back(objframe);
         redrawMask();
       } else {
         pedQueue.pop_front();
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), ccomp.getBoundingBoxArea() / scale, redrawColor, CV_FILLED);
+        circle(ctrd_mat, ccomp.getCentroidBox(), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(redrawValue/2,redrawValue/2,redrawValue/2), CV_FILLED);
         pedQueue.push_back(ctrd_mat);
-        //pedQueue.push_back(objframe);
         redrawMask();
       }
     }
@@ -203,10 +222,12 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
 void PathClassifier::redrawMask() {
 
+    /*
     carPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < carQueue.size(); i++) {
         carPath |= carQueue[i];
     }
+    */
 
     pedPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < pedQueue.size(); i++) {
@@ -216,11 +237,5 @@ void PathClassifier::redrawMask() {
 
     Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5,5));
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
-
-    // normalize the path and update
-    if(pedPathIsValid) {
-      threshold(pedPath, pedPath, 20, 255, THRESH_TOZERO);
-      normalize(pedPath,pedPath, 0, 255, NORM_MINMAX);
-    }
 }
 

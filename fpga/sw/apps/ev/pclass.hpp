@@ -48,6 +48,8 @@ private:
 public:
   bool bgValid;
 
+  bool recalibrate;
+
   bool carPathIsValid;
   bool pedPathIsValid;
 
