@@ -84,7 +84,7 @@ echo "exec /sbin/getty -L -8 115200 ttyPS0" >> ttyPS0.conf
 
 ## Adding Xilinx modules to rootfs ##
 sudo mkdir ../../lib/modules
-sudo cp -r $BUILDPATH/petalinux/zedboard-baseline/build/linux/kernel/xlnx-4.0/ ../../lib/modules/4.0.0-xilinx
+sudo cp -r $BUILDPATH/petalinux/zedboard-baseline/build/linux/rootfs/targetroot/lib/modules/4.0.0-xilinx/ ../../lib/modules/4.0.0-xilinx
 
 
 ####################################################################
