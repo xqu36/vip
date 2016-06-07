@@ -86,17 +86,15 @@ while True:
     if stamp == 15:
         stamp = 0 #change this later to "stamp = 0"
 
-    #Find the rms value
+    #Find the dB value...........Not complete yet but works
     f = wave.open(WAVE_OUTPUT_FILENAME,'rb')
     nchannels, sampwidth, framerate, nframes, comptype, compname = f.getparams()[:6]
     byteList = np.fromstring(f.readframes(nframes), dtype = np.int16)
     byteList = byteList.astype(np.float)
     f.close()
-    print len(byteList)
-    print nframes
-    avg = sum(byteList) / len(byteList)
-    amp = avg / 32767 #Il est parce que le nombre de bits est de 16.. zéro à une
-    dB = 20 * log10(amp)
+    avg = sum(byteList) / nframes #or len(byteList)
+    amp = abs(avg / 32767) #This is becase it is a 16 bit number (2^15 -1)
+    dB = 20 * math.log10(amp)
     print('dB = {}'.format(dB))
 
 # stop Recording
