@@ -6,14 +6,16 @@ import signal
 import atexit
 import time
 import datetime
-from Adafruit_ADS1x15.Adafruit_ADS1x15 import ADS1x15 
-import Adafruit_BMP.BMP085 as BMP085
+#from Adafruit_ADS1x15.Adafruit_ADS1x15 import ADS1x15 
+#import Adafruit_BMP.BMP085 as BMP085
 import numpy as np
 try:
     from cStringIO import StringIO
 except:
     from StringIO import StringIO
-
+import pickle
+#import SSLClient
+#from node_rsa import *
 
 # Initialize GPIO and I2C
 subprocess.call(["/sbin/modprobe", "i2c-dev"])
@@ -36,6 +38,11 @@ sensor_id = 3
 
 global data
 data = {}
+
+data_queue = []
+
+WIFI_UP = True
+
 mutex = threading.Lock()
 
 # Utility Functions
@@ -64,6 +71,7 @@ def movingAvg(values,window):
 	return smas
 
 # Polling Threads 
+# report every .25s
 def poll_proc(process):
   for line in iter(process.stdout.readline, ""):
     splitline = line.strip("\n").split(",")
@@ -77,44 +85,52 @@ def poll_proc(process):
     finally:
       mutex.release()
 
+# report every .5s
 def poll_sensors_0():
   while True:
-    for i in window:
-      windowIR[i] = sensorADC.readADCSingleEnded(0, gain, sps)
-    for i in window:
-	    windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
-    for i in window:
-      windowCO[i] = sensorADC.readADCSingleEnded(3, gain, sps)
+    #for i in window:
+    #  windowIR[i] = sensorADC.readADCSingleEnded(0, gain, sps)
+    #for i in window:
+	  #  windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
 
-    IRAvg = movingAvg(windowIR,10)
-    USAvg = movingAvg(windowUS,10)
-    COAvg = movingAvg(windowCO,10)
+    # the averager sleeps for 25ms, polls again, sleeps
+    #for i in window:
+    #  windowCO[i] = sensorADC.readADCSingleEnded(3, gain, sps)
+    #  time.sleep(.025)
+
+    #IRAvg = movingAvg(windowIR,10)
+    #USAvg = movingAvg(windowUS,10)
+
+    # data collected over .25s
+    #COAvg = movingAvg(windowCO,10)
+    COAvg = sensorADC.readADCSingleEnded(3, gain, sps)
 
     # put in dict here
     mutex.acquire()
     try:
-      data["IRAvg"]=IRAvg
-      data["USAvg"]=USAvg
+      #data["IRAvg"]=IRAvg
+      #data["USAvg"]=USAvg
       data["COAvg"]=COAvg
     finally:
       mutex.release()
 
-    time.sleep(.50)
+    time.sleep(.5)
 
+# report every 3m
 def poll_sensors_1():
-  
+  while True:
     Temp = sensor.read_temperature()
     Pressure = sensor.read_pressure()
-    Altitude = sensor.read_altitude()
-    Sealevel = sensor.read_sealevel_pressure()
+    #Altitude = sensor.read_altitude()
+    #Sealevel = sensor.read_sealevel_pressure()
 
     # put in dict here
     mutex.acquire()
     try:
       data["Temp"]=Temp
       data["Pressure"]=Pressure
-      data["Altitude"]=Altitude
-      data["Sealevel"]=Sealevel
+      #data["Altitude"]=Altitude
+      #data["Sealevel"]=Sealevel
     finally:
       mutex.release()
 
@@ -127,9 +143,57 @@ def hold_data():
   #
   # look for flag WIFI_UP=NO
   # write X number of packets, close file, encrypt
+  #
+  # write queue first, then iter
+
+  global WIFI_UP
+  written_queue = False
+  writing = False
+
+  while True:
+    if(WIFI_UP == False):
+      if(written_queue == False):
+        print "writing queue"
+        qfilename = time.strftime("%c").replace(" ","_").replace(":","-")+"_queue.p"
+        qfile = open(qfilename, "w")
+
+        # Testing encryption
+        ctext = encrypt_data(data_queue)
+
+        pickle.dump(ctext, qfile)
+        #pickle.dump(data_queue, qfile)
+        qfile.close()
+
+        # TESTING
+        qfile = open(qfilename, "r")
+        picklecipher = pickle.load(qfile)
+        printfodder = decrypt_data(picklecipher)
+        print printfodder
+
+        written_queue = True
+      if(writing == False):
+        pickle_queue = []
+        pfilename = time.strftime("%c").replace(" ","_").replace(":","-")+".p"
+        pfile = open(pfilename, "w")
+        writing = True
+
+      if(writing == True):
+        #print "filling out pickle queue"
+        pickle_queue.append(data)
+
+        # encrypt and close data files every 5m
+        if(len(pickle_queue) > 300):
+          pickle.dump(pickle_queue, pfile)
+          del pickle_queue[:]
+          pfile.close()
+          writing = False
+
+    time.sleep(1)
+
  
 def main():
   process = start_proc("/home/ubuntu/ev/segmentation")
+  #process = start_proc("./segmentation")
   atexit.register(kill_child)
   
   t1 = threading.Thread(target=poll_proc, args = (process,))
@@ -144,18 +208,46 @@ def main():
   t3.daemon = True
   t3.start()
 
-  #filename = time.strftime("%x").replace(" ","_")
-  #print filename
+  t4 = threading.Thread(target=hold_data)
+  t4.daemon = True
+  t4.start()
 
+  global WIFI_UP
+  global data_queue
+
+  cnt = 0
   try:
     while True:
-      print data
       time.sleep(1)
+      cnt += 1
+
+      mutex.acquire()
+      try:
+        data["Timestamp"]=time.strftime("%c")
+      finally:
+        mutex.release()
+
+      # TODO: HOW BIG IN MEMORY?
+      # enqueue most recent data
+      data_queue.append(data)
+
+      # keep the last 30s of data in RAM
+      if(len(data_queue) > 30):
+        del data_queue[0]
+
+      # send packet
+      try:
+        SSLClient.send_data(data)
+        WIFI_UP = True
+
+      # on exception, set WIFI_UP flag and try again ad infinitum
+      except socket.error:
+        WIFI_UP = False
+        continue
+
   except KeyboardInterrupt:
     print "Closing active threads..."
-    t1.join()
-    t2.join()
-    t3.join()
+    # don't need to .join() threads when daemonized
 
 if __name__ == "__main__":
   signal.signal(signal.SIGTERM, exitall)
