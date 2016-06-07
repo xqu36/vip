@@ -34,6 +34,8 @@ sudo apt-get -y install udhcpc
 sudo apt-get -y install libopencv-dev
 sudo apt-get -y install gpsd
 sudo apt-get -y install python-GPS
+sudo apt-get install usbutils
+sudo apt-get install python-pyaudio
 
 ## Python libraries ##
 sudo pip install Adafruit_Libraries
