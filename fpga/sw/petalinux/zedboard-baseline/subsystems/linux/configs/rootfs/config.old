@@ -1230,6 +1230,14 @@ CONFIG_ROOTFS_PACKAGES_UPDATE_RC_D=y
 #
 
 #
+# x11/base
+#
+
+#
+# libdrm
+#
+
+#
 # Libs
 #
 # CONFIG_ROOTFS_COMPONENT_LIBS_NAME_MISC is not set
