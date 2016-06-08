@@ -43,6 +43,11 @@ sudo pip install python-smbus
 sudo apt-get -y install python-smbus
 sudo apt-get -y install python-numpy
 
+# @jdanner3 additions
+cd /home/ubuntu/ev
+make
+cd -
+
 echo "#####################"
 echo "   EXITING CHROOT"
 echo "#####################"
