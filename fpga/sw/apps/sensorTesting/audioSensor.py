@@ -7,7 +7,6 @@ stamp = 0 #this is used to index the multiple .125s recordings
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-CHUNK = 1024
 RECORD_SECONDS = .125 #each recording is 1/8 sec long
 audio = pyaudio.PyAudio()
 rms = 0
@@ -63,13 +62,12 @@ while True:
         rms14 = rms
         
     stream = audio.open(format=FORMAT, channels=CHANNELS,
-                rate=RATE, input=True,
-                frames_per_buffer=CHUNK)
+                rate=RATE, input=True)
     
     frames = []
 
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        data = stream.read(CHUNK)
+    for i in range(0, int(RATE / frame_count * RECORD_SECONDS)):
+        data = stream.read(frame_count)
         frames.append(data)
     
     stamp = stamp = stamp + 1
