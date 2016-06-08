@@ -40,12 +40,12 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  VideoCapture capture("img/pedxing_seq2.mp4");
-  //VideoCapture capture(-1);
+  //VideoCapture capture("img/pedxing_seq2.mp4");
+  VideoCapture capture(-1);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
-    //cout << "Capture failed to open." << endl; 
+    cout << "Capture failed to open." << endl; 
     return -1; 
   }
 
