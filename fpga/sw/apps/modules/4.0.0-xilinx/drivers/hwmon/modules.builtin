@@ -1,0 +1,5 @@
+kernel/drivers/hwmon/hwmon.ko
+kernel/drivers/hwmon/pmbus/pmbus_core.ko
+kernel/drivers/hwmon/pmbus/pmbus.ko
+kernel/drivers/hwmon/pmbus/ucd9000.ko
+kernel/drivers/hwmon/pmbus/ucd9200.ko

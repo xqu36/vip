@@ -1,0 +1,1 @@
+cmd_drivers/staging/rtl8192e/rtl8192e/r8192e_pci.ko := arm-xilinx-linux-gnueabi-ld -EL -r  -T /opt/pkg/petalinux-v2015.4-final/components/linux-kernel/xlnx-4.0/scripts/module-common.lds --build-id  -o drivers/staging/rtl8192e/rtl8192e/r8192e_pci.ko drivers/staging/rtl8192e/rtl8192e/r8192e_pci.o drivers/staging/rtl8192e/rtl8192e/r8192e_pci.mod.o

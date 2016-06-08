@@ -1,0 +1,3 @@
+kernel/drivers/net/ethernet/xilinx/xilinx_emaclite.ko
+kernel/drivers/net/ethernet/xilinx/xilinx_emacps.ko
+kernel/drivers/net/ethernet/xilinx/xilinx_emac.ko

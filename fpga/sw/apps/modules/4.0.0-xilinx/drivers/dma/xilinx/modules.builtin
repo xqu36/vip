@@ -1,0 +1,3 @@
+kernel/drivers/dma/xilinx/xilinx_dma.ko
+kernel/drivers/dma/xilinx/xilinx_cdma.ko
+kernel/drivers/dma/xilinx/xilinx_vdma.ko

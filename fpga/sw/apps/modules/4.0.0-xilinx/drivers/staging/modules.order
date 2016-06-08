@@ -1,0 +1,7 @@
+kernel/drivers/staging/rtl8192u/r8192u_usb.ko
+kernel/drivers/staging/rtl8192e/rtllib.ko
+kernel/drivers/staging/rtl8192e/rtllib_crypt_ccmp.ko
+kernel/drivers/staging/rtl8192e/rtllib_crypt_tkip.ko
+kernel/drivers/staging/rtl8192e/rtllib_crypt_wep.ko
+kernel/drivers/staging/rtl8192e/rtl8192e/r8192e_pci.ko
+kernel/drivers/staging/rtl8188eu/r8188eu.ko

@@ -1,0 +1,3 @@
+kernel/sound/soc/snd-soc-core.ko
+kernel/sound/soc/adi/snd-soc-adi-axi-i2s.ko
+kernel/sound/soc/adi/snd-soc-adi-axi-spdif.ko

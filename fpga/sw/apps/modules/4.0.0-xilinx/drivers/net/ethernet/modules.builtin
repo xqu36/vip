@@ -1,0 +1,6 @@
+kernel/drivers/net/ethernet/cadence/macb.ko
+kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
+kernel/drivers/net/ethernet/realtek/r8169.ko
+kernel/drivers/net/ethernet/xilinx/xilinx_emaclite.ko
+kernel/drivers/net/ethernet/xilinx/xilinx_emacps.ko
+kernel/drivers/net/ethernet/xilinx/xilinx_emac.ko

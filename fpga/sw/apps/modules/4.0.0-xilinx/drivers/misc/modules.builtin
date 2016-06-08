@@ -1,0 +1,3 @@
+kernel/drivers/misc/xilinx_trafgen.ko
+kernel/drivers/misc/eeprom/at24.ko
+kernel/drivers/misc/eeprom/at25.ko

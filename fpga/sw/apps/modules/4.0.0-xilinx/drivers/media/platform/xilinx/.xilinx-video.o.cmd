@@ -1,0 +1,1 @@
+cmd_drivers/media/platform/xilinx/xilinx-video.o := arm-xilinx-linux-gnueabi-ld -EL    -r -o drivers/media/platform/xilinx/xilinx-video.o drivers/media/platform/xilinx/xilinx-dma.o drivers/media/platform/xilinx/xilinx-vip.o drivers/media/platform/xilinx/xilinx-vipp.o 

@@ -1,0 +1,4 @@
+kernel/drivers/iio/industrialio.ko
+kernel/drivers/iio/industrialio-triggered-buffer.ko
+kernel/drivers/iio/kfifo_buf.ko
+kernel/drivers/iio/adc/xilinx-xadc.ko
