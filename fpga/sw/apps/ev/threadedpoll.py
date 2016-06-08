@@ -17,7 +17,7 @@ try:
 except:
     from StringIO import StringIO
 import pickle
-#import SSLClient
+import SSLClient
 #from node_rsa import *
 
 # Initialize GPIO and I2C
@@ -262,22 +262,21 @@ def hold_data():
   while True:
     if(WIFI_UP == False):
       if(written_queue == False):
-        print "writing queue"
         qfilename = time.strftime("%c").replace(" ","_").replace(":","-")+"_queue.p"
         qfile = open(qfilename, "w")
 
         # Testing encryption
-        ctext = encrypt_data(data_queue)
+        #ctext = encrypt_data(data_queue)
 
-        pickle.dump(ctext, qfile)
-        #pickle.dump(data_queue, qfile)
+        #pickle.dump(ctext, qfile)
+        pickle.dump(data_queue, qfile)
         qfile.close()
 
         # TESTING
-        qfile = open(qfilename, "r")
-        picklecipher = pickle.load(qfile)
-        printfodder = decrypt_data(picklecipher)
-        print printfodder
+        #qfile = open(qfilename, "r")
+        #picklecipher = pickle.load(qfile)
+        #printfodder = decrypt_data(picklecipher)
+        #print printfodder
 
         written_queue = True
       if(writing == False):
@@ -287,7 +286,6 @@ def hold_data():
         writing = True
 
       if(writing == True):
-        #print "filling out pickle queue"
         pickle_queue.append(data)
 
         # encrypt and close data files every 5m
@@ -305,7 +303,7 @@ def main():
   #process = start_proc("./segmentation")
   atexit.register(kill_child)
   
-  t1 = threading.Thread(target=poll_proc, args = (process,))
+  t1 = threading.Thread(target=poll_proc, args=(process,))
   t1.daemon = True
   t1.start()
 
@@ -328,11 +326,9 @@ def main():
   global WIFI_UP
   global data_queue
 
-  cnt = 0
   try:
     while True:
       time.sleep(1)
-      cnt += 1
 
       mutex.acquire()
       try:
@@ -340,7 +336,6 @@ def main():
       finally:
         mutex.release()
 
-      # TODO: HOW BIG IN MEMORY?
       # enqueue most recent data
       data_queue.append(data)
 
@@ -360,7 +355,6 @@ def main():
         continue
 
   except KeyboardInterrupt:
-    print "Closing active threads..."
     # don't need to .join() threads when daemonized
 
 if __name__ == "__main__":

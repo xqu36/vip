@@ -39,6 +39,33 @@ function usage() {
     echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
+# This function is designed to take care of the special snowflakes that refuse to use the combined BOOT.bin
+# and boot from QSPI. Essentially, modifications to U-Boot were necessary to load the kernel/system.dtb
+# into fixed locations in RAM. These modifications prevent individuals from creating a separated BOOT.bin
+# and image.ub. To remedy this, the user needs to simply point to the non-customized u-boot directory.
+function setubootconfiguration() {
+    if [ -e $SWPATH/petalinux/$PROJNAME/subsystems/linux/config ] 
+    then
+        if [ $SEPARATE -eq 1 ]
+        then
+            echo -e "Altering the petalinux-config file to use the default u-boot_PLNX..."
+            sed -i -e "s/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE=y/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE is not set/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            sed -i -e "s/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX is not set/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX=y/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            sed -i -e "s/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX is not set/CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX=y/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            sed -i -e "s/CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER=y/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER is not set/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            sed -i -e "/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET=\"*\"/d" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            sed -i -e "/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_DOWNLOAD_PATH=\"*\"/d" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            sed -i -e "/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_REFERENCE=\"*\"/d" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+        else
+            echo -e "Checking to see if modifications are necessary to the petalinux-config u-boot location..."
+            echo -e "JK! I haven't provided that functionality yet!"
+            #TODO: Add functionality to return from separated configurations to combined configuration... 
+        fi
+    else
+        echo -e "Unable to find the configuration files..."
+    fi
+}
+
 # Set up the most recent Vivado and the SDK
 if [ -d "/opt/Xilinx/Vivado/2014.4" ]
 then
@@ -233,6 +260,11 @@ case $a in
 	# regenerate first stage bootloader for hardware
 #	hsi -mode batch -source $BUILDPATH/support/generate_fsbl.tcl -tclargs $HWPATH/project/zedboard_baseline.sdk/zedboard_baseline.hdf 
         # get hw description & config
+        if [ $SEPARATE -eq 1 ]
+        then
+            rm -f $SWPATH/petalinux/$PROJNAME/subsystems/linux/configs/u-boot/config
+        fi
+        setubootconfiguration
         petalinux-config -p $SWPATH/petalinux/$PROJNAME --get-hw-description=$HWPATH/project/zedboard_baseline.sdk/
         petalinux-build -p $SWPATH/petalinux/$PROJNAME
     else
@@ -351,12 +383,6 @@ case $a in
 		echo "removing old image.ub..."
 		rm -f $BUILDPATH/boot/image.ub
 	fi
-
-    if [ -f "$BUILDPATH/BOOT.bin" ]
-    then
-        echo "mv $BUILDPATH/BOOT.bin $BUILDPATH/boot/"
-        mv $BUILDPATH/BOOT.BIN $BUILDPATH/boot/
-    fi
 
     ;;
 
