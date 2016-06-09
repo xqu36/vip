@@ -18,7 +18,6 @@ except:
     from StringIO import StringIO
 import pickle
 import SSLClient
-#from node_rsa import *
 
 # Initialize GPIO and I2C
 subprocess.call(["/sbin/modprobe", "i2c-dev"])
@@ -50,7 +49,7 @@ mutex = threading.Lock()
 
 # Utility Functions
 def exitall(signal, frame):
-  print "Exiting..."
+  #print "Exiting..."
   sys.exit(0)
 
 def start_proc(cmd):
@@ -66,12 +65,12 @@ def kill_child():
     try:
       os.kill(child_pid, signal.SIGINT)
     except OSError:
-      print "No such proc is running."
+      pass
 
 def movingAvg(values,window): 
-	weights = np.repeat(1.0,window)/window
-	smas = np.convolve(values,weights,"valid")
-	return smas
+  weights = np.repeat(1.0,window)/window
+  smas = np.convolve(values,weights,"valid")
+  return smas
 
 # Polling Threads 
 # report every .25s
@@ -94,7 +93,7 @@ def poll_sensors_0():
     #for i in window:
     #  windowIR[i] = sensorADC.readADCSingleEnded(0, gain, sps)
     #for i in window:
-	  #  windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
+    #  windowUS[i] = sensorADC.readADCSingleEnded(1, gain, sps)
 
     # the averager sleeps for 25ms, polls again, sleeps
     #for i in window:
@@ -265,17 +264,21 @@ def hold_data():
         qfilename = time.strftime("%c").replace(" ","_").replace(":","-")+"_queue.p"
         qfile = open(qfilename, "w")
 
-        # Testing encryption
-        #ctext = encrypt_data(data_queue)
-
-        #pickle.dump(ctext, qfile)
         pickle.dump(data_queue, qfile)
         qfile.close()
 
+        # Testing encryption
+        subprocess.call([ "openssl", 
+                          "smime", 
+                          "-encrypt", "-binary", "-aes-256-cbc", 
+                          "-in", qfilename, 
+                          "-out", qfilename+".enc", 
+                          "-outform", "DER", 
+                          "node1/node1.pem" ])
+
         # TESTING
         #qfile = open(qfilename, "r")
-        #picklecipher = pickle.load(qfile)
-        #printfodder = decrypt_data(picklecipher)
+        #printfodder = pickle.load(qfile)
         #print printfodder
 
         written_queue = True
@@ -294,6 +297,15 @@ def hold_data():
           del pickle_queue[:]
           pfile.close()
           writing = False
+
+          # Testing encryption
+          subprocess.call([ "openssl", 
+                            "smime", 
+                            "-encrypt", "-binary", "-aes-256-cbc", 
+                            "-in", qfilename, 
+                            "-out", qfilename+".enc", 
+                            "-outform", "DER", 
+                            "node1/node1.pem" ])
 
     time.sleep(1)
 
@@ -346,7 +358,7 @@ def main():
       # send packet
       try:
         SSLClient.send_data(data)
-        WIFI_UP = True
+        WIFI_UP = False
 
       # on exception, set WIFI_UP flag and try again ad infinitum
       except socket.error:
@@ -355,6 +367,7 @@ def main():
 
   except KeyboardInterrupt:
     # don't need to .join() threads when daemonized
+    pass
 
 if __name__ == "__main__":
   signal.signal(signal.SIGTERM, exitall)
