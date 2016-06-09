@@ -149,6 +149,7 @@ def poll_sensors_2():
   rms = 0
 
   while True:
+  	try:
       if stamp == 0:
           WAVE_OUTPUT_FILENAME = "file0.wav"
           rms15 = rms #stores the last index's rms value to be compared later
@@ -238,7 +239,8 @@ def poll_sensors_2():
       finally:
         mutex.release()
       time.sleep(.3)
-
+    except:
+    	pass
   # stop Recording
   stream.stop_stream()
   stream.close()
