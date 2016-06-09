@@ -34,8 +34,8 @@ sudo apt-get -y install udhcpc
 sudo apt-get -y install libopencv-dev
 sudo apt-get -y install gpsd
 sudo apt-get -y install python-GPS
-sudo apt-get install usbutils
-sudo apt-get install python-pyaudio
+sudo apt-get -y install usbutils
+sudo apt-get -y install python-pyaudio
 
 ## Python libraries ##
 sudo pip install Adafruit_Libraries
@@ -44,9 +44,16 @@ sudo apt-get -y install python-smbus
 sudo apt-get -y install python-numpy
 
 # @jdanner3 additions
+sudo chown -R ubuntu /home/ubuntu
+
+# install python libs
+sudo cp -r /home/ubuntu/sensorTesting/Adafruit_ADS1x15 /home/ubuntu/ev
+sudo cp -r /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master /home/ubuntu/ev
+cd /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master
+sudo python setup.py install 
+
 cd /home/ubuntu/ev
-make
-cd -
+sudo make
 
 echo "#####################"
 echo "   EXITING CHROOT"

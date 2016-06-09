@@ -116,7 +116,7 @@ def poll_sensors_0():
     finally:
       mutex.release()
 
-    time.sleep(.5)
+    time.sleep(30)
 
 # report every 3m
 def poll_sensors_1():
@@ -358,7 +358,7 @@ def main():
       # send packet
       try:
         SSLClient.send_data(data)
-        WIFI_UP = False
+        WIFI_UP = True
 
       # on exception, set WIFI_UP flag and try again ad infinitum
       except socket.error:
