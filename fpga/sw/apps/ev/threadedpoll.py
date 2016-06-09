@@ -345,9 +345,8 @@ def main():
 
       # send packet
       try:
-        #SSLClient.send_data(data)
-        #WIFI_UP = True
-        print(data)
+        SSLClient.send_data(data)
+        WIFI_UP = True
 
       # on exception, set WIFI_UP flag and try again ad infinitum
       except socket.error:

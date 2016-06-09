@@ -10,16 +10,17 @@ def send_data(data):
   # Require a certificate from the server. We used a self-signed certificate
   # so here ca_certs must be the server certificate itself.
   ssl_sock = ssl.wrap_socket(s,
-	                           ca_certs="cacert.crt",
+	                           ca_certs="cacert.pem",
 	                           cert_reqs=ssl.CERT_REQUIRED, 
-	                           certfile="brandon.crt",
-                               keyfile="server.key",
+	                           certfile="smartcities/smartcities.pem",
+                               keyfile="smartcities/server.key",
 	                           ciphers= "HIGH",
 	                           do_handshake_on_connect=True)
 
   ssl_sock.settimeout(5)
 
-  ssl_sock.connect(('brandon.gtisc.gatech.edu', 10023))
+  #ssl_sock.connect(('brandon.gtisc.gatech.edu', 10023))
+  ssl_sock.connect(('smartcities.gatech.edu', 50008))
   info = data #encrypt_data(data)
   #print_log(ssl_sock)
   ssl_sock.write(json.dumps(info))
@@ -42,5 +43,5 @@ def print_log(ssl_sock):
   print pprint.pformat(ssl_sock.getpeercert())
 
 
-data = {'time': "12:30", 'count': "60000"}
-send_data(data)
+#data = {'time': "12:30", 'count': "60000"}
+#send_data(data)

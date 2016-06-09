@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
-    cout << "Capture failed to open." << endl; 
+    //cout << "Capture failed to open." << endl; 
     return -1; 
   }
 
