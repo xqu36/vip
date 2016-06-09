@@ -10,6 +10,7 @@ RATE = 44100
 RECORD_SECONDS = .125 #each recording is 1/8 sec long
 audio = pyaudio.PyAudio()
 rms = 0
+CHUNK = 1024
 
 while True:
     if stamp == 0:
@@ -62,12 +63,13 @@ while True:
         rms14 = rms
         
     stream = audio.open(format=FORMAT, channels=CHANNELS,
-                rate=RATE, input=True)
+                rate=RATE, input=True,
+                frames_per_buffer=CHUNK)
     
     frames = []
 
-    for i in range(0, int(RATE / frame_count * RECORD_SECONDS)):
-        data = stream.read(frame_count)
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        data = stream.read(CHUNK)
         frames.append(data)
     
     stamp = stamp = stamp + 1
