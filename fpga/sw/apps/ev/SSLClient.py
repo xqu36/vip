@@ -10,10 +10,10 @@ def send_data(data):
   # Require a certificate from the server. We used a self-signed certificate
   # so here ca_certs must be the server certificate itself.
   ssl_sock = ssl.wrap_socket(s,
-	                           ca_certs="cacert.pem",
+	                           ca_certs="node1/cacert.pem",
 	                           cert_reqs=ssl.CERT_REQUIRED, 
-	                           certfile="smartcities/smartcities.pem",
-                               keyfile="smartcities/server.key",
+	                           certfile="node1/node1.pem",
+                               keyfile="node1/server.key",
 	                           ciphers= "HIGH",
 	                           do_handshake_on_connect=True)
 
