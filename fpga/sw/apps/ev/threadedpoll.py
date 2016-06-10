@@ -150,7 +150,7 @@ def poll_sensors_2():
   rms = 0
 
   while True:
-  	try:
+    try:
       if stamp == 0:
           WAVE_OUTPUT_FILENAME = "file0.wav"
           rms15 = rms #stores the last index's rms value to be compared later
@@ -222,7 +222,7 @@ def poll_sensors_2():
       waveFile.close()
 
       if stamp == 15:
-          stamp = 0 #change this later to "stamp = 0"
+        stamp = 0 #change this later to "stamp = 0"
 
       #Find the dB value...........Not complete yet but works
       f = wave.open(WAVE_OUTPUT_FILENAME,'rb')
@@ -241,7 +241,7 @@ def poll_sensors_2():
         mutex.release()
       time.sleep(.3)
     except:
-    	pass
+      pass
   # stop Recording
   stream.stop_stream()
   stream.close()
