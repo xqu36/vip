@@ -18,6 +18,7 @@ except:
     from StringIO import StringIO
 import pickle
 import SSLClient
+import socket
 
 # Initialize GPIO and I2C
 subprocess.call(["/sbin/modprobe", "i2c-dev"])
@@ -264,19 +265,18 @@ def hold_data():
     if(WIFI_UP == False):
       if(written_queue == False):
         qfilename = time.strftime("%c").replace(" ","_").replace(":","-")+"_queue.p"
-        qfile = open(qfilename, "w")
+        #qfile = open(qfilename, "w")
 
-        pickle.dump(data_queue, qfile)
-        qfile.close()
+        #pickle.dump(data_queue, qfile)
+        #qfile.close()
 
         # Testing encryption
-        subprocess.call([ "openssl", 
-                          "smime", 
-                          "-encrypt", "-binary", "-aes-256-cbc", 
-                          "-in", qfilename, 
-                          "-out", qfilename+".enc", 
-                          "-outform", "DER", 
-                          "node1/node1.pem" ])
+        #subprocess.call([ "openssl", 
+        #                  "rsautl", 
+        #                  "-encrypt", 
+        #                  "-pubin", "-inkey", "node1/public.pem"
+        #                  "-in", qfilename, 
+        #                  "-out", qfilename+".enc" ])
 
         # TESTING
         #qfile = open(qfilename, "r")
@@ -287,7 +287,7 @@ def hold_data():
       if(writing == False):
         pickle_queue = []
         pfilename = time.strftime("%c").replace(" ","_").replace(":","-")+".p"
-        pfile = open(pfilename, "w")
+        #pfile = open(pfilename, "w")
         writing = True
 
       if(writing == True):
@@ -295,19 +295,18 @@ def hold_data():
 
         # encrypt and close data files every 5m
         if(len(pickle_queue) > 300):
-          pickle.dump(pickle_queue, pfile)
-          del pickle_queue[:]
-          pfile.close()
+          #pickle.dump(pickle_queue, pfile)
+          #del pickle_queue[:]
+          #pfile.close()
           writing = False
 
           # Testing encryption
-          subprocess.call([ "openssl", 
-                            "smime", 
-                            "-encrypt", "-binary", "-aes-256-cbc", 
-                            "-in", qfilename, 
-                            "-out", qfilename+".enc", 
-                            "-outform", "DER", 
-                            "node1/node1.pem" ])
+        #subprocess.call([ "openssl", 
+        #                  "rsautl", 
+        #                  "-encrypt", 
+        #                  "-pubin", "-inkey", "node1/public.pem"
+        #                  "-in", pfilename, 
+        #                  "-out", pfilename+".enc" ])
 
     time.sleep(1)
 
