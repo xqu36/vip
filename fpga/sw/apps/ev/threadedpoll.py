@@ -14,9 +14,9 @@ from Adafruit_ADS1x15.Adafruit_ADS1x15 import ADS1x15
 import Adafruit_BMP.BMP085 as BMP085
 import numpy as np
 try:
-    from cStringIO import StringIO
+  from cStringIO import StringIO
 except:
-    from StringIO import StringIO
+  from StringIO import StringIO
 import pickle
 import SSLClient
 import socket
@@ -148,7 +148,7 @@ def poll_sensors_2():
   RECORD_SECONDS = .125 #each recording is 1/8 sec long
   WAVE_OUTPUT_FILENAME = "file0.wav"
   audio = pyaudio.PyAudio()    #instantiate audio
-
+  
   while True:
     try:
       stream = audio.open(format=FORMAT, channels=CHANNELS,
@@ -158,8 +158,8 @@ def poll_sensors_2():
       frames = []
 
       for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-          datai = stream.read(CHUNK)
-          frames.append(datai)
+        datai = stream.read(CHUNK)
+        frames.append(datai)
 
       stream.stop_stream()
       stream.close() #close the audio stream within the loop only to restart above
@@ -187,8 +187,8 @@ def poll_sensors_2():
         
     except (IOError) as err:
       print "PyAudio error: {0}".format(err)
-        data["dB"] = "NA"
-        pass
+      data["dB"] = "NA"
+      pass
         
   # close audio when thread dies
   audio.terminate()
