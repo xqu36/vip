@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import threading
 import subprocess
 import sys
@@ -260,7 +261,6 @@ def hold_data():
  
 def main():
   process = start_proc("/home/ubuntu/ev/segmentation")
-  #process = start_proc("./segmentation")
   atexit.register(kill_child)
   
   t1 = threading.Thread(target=poll_proc, args=(process,))
@@ -288,7 +288,7 @@ def main():
 
   try:
     while True:
-      time.sleep(1)
+      time.sleep(30)
 
       mutex.acquire()
       try:
@@ -305,11 +305,14 @@ def main():
 
       # send packet
       try:
+        print "Sending Data...."
+        print data
         SSLClient.send_data(data)
         WIFI_UP = True
 
       # on exception, set WIFI_UP flag and try again ad infinitum
-      except socket.error:
+      except socket.error as err:
+        print "SSL Socket Error: {0}".format(err)
         WIFI_UP = False
         continue
 
