@@ -142,15 +142,15 @@ def poll_sensors_1():
 
 def poll_sensors_2():
   FORMAT = pyaudio.paInt16
-  CHANNELS = 2
+  CHANNELS = 1
   RATE = 44100
   CHUNK = 1024
   RECORD_SECONDS = .125 #each recording is 1/8 sec long
   WAVE_OUTPUT_FILENAME = "file0.wav"
+  audio = pyaudio.PyAudio()    #instantiate audio
 
   while True:
     try:
-      audio = pyaudio.PyAudio()    #instantiate audio
       stream = audio.open(format=FORMAT, channels=CHANNELS,
                     rate=RATE, input=True,
                     frames_per_buffer=CHUNK)
@@ -160,39 +160,37 @@ def poll_sensors_2():
       for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
           datai = stream.read(CHUNK)
           frames.append(datai)
+
+      stream.stop_stream()
       stream.close() #close the audio stream within the loop only to restart above
 
       #setting the parameters for the .WAV file
 
-      waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-      waveFile.setnchannels(CHANNELS) #set channels
-      waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-      waveFile.setframerate(RATE)
-      waveFile.writeframes(b''.join(frames))
-      waveFile.close()
-
       #Find the dB value
-      f = wave.open(WAVE_OUTPUT_FILENAME,'rb')
-      nchannels, sampwidth, framerate, nframes, comptype, compname = f.getparams()[:6]
-      byteList = np.fromstring(f.readframes(nframes), dtype = np.int16)
-      byteList = byteList.astype(np.float)
-      f.close()
-      avg = sum(byteList) / nframes #or len(byteList)
-      amp = abs(avg / 32767) #This is becase it is a 16 bit number (2^15 -1)
-      dB = 20 * math.log10(amp)
+      #avg = sum(byteList) / nframes #or len(byteList)
+      #avg = sum(byteList) / len(byteList)
+      #amp = abs(avg / 32767) #This is becase it is a 16 bit number (2^15 -1)
+      #dB = 20 * math.log10(amp)
+
+      byteList = np.fromstring(b''.join(frames), dtype = np.int16).astype(np.float)
+      dat = byteList / 32768.0
+      magSq = np.sum(dat ** 2.0) / len(dat)
+      dB = 10.0 * math.log(magSq,10.0)
+      
 
       mutex.acquire()
       try:
         data["dB"]=dB
       finally:
         mutex.release()
-        time.sleep(.3)
-    except (OverflowError, ArithmeticError) as err:
+        time.sleep(3)
+        
+    except (IOError) as err:
+      print "PyAudio error: {0}".format(err)
         data["dB"] = "NA"
         pass
-  # stop Recording
-  stream.stop_stream()
-  stream.close()
+        
+  # close audio when thread dies
   audio.terminate()
 
 def hold_data():
