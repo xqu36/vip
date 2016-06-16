@@ -1,1 +1,0 @@
-cmd_drivers/remoteproc/remoteproc.o := arm-xilinx-linux-gnueabi-ld -EL    -r -o drivers/remoteproc/remoteproc.o drivers/remoteproc/remoteproc_core.o drivers/remoteproc/remoteproc_debugfs.o drivers/remoteproc/remoteproc_virtio.o drivers/remoteproc/remoteproc_elf_loader.o 

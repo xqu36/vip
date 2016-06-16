@@ -1,1 +1,0 @@
-cmd_drivers/video/fbdev/core/built-in.o :=  arm-xilinx-linux-gnueabi-ld -EL    -r -o drivers/video/fbdev/core/built-in.o drivers/video/fbdev/core/fb_notify.o drivers/video/fbdev/core/fb_cmdline.o drivers/video/fbdev/core/fb.o drivers/video/fbdev/core/sysfillrect.o drivers/video/fbdev/core/syscopyarea.o drivers/video/fbdev/core/sysimgblt.o 

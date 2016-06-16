@@ -1,2 +1,0 @@
-zynq-afx-nor.o: \
- /opt/pkg/petalinux-v2015.4-final/components/linux-kernel/xlnx-4.0/arch/arm/boot/dts/zynq-afx-nor.dts

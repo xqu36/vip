@@ -1,3 +1,0 @@
-kernel/drivers/usb/host/ehci-hcd.ko
-kernel/drivers/usb/host/ehci-pci.ko
-kernel/drivers/usb/host/ehci-platform.ko

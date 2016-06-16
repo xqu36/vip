@@ -1,1 +1,0 @@
-arch/arm/boot/dts/zynq-zc702.dtb: arch/arm/boot/dts/.zynq-zc702.dtb.dts.tmp /opt/pkg/petalinux-v2015.4-final/components/linux-kernel/xlnx-4.0/arch/arm/boot/dts/zynq-7000.dtsi /opt/pkg/petalinux-v2015.4-final/components/linux-kernel/xlnx-4.0/arch/arm/boot/dts/skeleton.dtsi

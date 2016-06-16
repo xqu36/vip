@@ -1,7 +1,0 @@
-kernel/drivers/usb/chipidea/ci_hdrc.ko
-kernel/drivers/usb/chipidea/ci_hdrc_usb2.ko
-kernel/drivers/usb/chipidea/ci_hdrc_msm.ko
-kernel/drivers/usb/chipidea/ci_hdrc_zevio.ko
-kernel/drivers/usb/chipidea/ci_hdrc_pci.ko
-kernel/drivers/usb/chipidea/usbmisc_imx.ko
-kernel/drivers/usb/chipidea/ci_hdrc_imx.ko

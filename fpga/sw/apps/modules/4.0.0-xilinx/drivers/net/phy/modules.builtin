@@ -1,5 +1,0 @@
-kernel/drivers/net/phy/libphy.ko
-kernel/drivers/net/phy/marvell.ko
-kernel/drivers/net/phy/vitesse.ko
-kernel/drivers/net/phy/mdio-bitbang.ko
-kernel/drivers/net/phy/xilinx_phy.ko

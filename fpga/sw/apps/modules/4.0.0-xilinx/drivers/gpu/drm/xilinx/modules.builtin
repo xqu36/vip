@@ -1,3 +1,0 @@
-kernel/drivers/gpu/drm/xilinx/xilinx_drm.ko
-kernel/drivers/gpu/drm/xilinx/xilinx_drm_dp.ko
-kernel/drivers/gpu/drm/xilinx/xilinx_drm_dp_sub.ko

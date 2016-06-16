@@ -1,1 +1,0 @@
-cmd_kernel/config_data.gz := (cat /home/cturner48/llerner3/vip/fpga/sw/petalinux/zedboard-baseline/build/linux/kernel/xlnx-4.0/.config | gzip -n -f -9 > kernel/config_data.gz) || (rm -f kernel/config_data.gz ; false)

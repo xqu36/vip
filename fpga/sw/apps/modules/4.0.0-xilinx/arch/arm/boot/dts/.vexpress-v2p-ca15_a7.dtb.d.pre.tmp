@@ -1,2 +1,0 @@
-vexpress-v2p-ca15_a7.o: \
- /opt/pkg/petalinux-v2015.4-final/components/linux-kernel/xlnx-4.0/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
