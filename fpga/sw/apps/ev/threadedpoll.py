@@ -47,6 +47,8 @@ data_queue = []
 
 WIFI_UP = True
 
+TRANSMIT_INTERVAL = 3
+
 mutex = threading.Lock()
 
 # Utility Functions
@@ -166,7 +168,19 @@ def poll_sensors_2():
 
       #setting the parameters for the .WAV file
 
+      #waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+      #waveFile.setnchannels(CHANNELS) #set channels
+      #waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+      #waveFile.setframerate(RATE)
+      #waveFile.writeframes(b''.join(frames))
+      #waveFile.close()
+
       #Find the dB value
+      #f = wave.open(WAVE_OUTPUT_FILENAME,'rb')
+      #nchannels, sampwidth, framerate, nframes, comptype, compname = f.getparams()[:6]
+      #byteList = np.fromstring(f.readframes(nframes), dtype = np.int16)
+      #byteList = byteList.astype(np.float)
+      #f.close()
       #avg = sum(byteList) / nframes #or len(byteList)
       #avg = sum(byteList) / len(byteList)
       #amp = abs(avg / 32767) #This is becase it is a 16 bit number (2^15 -1)
@@ -186,7 +200,7 @@ def poll_sensors_2():
         time.sleep(3)
         
     except (IOError) as err:
-      print "PyAudio error: {0}".format(err)
+      print "ruh roh error: {0}".format(err)
       data["dB"] = "NA"
       pass
         
@@ -283,10 +297,11 @@ def main():
 
   global WIFI_UP
   global data_queue
+  global TRANSMIT_INTERVAL
 
   try:
     while True:
-      time.sleep(30)
+      time.sleep(TRANSMIT_INTERVAL)
 
       mutex.acquire()
       try:
@@ -305,7 +320,7 @@ def main():
       try:
         print "Sending Data...."
         print data
-        SSLClient.send_data(data)
+        SSLClient.send_data(data, int(math.ceil(math.sqrt(TRANSMIT_INTERVAL))))
         WIFI_UP = True
 
       # on exception, set WIFI_UP flag and try again ad infinitum
