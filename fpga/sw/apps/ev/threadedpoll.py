@@ -20,6 +20,11 @@ except:
 import pickle
 import SSLClient
 import socket
+from si1145 import read_ir
+from si1145 import read_uv
+from si1145 import read_vis
+from si1145 import reset
+from si1145 import calibration
 
 # Initialize GPIO and I2C
 subprocess.call(["/sbin/modprobe", "i2c-dev"])
@@ -207,6 +212,23 @@ def poll_sensors_2():
   # close audio when thread dies
   audio.terminate()
 
+def poll_sensors_3():
+  reset()
+  calibration()
+  while True:
+    ir = read_ir()
+    uv = read_uv()
+    vis = read_vis()
+    mutex.acquire()
+    try:
+      data["uv"]=uv
+      data["ir"]=ir
+      data["vis"]=vis
+    finally:
+  	  mutex.release()
+  	  time.sleep(3)
+
+
 def hold_data():
   # low-priority thread: does not need to perform @ real time
   # store recent data and keep a queue
@@ -294,6 +316,10 @@ def main():
   t5 = threading.Thread(target=poll_sensors_2)
   t5.daemon = True
   t5.start()
+
+  t6 = threading.Thread(target=poll_sensors_3)
+  t6.daemon = True
+  t6.start()
 
   global WIFI_UP
   global data_queue
