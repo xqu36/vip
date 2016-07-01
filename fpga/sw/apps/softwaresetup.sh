@@ -1,10 +1,18 @@
-#!/bin/bash -x
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          softwaresetup
+# Required-Start:    $remote_fs $syslog     
+# Required-Stop:
+# Default-Start:     2
+# Default-Stop:      
+# X-Start-Before:    cron
+# Short-Description: Sets up the file system for use of VIP files
+# Description:
+### END INIT INFO
 
-# Michael Capone, 6/28/2016
-# BASH script that runs on STARTUP. On startup, it pulls the software
-# decryption key to decrypt the user defined software. Once decrypted,
-# the files are unpackaged and placed onto the RAM disk to prevent
-# potential theft of IP.
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+. /lib/lsb/init-functions
 
 CURRENT_SOFTWARE_ENC="/etc/software_updates/software_enc"
 CURRENT_SOFTWARE="/etc/software_updates/software.tar.gz"
@@ -12,11 +20,13 @@ NEW_SOFTWARE_ENC="/etc/software_updates/new_softwareupdate_enc"
 NEW_SOFTWARE="/etc/software_updates/new_softwareupdate.tar.gz"
 CURRENT_OUTPUT="/mnt/ramdisk/software.tar.gz"
 NEW_OUTPUT="/mnt/ramdisk/new_softwareupdate.tar.gz"
+OUTPUT_DIRECTORY="/mnt/ramdisk"
 VERSION="version.txt"
 NEW_VERSION+="new_${VERSION}"
 VERSION_TEXT=
 NEW_VERSION_TEXT=
 KEY=
+LOGIN="ubuntu"
 
 vercomp () {
     if [[ $1 == $2 ]]
@@ -49,7 +59,12 @@ vercomp () {
     return 0
 }
 
+change_owner () {
+  chown -R "$LOGIN":"$LOGIN" /mnt
+  echo "Successfully loaded current version of software"
+}
 
+setup () {
 # Check that the file exists
 if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
   # Get the key from the specified BRAM on board
@@ -70,49 +85,65 @@ if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
       if [ ! -z "$NEW_VERSION_TEXT" ]; then
         vercomp "$VERSION_TEXT" "$NEW_VERSION_TEXT"
         case $? in
-          0)
+          0|1)
             rm -f "$NEW_OUTPUT"
             rm -f "$NEW_SOFTWARE_ENC"
-            tar -xzvf "$CURRENT_OUTPUT"
-            echo "Successfully loaded current version of software"
+            tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY"
+            change_owner
             ;; 
-          1)
-            rm -f "$NEW_OUTPUT"
-            rm -f "$NEW_SOFTWARE_ENC"
-            tar -xzvf "$CURRENT_OUTPUT"
-            echo "Successfully loaded current version of software"
-            ;;
           2)
             rm -f "$CURRENT_OUTPUT"
             rm -f "$CURRENT_SOFTWARE_ENC"
             mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
-            tar -xzvf "$NEW_OUTPUT"
-            echo "Successfully loaded current version of software"
+            tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY"
+            change_owner
             ;;
           *)
-            echo "What on earth...?"
-            exit 1
+            echo "ERROR: Great Scott!?!"
+            return 1
             ;;
         esac
       else
         "ERROR: No version information in the new software file!"
         rm -f "$NEW_OUTPUT"
         rm -f "$NEW_SOFTWARE_ENC"
-        tar -xzvf "$CURRENT_OUTPUT"
-        echo "Successfully loaded current version of software"
+        tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY"
+        change_owner
       fi
     else
       echo "ERROR: File does not contain version information"
-      exit 1
+      return 1
     fi
   else
-    tar -xzvf "$CURRENT_SOFTWARE"
+    tar -xzvf "$CURRENT_SOFTWARE" --directory "$OUTPUT_DIRECTORY"
+    change_owner
   fi
   
 else
   echo "ERROR: $CURRENT_SOFTWARE not found."
-  exit 1
+  return 1
 fi
 
-rm -f "$VERSION"
-rm -f "$NEW_VERSION"
+#rm -f "$VERSION"
+#rm -f "$NEW_VERSION"
+return 0
+}
+
+
+case "$1" in
+  start)
+    log_action_msg "softwaresetup is running!"
+    setup
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  *)
+    echo "Usage: $0 start" >&2
+    exit 3
+  ;;
+esac
