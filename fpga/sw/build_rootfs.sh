@@ -122,6 +122,6 @@ sudo python setup.py install
 sudo cp $BUILDPATH/apps/modules/interfaces /media/$name/rootfs/etc/network/
 sudo cp $BUILDPATH/apps/modules/wpa_supplicant.conf /media/$name/rootfs/etc/
 sudo cp $BUILDPATH/apps/modules/failsafe.conf /media/$name/rootfs/etc/init/
-
-
+sudo cp $BUILDPATH/apps/modules/rc.local /media/$name/rootfs/etc/rc.local
+sudo chown -R ubuntu.ubuntu /media/$name/rootfs/home/ubuntu/
 echo "END OF BUILD SCRIPT"
