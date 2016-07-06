@@ -1,0 +1,35 @@
+kernel/fs/configfs/configfs.ko:
+kernel/crypto/michael_mic.ko:
+kernel/crypto/ansi_cprng.ko:
+kernel/drivers/net/wireless/rtlwifi/rtlwifi.ko:
+kernel/drivers/net/wireless/rtlwifi/rtl_usb.ko: kernel/drivers/net/wireless/rtlwifi/rtlwifi.ko
+kernel/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko: kernel/drivers/net/wireless/rtlwifi/rtlwifi.ko
+kernel/drivers/net/wireless/rtlwifi/rtl8192cu/rtl8192cu.ko: kernel/drivers/net/wireless/rtlwifi/rtl_usb.ko kernel/drivers/net/wireless/rtlwifi/rtl8192c/rtl8192c-common.ko kernel/drivers/net/wireless/rtlwifi/rtlwifi.ko
+kernel/drivers/usb/gadget/function/usb_f_ss_lb.ko: kernel/drivers/usb/gadget/libcomposite.ko kernel/fs/configfs/configfs.ko
+kernel/drivers/usb/gadget/function/usb_f_mass_storage.ko: kernel/drivers/usb/gadget/libcomposite.ko kernel/fs/configfs/configfs.ko
+kernel/drivers/usb/gadget/legacy/g_zero.ko: kernel/drivers/usb/gadget/libcomposite.ko kernel/fs/configfs/configfs.ko
+kernel/drivers/usb/gadget/libcomposite.ko: kernel/fs/configfs/configfs.ko
+kernel/drivers/media/usb/gspca/gspca_main.ko:
+kernel/drivers/staging/rtl8192u/r8192u_usb.ko:
+kernel/drivers/staging/rtl8192e/rtllib.ko: kernel/net/wireless/lib80211.ko
+kernel/drivers/staging/rtl8192e/rtllib_crypt_ccmp.ko: kernel/net/wireless/lib80211.ko
+kernel/drivers/staging/rtl8192e/rtllib_crypt_tkip.ko: kernel/net/wireless/lib80211.ko
+kernel/drivers/staging/rtl8192e/rtllib_crypt_wep.ko: kernel/net/wireless/lib80211.ko
+kernel/drivers/staging/rtl8192e/rtl8192e/r8192e_pci.ko: kernel/drivers/staging/rtl8192e/rtllib.ko kernel/net/wireless/lib80211.ko
+kernel/drivers/staging/rtl8188eu/r8188eu.ko:
+kernel/drivers/virtio/virtio.ko:
+kernel/drivers/virtio/virtio_ring.ko:
+kernel/drivers/remoteproc/remoteproc.ko: kernel/drivers/virtio/virtio.ko kernel/drivers/virtio/virtio_ring.ko
+kernel/drivers/remoteproc/zynq_remoteproc.ko: kernel/drivers/remoteproc/remoteproc.ko kernel/drivers/virtio/virtio.ko kernel/drivers/virtio/virtio_ring.ko
+kernel/drivers/remoteproc/mb_remoteproc.ko: kernel/drivers/remoteproc/remoteproc.ko kernel/drivers/virtio/virtio.ko kernel/drivers/virtio/virtio_ring.ko
+kernel/drivers/rpmsg/virtio_rpmsg_bus.ko: kernel/drivers/virtio/virtio.ko kernel/drivers/virtio/virtio_ring.ko
+kernel/net/ipv4/ip_tunnel.ko:
+kernel/net/ipv4/ipip.ko: kernel/net/ipv4/tunnel4.ko kernel/net/ipv4/ip_tunnel.ko
+kernel/net/ipv4/tunnel4.ko:
+kernel/net/ipv6/ipv6.ko:
+kernel/net/ipv6/xfrm6_mode_transport.ko:
+kernel/net/ipv6/xfrm6_mode_tunnel.ko: kernel/net/ipv6/ipv6.ko
+kernel/net/ipv6/xfrm6_mode_beet.ko: kernel/net/ipv6/ipv6.ko
+kernel/net/ipv6/sit.ko: kernel/net/ipv6/ipv6.ko kernel/net/ipv4/tunnel4.ko kernel/net/ipv4/ip_tunnel.ko
+kernel/net/8021q/8021q.ko:
+kernel/net/wireless/lib80211.ko:
