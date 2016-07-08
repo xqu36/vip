@@ -25,6 +25,7 @@ from si1145 import read_uv
 from si1145 import read_vis
 from si1145 import reset
 from si1145 import calibration
+import gps
 
 # Initialize GPIO and I2C
 subprocess.call(["/sbin/modprobe", "i2c-dev"])
@@ -76,6 +77,11 @@ def kill_child():
     except OSError:
       pass
 
+def start_gps():
+  session = gps.gps("localhost", "2947")
+  session.stream(gps.WATCH_ENABLE|gps.WATCH_NEWSTYLE)
+  return session
+
 def movingAvg(values,window): 
   weights = np.repeat(1.0,window)/window
   smas = np.convolve(values,weights,"valid")
@@ -83,6 +89,7 @@ def movingAvg(values,window):
 
 # Polling Threads 
 # report every .25s
+# EV
 def poll_proc(process):
   for line in iter(process.stdout.readline, ""):
     splitline = line.strip("\n").split(",")
@@ -96,7 +103,8 @@ def poll_proc(process):
     finally:
       mutex.release()
 
-# report every .5s
+# report every 30s
+# CO
 def poll_sensors_0():
   while True:
     #for i in window:
@@ -128,6 +136,7 @@ def poll_sensors_0():
     time.sleep(30)
 
 # report every 3m
+# Temp/Pressure
 def poll_sensors_1():
   while True:
     Temp = sensor.read_temperature()
@@ -147,6 +156,7 @@ def poll_sensors_1():
 
     time.sleep(180)
 
+# audio
 def poll_sensors_2():
   FORMAT = pyaudio.paInt16
   CHANNELS = 1
@@ -212,6 +222,7 @@ def poll_sensors_2():
   # close audio when thread dies
   audio.terminate()
 
+# UV/IR/VIS
 def poll_sensors_3():
   reset()
   calibration()
@@ -227,6 +238,27 @@ def poll_sensors_3():
     finally:
   	  mutex.release()
   	  time.sleep(3)
+
+# GPS
+def poll_sensors_4(session):
+  while True:
+    try:
+      report = session.next()
+
+      # put in dict here
+      mutex.acquire()
+
+      try:
+        data["GPS"]=report
+      finally:
+        mutex.release()
+
+    except KeyError:
+      pass
+    except StopIteration:
+      session = None
+
+    time.sleep(3)
 
 
 def hold_data():
@@ -296,6 +328,8 @@ def hold_data():
 def main():
   process = start_proc("/home/ubuntu/ev/segmentation")
   atexit.register(kill_child)
+
+  session = start_gps()
   
   t1 = threading.Thread(target=poll_proc, args=(process,))
   t1.daemon = True
@@ -320,6 +354,10 @@ def main():
   t6 = threading.Thread(target=poll_sensors_3)
   t6.daemon = True
   t6.start()
+
+  t7 = threading.Thread(target=poll_sensors_4, args=(session,))
+  t7.daemon = True
+  t7.start()
 
   global WIFI_UP
   global data_queue
