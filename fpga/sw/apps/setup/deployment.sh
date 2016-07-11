@@ -6,14 +6,19 @@
 #	after running, it deletes its self		      #
 ###############################################################
 
+#This will ask the user for the version number and write it to a .txt file
+echo "what version is this?";
+read  version;
+echo 'version number: '$version'' > /home/ubuntu/version
+
 #change password
 echo "ubuntu:@G30rg1@T3chN0tUG@1738" | sudo chpasswd
 
 #cron job stuff
-sudo cp /home/ubuntu/unactiveCron/getCertificate.sh /etc/cron.weekly/
-sudo cp /home/ubuntu/unactiveCron/updateChecker.sh /etc/cron.monthly/
-sudo cp /home/ubuntu/unactiveCron/getCertificate /etc/cron.weekly/
-sudo cp /home/ubuntu/unactiveCron/updateChecker /etc/cron.monthly/
+sudo cp /home/ubuntu/cronScripts/updateSoftware.sh /etc/cron.weekly/
+sudo cp /home/ubuntu/cronScripts/updateChecker.sh /etc/cron.monthly/
+sudo cp /home/ubuntu/cronScripts/updateSoftware /etc/cron.weekly/
+sudo cp /home/ubuntu/cronScripts/updateChecker /etc/cron.monthly/
 (crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu; /bin/bash /home/ubuntu/sentinel2.sh_script.sh") | crontab -
 (sudo crontab -l 2>/dev/null; echo "0 4   *   *   *    /sbin/shutdown -r now") | sudo crontab -
 
