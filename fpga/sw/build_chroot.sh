@@ -6,15 +6,17 @@ adduser --gecos "" ubuntu
 #sudo passwd root ubuntu
 addgroup ubuntu adm
 addgroup ubuntu sudo
-
+sudo chown -R ubuntu.ubuntu /home/ubuntu
+rm /home/ubuntu/chroot.log
 
 ## Adding repositories and updating apt-get package manager ##
 echo "deb http://ports.ubuntu.com/ trusty main restricted universe multiverse" > /etc/apt/sources.list
 echo "deb http://ports.ubuntu.com/ trusty-security main restricted universe multiverse" >> /etc/apt/sources.list
 echo "deb http://ports.ubuntu.com/ trusty-updates main restricted universe multiverse" >> /etc/apt/sources.list
 echo "deb http://ports.ubuntu.com/ trusty-backports main restricted universe multiverse" >> /etc/apt/sources.list
-apt-get -y dist-upgrade
-apt-get -y update
+echo "127.0.0.1 localhost.localdomain localhost" > /etc/hosts
+apt-get -y dist-upgrade >> /home/ubuntu/chroot.log
+apt-get -y update >> /home/ubuntu/chroot.log
 sudo apt-get -f install #fix broken dependencies (may need this for installing python-smbus)
 
 ## Packages for installation ##
@@ -39,24 +41,29 @@ sudo apt-get -y install python-pyaudio
 
 ## Python libraries ##
 sudo pip install Adafruit_Libraries
-sudo pip install python-smbus
+#sudo pip install python-smbus
 sudo apt-get -y install python-smbus
 sudo apt-get -y install python-numpy
 
 # @jdanner3 additions
-sudo chown -R ubuntu /home/ubuntu
+#sudo chown -R ubuntu /home/ubuntu
 
 # install python libs
-sudo cp -r /home/ubuntu/sensorTesting/Adafruit_ADS1x15 /home/ubuntu/ev
-sudo cp -r /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master /home/ubuntu/ev
+cp -r /home/ubuntu/sensorTesting/Adafruit_ADS1x15 /home/ubuntu/ev
+cp -r /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master /home/ubuntu/ev
 cd /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master
 sudo python setup.py install 
 
-cd /home/ubuntu/ev
+cd /home/ubuntu/ev/
 sudo make
+rm *.cpp
+rm *.hpp
 
+#sudo chown -R ubuntu /home/ubuntu
+sudo chown -R root.root /lib/modules/4.0.0-xilinx
 echo "#####################"
 echo "   EXITING CHROOT"
 echo "#####################"
+sleep 3
 exit
 
