@@ -1,8 +1,64 @@
-## Variable Definitions ##
+#!/bin/bash
 
-name=$USER
+# Chris Turner
+# cturner48@gatech.edu
+#
+# Script for automating the build process of the GaTech Embedded Systems
+# VIP rootfs. Completes all necessary setup for the development phase
+# of the project. Requires that the SD card be formatted with the
+# BOOT/rootfs partitions as outlined on the team wiki. Will need to 
+# provide mount location of the rootfs partition.
+
+
+
+## Variable Definitions ##
+RFSLOC=0
+CLEAN=0
+VERBOSE=0
+#name=$USER
 BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+
+function usage() {
+    echo "Usage: build_rootfs.sh -t=[SD mount location] [options]"
+    echo -e "\t -t|--target: Must provide full mount address of the rootfs SD card partition."
+    echo -e "\t -v|--verbose: Enables verbose mode. [Default 0]"
+    echo -e "\t -c|--clean: Erases all files on the SD card, and downloads a new copy of the ubuntu core tar."
+    echo -e "\t -h|--help: Show help information. Hint: You're lookin' at it!"
+}
+
+
+
+for i in "$@"
+do
+case $i in 
+    -t=*|--target=*)
+    RFSLOC="${i#*=}"
+    shift
+    ;;
+    -v|--verbose)
+    VERBOSE=1
+    shift
+    ;;
+    -c|--clean)
+    CLEAN=1
+    shift
+    ;;
+    -h|--help)
+    usage
+    exit 1
+    ;;
+    *)
+    echo "Unkown option $i, now exiting build script."
+    exit 1
+    ;;
+esac
+done
+
+
+echo "##################################"
+echo "##        BUILDING ROOTFS       ##"
+echo "##################################"
 
 ###############################################
 ## FORMATING AND PARTITIONING OF SD CARD     ##
@@ -54,19 +110,37 @@ BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # sudo rm ubuntu-core-14.04.3-core-armhf.tar.gz
 
 ## Change directoy to SD card and unpackage the rootfs ##
-cd /media/$name/rootfs/
-sudo tar -xzpvf ubuntu-core-14.04.3-core-armhf.tar.gz
+cd $RFSLOC
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Unpacking Ubuntu Core FS on SD card..."
+    tar -xzpvf ubuntu-core-14.04.3-core-armhf.tar.gz
+else
+    echo "Unpacking Ubuntu Core FS on SD card..."
+    tar -xzpf ubuntu-core-14.04.3-core-armhf.tar.gz
+fi
 
-## Append and add needed files for accessing the baoard through UART ##
-cd etc/security/
-sudo chmod a=rw access.conf
+## Append and add needed files for accessing the board through UART ##
+
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Editing access configuration to include serial ports..."
+fi
+
+cd $RFSLOC/etc/security/
+chmod a=rw access.conf
 echo "# Zynq's UARTs" >> access.conf
 echo "ttyPS0" >> access.conf
 echo "ttyPS1" >> access.conf
 
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Editing serial 0 configuration for terminal access..."
+fi
+
 cd ../init/
-sudo touch ttyPS0.conf
-sudo chmod a=rw ttyPS0.conf
+touch ttyPS0.conf
+chmod a=rw ttyPS0.conf
 echo "# ttyPS0 - getty" > ttyPS0.conf
 echo "#" >> ttyPS0.conf
 echo "# This service maintains a getty on ttyPS0 from the point the system is" >> ttyPS0.conf
@@ -83,45 +157,70 @@ echo "respawn" >> ttyPS0.conf
 echo "exec /sbin/getty -L -8 115200 ttyPS0" >> ttyPS0.conf
 
 ## Adding Xilinx modules to rootfs ##
-sudo mkdir ../../lib/modules
-sudo cp -r $BUILDPATH/petalinux/zedboard-baseline/build/linux/rootfs/targetroot/lib/modules/4.0.0-xilinx/ ../../lib/modules/4.0.0-xilinx
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Unpacking xilinx modules..."
+    mkdir $RFSLOC/lib/modules
+    tar xzvf $BUILDPATH/apps/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
+else
+    echo "Unpacking xilinx modules..."
+    mkdir $RFSLOC/lib/modules
+    tar xzf $BUILDPATH/apps/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
+fi
 
 
 ####################################################################
-## PREPARING THE ROOTFS FOR DISTRIBUTION WITH PROJECT INFORMATION ##
+## PREPARING THE ROOTFS FOR DEVELOPMENT WITH PROJECT INFORMATION  ##
 ####################################################################
-## Copying all project specific files from the /sw/apps folder ##
-sudo rsync -r --exclude=modules $BUILDPATH/apps/ /media/$name/rootfs/home/ubuntu
 
+##  Copying all project specific files from the /sw/apps folder   ##
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Copying all project specific files to rootfs..."
+    echo "All files located under the $BUILDPATH/apps folder are included except the modules folder."
+fi
+
+rsync -r --exclude=modules $BUILDPATH/apps/ $RFSLOC/home/ubuntu
+cp $BUILDPATH/apps/modules/rc.local $RFSLOC/etc/.
+cp $BUILDPATH/apps/modules/interfaces $RFSLOC/etc/network/.
+cp $BUILDPATH/apps/modules/wpa_supplicant.conf $RFSLOC/etc/.
+cp $BUILDPATH/apps/modules/failsafe.conf $RFSLOC/etc/init/.
+cp $BUILDPATH/apps/modules/.bashrc $RFSLOC/home/ubuntu/.
 ## chroot into the rootfs and running the build_chroot.sh script ##
 ## Any commands to be run from chroot should be added to build_chroot.sh ##
 
-sudo apt-get install qemu-user-static
-cd /media/$name/rootfs/
+apt-get install qemu-user-static
+cd $RFSLOC 
 echo "###################"
-echo "  ENTERING CHROOT"
+echo "# ENTERING CHROOT #"
 echo "###################"
-sudo chmod +x $BUILDPATH/build_chroot.sh
-sudo cp $BUILDPATH/build_chroot.sh /media/$name/rootfs/
-sudo cp /usr/bin/qemu-arm-static usr/bin/
-sudo mv etc/resolv.conf etc/resolv.conf.saved
-sudo cp /etc/resolv.conf etc/resolv.conf
+
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Running build_chroot.sh..."
+fi
+
+chmod +x $BUILDPATH/build_chroot.sh
+cp $BUILDPATH/build_chroot.sh $RFSLOC 
+cp /usr/bin/qemu-arm-static usr/bin/
+mv etc/resolv.conf etc/resolv.conf.saved
+cp /etc/resolv.conf etc/resolv.conf
 for m in `echo 'sys dev proc'`; do sudo mount /$m ./$m -o bind; done
-sudo LC_ALL=C chroot . /bin/bash -c "./build_chroot.sh"
+LC_ALL=C chroot . /bin/bash -c "./build_chroot.sh"
 
+if [ "$VERBOSE" -eq 1 ]
+then
+    echo "Leaving chroot and performing cleanup..."
+fi
+
+sleep 3
 for m in `echo 'sys dev proc'`; do sudo umount ./$m; done
-sudo mv etc/resolv.conf.saved etc/resolv.conf
+mv etc/resolv.conf.saved etc/resolv.conf
 
-sudo rm /media/$name/rootfs/build_chroot.sh
-sudo mkdir /media/$name/rootfs/lib/firmware
-sudo mkdir /media/$name/rootfs/lib/firmware/rtlwifi
-sudo cp $BUILDPATH/apps/modules/rtl8192cufw_TMSC.bin /media/$name/rootfs/lib/firmware/rtlwifi
-cd /media/$name/rootfs/home/ubuntu/sensorTesting/Adafruit_Python_BMP-master
-sudo python setup.py install
+rm $RFSLOC/build_chroot.sh
 
-sudo cp $BUILDPATH/apps/modules/interfaces /media/$name/rootfs/etc/network/
-sudo cp $BUILDPATH/apps/modules/wpa_supplicant.conf /media/$name/rootfs/etc/
-sudo cp $BUILDPATH/apps/modules/failsafe.conf /media/$name/rootfs/etc/init/
-sudo cp $BUILDPATH/apps/modules/rc.local /media/$name/rootfs/etc/rc.local
-sudo chown -R ubuntu.ubuntu /media/$name/rootfs/home/ubuntu/
-echo "END OF BUILD SCRIPT"
+
+echo "#######################"
+echo "# END OF BUILD SCRIPT #"
+echo "#######################"
+
