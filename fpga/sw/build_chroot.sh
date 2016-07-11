@@ -56,6 +56,8 @@ sudo python setup.py install
 
 cd /home/ubuntu/ev/
 sudo make
+rm *.cpp
+rm *.hpp
 
 #sudo chown -R ubuntu /home/ubuntu
 sudo chown -R root.root /lib/modules/4.0.0-xilinx
