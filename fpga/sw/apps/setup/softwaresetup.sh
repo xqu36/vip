@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash 
 ### BEGIN INIT INFO
 # Provides:          softwaresetup
 # Required-Start:    $remote_fs $syslog     
@@ -15,9 +15,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 . /lib/lsb/init-functions
 
 CURRENT_SOFTWARE_ENC="/etc/software_updates/software_enc"
-CURRENT_SOFTWARE="/etc/software_updates/software.tar.gz"
 NEW_SOFTWARE_ENC="/etc/software_updates/new_softwareupdate_enc"
-NEW_SOFTWARE="/etc/software_updates/new_softwareupdate.tar.gz"
 CURRENT_OUTPUT="/mnt/ramdisk/software.tar.gz"
 NEW_OUTPUT="/mnt/ramdisk/new_softwareupdate.tar.gz"
 OUTPUT_DIRECTORY="/mnt/ramdisk"
@@ -25,7 +23,7 @@ VERSION="version.txt"
 NEW_VERSION+="new_${VERSION}"
 VERSION_TEXT=
 NEW_VERSION_TEXT=
-KEY=
+KEY=""
 LOGIN="ubuntu"
 
 vercomp () {
@@ -61,24 +59,43 @@ vercomp () {
 
 change_owner () {
   chown -R "$LOGIN":"$LOGIN" /mnt
-  echo "Successfully loaded current version of software"
+  #echo "Successfully loaded current version of software"
+}
+
+extract_key () {
+  HEX_INDEX=
+  HEX_CHARACTER_1=""
+  HEX_CHARACTER_2=""
+
+  for i in {1073742076..1073741823..-8}
+  do
+    for j in {0..4..4}
+    do
+      printf -v HEX_INDEX '%x\n' "$((${i} - ${j}))" 
+      HEX_CHARACTER1="$(./etc/init.d/peek 0x${HEX_INDEX})"
+      HEX_CHARACTER1="$(echo $HEX_CHARACTER1 | cut -c 10-)"
+      HEX_CHARACTER2="${HEX_CHARACTER2}${HEX_CHARACTER1}"
+    done
+    KEY="${KEY}$(echo -e \\x${HEX_CHARACTER2})"
+    HEX_CHARACTER2=""
+  done  
+  return 0
 }
 
 setup () {
 # Check that the file exists
 if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
   # Get the key from the specified BRAM on board
-  #KEY=$(GET_AES_KEY -g 0x400000 -i 2>&1)
-  KEY="00000000000000000000000000000000"
+  extract_key
   # Decrypt the software updates
-  openssl enc -aes-256-cbc -d -iv $KEY -K "$KEY" -in "$CURRENT_SOFTWARE_ENC" -out "$CURRENT_OUTPUT"
+  openssl enc -aes-256-cbc -d -salt -in "$CURRENT_SOFTWARE_ENC" -out "$CURRENT_OUTPUT" -pass pass:${KEY}
   if [ -e "$NEW_SOFTWARE_ENC" ]; then
-    # Decrypdt the software updates
-    openssl enc -aes-256-cbc -d -iv "$KEY" -K "$KEY" -in "$NEW_SOFTWARE_ENC" -out "$NEW_OUTPUT"
+    # Decrypt the software updates
+    openssl enc -aes-256-cbc -d -salt -in "$NEW_SOFTWARE_ENC" -out "$NEW_OUTPUT" -pass pass:${KEY}
     # Compare the two versions
-    tar --extract --file="$NEW_OUTPUT" "$VERSION"
+    tar --extract --file="$NEW_OUTPUT" "$VERSION" &> /dev/null
     mv "$VERSION" "$NEW_VERSION"
-    tar --extract --file="$CURRENT_OUTPUT" "$VERSION"
+    tar --extract --file="$CURRENT_OUTPUT" "$VERSION" &> /dev/null
     VERSION_TEXT=$(cat $VERSION)
     NEW_VERSION_TEXT=$(cat $NEW_VERSION)
     if [ ! -z "$VERSION_TEXT" ]; then
@@ -88,14 +105,14 @@ if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
           0|1)
             rm -f "$NEW_OUTPUT"
             rm -f "$NEW_SOFTWARE_ENC"
-            tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY"
+            tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
             change_owner
             ;; 
           2)
             rm -f "$CURRENT_OUTPUT"
             rm -f "$CURRENT_SOFTWARE_ENC"
             mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
-            tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY"
+            tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
             change_owner
             ;;
           *)
@@ -107,7 +124,7 @@ if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
         "ERROR: No version information in the new software file!"
         rm -f "$NEW_OUTPUT"
         rm -f "$NEW_SOFTWARE_ENC"
-        tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY"
+        tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
         change_owner
       fi
     else
@@ -115,25 +132,31 @@ if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
       return 1
     fi
   else
-    tar -xzvf "$CURRENT_SOFTWARE" --directory "$OUTPUT_DIRECTORY"
+    tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
     change_owner
   fi
   
 else
-  echo "ERROR: $CURRENT_SOFTWARE not found."
+  echo "ERROR: $CURRENT_SOFTWARE_END not found."
   return 1
 fi
-
-#rm -f "$VERSION"
-#rm -f "$NEW_VERSION"
+rm -f "$NEW_OUTPUT"
+rm -f "$CURRENT_OUTPUT"
+rm -f "$VERSION"
+rm -f "$NEW_VERSION"
 return 0
 }
 
 
 case "$1" in
   start)
-    log_action_msg "softwaresetup is running!"
+    log_action_msg "Initializing Software Setup" "softwaresetup.sh"
     setup
+    if [[ $? == 0 ]]; then
+      log_end_msg 0 || true
+    else
+      log_end_msg 1 || true
+    fi
     ;;
   restart|reload|force-reload)
     echo "Error: argument '$1' not supported" >&2
