@@ -33,4 +33,6 @@ chmod g+w /sys/class/gpio/gpio963/value
 chmod g+w /sys/class/gpio/gpio960/value
 chmod g+w /sys/class/gpio/gpio961/value
 
+gpsd -F /var/run/gpsd.sock /dev/ttyPS1
+
 exit 0
