@@ -249,7 +249,12 @@ def poll_sensors_4(session):
       mutex.acquire()
 
       try:
-        data["GPS"]=report
+        if hasattr(report, 'lon'):
+          data["Longitude"]=report.lon 
+        if hasattr(report, 'lat'):
+          data["Latitude"]=report.lat
+        if hasattr(report, 'alt'):
+          data["Altitude"]=report.alt
       finally:
         mutex.release()
 
