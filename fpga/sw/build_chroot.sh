@@ -2,8 +2,8 @@
 
 ## Adding user information for rootfs ##
 ## Default password should be root ##
+## unless prompted otherwise. ##
 adduser --gecos "" ubuntu
-#sudo passwd root ubuntu
 addgroup ubuntu adm
 addgroup ubuntu sudo
 sudo chown -R ubuntu.ubuntu /home/ubuntu
@@ -20,7 +20,7 @@ apt-get -y update >> /home/ubuntu/chroot.log
 sudo apt-get -f install #fix broken dependencies (may need this for installing python-smbus)
 
 ## Packages for installation ##
-## Add addtional packages here and to the wiki page ##
+## Add addtional packages here and list them on the wiki page ##
 sudo apt-get -y install i2c-tools
 sudo apt-get -y install python-dev
 sudo apt-get -y install python-pip
@@ -40,27 +40,31 @@ sudo apt-get -y install usbutils
 sudo apt-get -y install python-pyaudio
 
 ## Python libraries ##
+## Add addtional libs here, and list them on the wiki page. ##
 sudo pip install Adafruit_Libraries
 #sudo pip install python-smbus
 sudo apt-get -y install python-smbus
 sudo apt-get -y install python-numpy
 
+## Ownership changes. ##
+sudo chown -R root.root /lib/modules/4.0.0-xilinx
 # @jdanner3 additions
-#sudo chown -R ubuntu /home/ubuntu
+sudo chown -R ubuntu /home/ubuntu
 
-# install python libs
+## Install python libs ##
+## Add new installation locations as needed. ##
 cp -r /home/ubuntu/sensorTesting/Adafruit_ADS1x15 /home/ubuntu/ev
 cp -r /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master /home/ubuntu/ev
 cd /home/ubuntu/sensorTesting/Adafruit_Python_BMP-master
 sudo python setup.py install 
 
+## Make segmentation and cleanup files. ##
 cd /home/ubuntu/ev/
 sudo make
 rm *.cpp
 rm *.hpp
 
-#sudo chown -R ubuntu /home/ubuntu
-sudo chown -R root.root /lib/modules/4.0.0-xilinx
+
 echo "#####################"
 echo "   EXITING CHROOT"
 echo "#####################"
