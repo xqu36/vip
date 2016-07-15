@@ -1,5 +1,12 @@
---sentinel2.sh
+--build_rootfs.sh
 --Current Version: 1.0
---Controls the health monitoring for the FPGA.
+--Setups the current working rootfs for SD card boot.
 
-The script is at each boot as a cronjob, which can be accessed through the crontab -e command while using the board. The FPGA recieves high signals through the JA pmod bank, and responds by copying the new value of the gpio input, to the gpio output pin. When the arduino recieves the signal change from the fpga, it will response with a low signal, which the FPGA will then mirror to the gpio output pin. Additionally when the FPGA recieves the forceDown signal from the arduino, the sentinel2.sh script will use the poweroff command to shutdown the board allowing for a clean reboot.
+build_rootfs.sh builds the current working project to the provided SD card location. The rootfs partition of the SD card is required using the -t=[location] argument. Once run, the SD card should not be removed until after the end of script message is displayed. The SD card must already be formated according the the SD card setup wiki page. This script only builds the rootfs, and doesn't setup the BOOT.bin or image.ub files needed for boot. For additional arguements use the build_rootfs.sh --help command. 
+
+
+--build_chroot.sh
+--Current Version: 1.0
+--Used in the build_rootfs.sh script to setup the user permissions and software packages.
+
+build_chroot.sh is used in conjuction with the build_rootfs.sh script to setup the current rootfs project version. It is not necessary to run this script on its own, it will be executed through the build_rootfs script. To add new software packages, add them to the build_chroot.sh package list using the apt-get install command to have them automatically installed in future versions.
