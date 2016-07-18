@@ -1,4 +1,4 @@
-#! /bin/bash 
+#! /bin/bash -x
 ### BEGIN INIT INFO
 # Provides:          softwaresetup
 # Required-Start:    $remote_fs $syslog     
@@ -63,22 +63,21 @@ change_owner () {
 }
 
 extract_key () {
+  LOCATION=40000000
   HEX_INDEX=
-  HEX_CHARACTER_1=""
-  HEX_CHARACTER_2=""
+  HEX_WORD=""
+  HEX_CHARACTER=""
 
-  for i in {1073742076..1073741823..-8}
+  for i in {1073741824..1073741852..4} 
   do
-    for j in {0..4..4}
+    printf -v HEX_INDEX '%x\n' "$i"
+    HEX_WORD="$(/etc/init.d/peek 0x${HEX_INDEX})"
+    for j in {2..8..2}
     do
-      printf -v HEX_INDEX '%x\n' "$((${i} - ${j}))" 
-      HEX_CHARACTER1="$(./etc/init.d/peek 0x${HEX_INDEX})"
-      HEX_CHARACTER1="$(echo $HEX_CHARACTER1 | cut -c 10-)"
-      HEX_CHARACTER2="${HEX_CHARACTER2}${HEX_CHARACTER1}"
+      HEX_CHARACTER=${HEX_WORD:((10 - $j)):2}
+      KEY="${KEY}$(echo -e \\x${HEX_CHARACTER})"
     done
-    KEY="${KEY}$(echo -e \\x${HEX_CHARACTER2})"
-    HEX_CHARACTER2=""
-  done  
+  done
   return 0
 }
 
