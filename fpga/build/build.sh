@@ -21,9 +21,11 @@ BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HWPATH=$BUILDPATH/../hw
 SWPATH=$BUILDPATH/../sw
 HLSPATH=$BUILDPATH/../hw/src/hls
+BRAMFILE=""
 
 # petalinux project name
 PROJNAME=zedboard-baseline
+PROJUNAME=zedboard_baseline
 
 function usage() {
     echo "Usage: build.sh -t[=all] [optional args]"
@@ -36,6 +38,7 @@ function usage() {
     echo -e "\t -h|--help: Display this menu."
     echo -e "\t -s|--secure: build with secure boot functionality [defaults to non-secure]"
 	echo -e "\t -sep|--separate: break the combined image into system.ub and BOOT.bin [defaults to single BOOT.bin]"  
+    echo -e "\t -b|--bramfile: Specify file for BRAM initialization vector"
     echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
@@ -119,6 +122,10 @@ case $i in
 	SEPARATE=1
 	shift
 	;;
+    -b=*|--bram-file=*)
+    BRAMFILE="${i#*=}"
+    shift
+    ;;
     *)
     echo "Unknown option $i, exiting"
     exit 1
@@ -152,7 +159,7 @@ then
     echo "HWPATH: $HWPATH"
     echo "SWPATH: $SWPATH"
     echo "HLSPATH: $HLSPATH"
-    
+    echo "BRAMFILE: $BRAMFILE"
 fi
 
 for a in $TARGETS
@@ -334,13 +341,35 @@ case $a in
         mkdir $BUILDPATH/boot
     fi 
 
+    if [ $VERBOSE -eq 1 ]
+    then
     echo "cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/"
-    cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/
+    echo "cp $SWPATH/petalinux/$PROJNAME/images/linux/u-boot.elf $SWPATH/mkboot/"
+    echo "cp $SWPATH/petalinux/$PROJNAME/image/linux/zynq_fsbl.elf $SWPATH/mkboot/"
+    echo "cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky"
+    fi
+
+    # This conditional calls the updatemem Xilinx function that reads in a file and initializated the contents
+    # of memory at specific locations. For the time being, this will only be used by S&T.
+    # NOTE: Assuming that the target will always by the Zynq 7 series
+    if [ $BRAMFILE ]
+    then
+        if [ $VERBOSE -eq 1 ]
+        then
+            echo "updatemem -meminfo $HWPATH/project/${PROJUNAME}.runs/impl_1/${PROJUNAME}_wrapper.mmi \
+                -data $BRAMFILE -bit $HWPATH/project/${PROJUNAME}.runs/impl_1/${PROJUNAME}_wrapper.bit \
+                -proc ${PROJUNAME}_i/processing_system7_0 -out $SWPATH/mkboot/${PROJUNAME}_wrapper.bit"
+        fi
+        updatemem -meminfo $HWPATH/project/${PROJUNAME}.runs/impl_1/${PROJUNAME}_wrapper.mmi \
+            -data $BRAMFILE -bit $HWPATH/project/${PROJUNAME}.runs/impl_1/${PROJUNAME}_wrapper.bit \
+            -proc ${PROJUNAME}_i/processing_system7_0 -out $SWPATH/mkboot/${PROJUNAME}_wrapper.bit
+    else
+        cp $SWPATH/petalinux/$PROJNAME/subsystems/linux/hw-description/zedboard_baseline_wrapper.bit $SWPATH/mkboot/
+    fi
 	cp $SWPATH/petalinux/$PROJNAME/images/linux/u-boot.elf $SWPATH/mkboot/.
     cp $SWPATH/petalinux/$PROJNAME/images/linux/zynq_fsbl.elf $SWPATH/mkboot/.
     # Let's make a copy of the key for a local reference from the .bif file
     cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky
-    echo "cp $BUILDPATH/keygen/keyfile.nky $SWPATH/mkboot/keyfile.nky"
 
     # $SWPATH/mkboot has all the files it needs (keyfile, bitstream, FSBL, and U-Boot) so let's package it up
     # BootGen gets confused with .bif references
