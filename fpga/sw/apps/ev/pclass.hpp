@@ -40,6 +40,7 @@ private:
   int pedPathCount;
 
   int carsInPath, pedsInPath;
+  int pedsInPathDivisor;
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
 
@@ -65,6 +66,8 @@ public:
   int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
   void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame);
   void redrawMask();
+  int getCurrentPedCount();
+  int getPedCountCalibration();
 };
 
 #endif // PCLASS_H
