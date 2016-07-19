@@ -7,7 +7,7 @@ import pprint
 import time
 
 def send_data(data, attempt_count=1):
-  for attempts in xrange (1, attempt_count):
+  for attempts in xrange(attempt_count):
     try:
       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       # Require a certificate from the server. We used a self-signed certificate
