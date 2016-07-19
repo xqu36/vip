@@ -15,13 +15,16 @@ TARGETS=all
 CLEAN=0
 VERBOSE=0
 SECURE=0
-SEPARATE=0
-BIF=boot_packaged
+QSPIBUILD=0
+BIF=boot_test
 BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HWPATH=$BUILDPATH/../hw
 SWPATH=$BUILDPATH/../sw
 HLSPATH=$BUILDPATH/../hw/src/hls
 BRAMFILE=""
+UBOOTPATH="git@github.gatech.edu:jnifong3/u-boot-xlnx-custom.git"
+UBOOTCOMMIT="febbc8605c2108f49d7017d37a80e1a2db9e9a2a"
+
 
 # petalinux project name
 PROJNAME=zedboard-baseline
@@ -36,33 +39,62 @@ function usage() {
     echo -e "\t -sp|--swpath: Path to /sw/. [Default fpga/sw]"
     echo -e "\t -hlsp|--hlspath: Path to /hls/. [Default fpga/hw/src/hls]"
     echo -e "\t -h|--help: Display this menu."
-    echo -e "\t -s|--secure: build with secure boot functionality [defaults to non-secure]"
-	echo -e "\t -sep|--separate: break the combined image into system.ub and BOOT.bin [defaults to single BOOT.bin]"  
+    echo -e "\t -s|--secure: Build with secure boot functionality [defaults to non-secure]"
+    echo -e "\t -q|--QSPI: Set the build target for QSPI boot [defaults to SD boot (BOOT.bin & image.ub separated)]"  
     echo -e "\t -b|--bramfile: Specify file for BRAM initialization vector"
+    echo -e "\t -u|--uboot[=Path,Commit]: Specify the customized U-Boot git repo and commit version. Ignored unless the QSPI option is set. [Default ${UBOOTPATH},${UBOOTCOMMIT}]"
     echo "NOTE: Petalinux settings must be sourced from your ~/.bashrc script, not from build.sh."
 }
 
-# This function is designed to take care of the special snowflakes that refuse to use the combined BOOT.bin
+# This function is designed to take care of the power users who use to use the combined BOOT.bin (S&T rocks!)
 # and boot from QSPI. Essentially, modifications to U-Boot were necessary to load the kernel/system.dtb
 # into fixed locations in RAM. These modifications prevent individuals from creating a separated BOOT.bin
 # and image.ub. To remedy this, the user needs to simply point to the non-customized u-boot directory.
 function setubootconfiguration() {
-    if [ -e $SWPATH/petalinux/$PROJNAME/subsystems/linux/config ] 
+    LINUXCONFIG="$SWPATH/petalinux/$PROJNAME/subsystems/linux/config"
+    if [ -e $LINUXCONFIG ] 
     then
-        if [ $SEPARATE -eq 1 ]
+        echo -e "Checking to see if modifications are necessary to the petalinux-config u-boot location..."
+        if [ $QSPIBUILD -eq 0 ]
         then
-            echo -e "Altering the petalinux-config file to use the default u-boot_PLNX..."
-            sed -i -e "s/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE=y/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE is not set/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
-            sed -i -e "s/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX is not set/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX=y/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
-            sed -i -e "s/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX is not set/CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX=y/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
-            sed -i -e "s/CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER=y/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER is not set/g" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
-            sed -i -e "/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET=\"*\"/d" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
-            sed -i -e "/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_DOWNLOAD_PATH=\"*\"/d" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
-            sed -i -e "/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_REFERENCE=\"*\"/d" $SWPATH/petalinux/$PROJNAME/subsystems/linux/config
+            # Removing configuration parameters that would cause the build to break. This is a result of the additional files
+            # added to the altered U-Boot remote repo. Simply removing the files will result in default paramters for U-Boot which
+            # is fine for the SD card boot. 
+            rm -f $SWPATH/petalinux/$PROJNAME/subsystems/linux/configs/u-boot/config
+            if grep -Fxq "CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX=y" $LINUXCONFIG
+            then
+                echo -e "No modifications are necessary... Continuing the build process"
+            else
+                echo -e "Altering the petalinux-config file to use the default u-boot_PLNX..."
+                sed -i -e "s/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE=y/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE is not set/g" $LINUXCONFIG
+                sed -i -e "s/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX is not set/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX=y/g" $LINUXCONFIG
+                sed -i -e "s/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX is not set/CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX=y/g" $LINUXCONFIG
+                sed -i -e "s/CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER=y/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER is not set/g" $LINUXCONFIG
+                sed -i -e "/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET=\"*\"/d" $LINUXCONFIG
+                sed -i -e "/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_DOWNLOAD_PATH=\"*\"/d" $LINUXCONFIG
+                sed -i -e "/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_REFERENCE=\"*\"/d" $LINUXCONFIG 
+            fi 
         else
-            echo -e "Checking to see if modifications are necessary to the petalinux-config u-boot location..."
-            echo -e "JK! I haven't provided that functionality yet!"
-            #TODO: Add functionality to return from separated configurations to combined configuration... 
+            # TODO: Come up with better mechanism than to git checkout the file...?
+            if grep -Fxq 'CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_REFERENCE=\"${UBOOTCOMMIT}\"' $LINUXCONFIG
+            then
+                echo -e "No modifications are necessary... Continuing the build process"
+            else
+                echo -e "Altering the configurations to point towards the following git repo: ${UBOOTPATH}:$UBOOTCOMMIT"
+                sed -i -e "s/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE is not set/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE=y/g" $LINUXCONFIG
+                sed -i -e "s/CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_U__BOOT__PLNX=y/# CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE is not set/g" $LINUXCONFIG  
+                sed -i -e "$ a CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_DOWNLOAD_PATH=\"${UBOOTPATH}\"" $LINUXCONFIG
+                sed -i -e "$ a CONFIG_SUBSYSTEM_COMPONENT_U__BOOT_NAME_REMOTE_REFERENCE=\"${UBOOTCOMMIT}\"" $LINUXCONFIG
+                sed -i -e "s/CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX=y/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_PETALINUX is not set/g" $LINUXCONFIG
+                sed -i -e "s/# CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER is not set/CONFIG_SUBSYSTEM_UBOOT_CONFIG_OTHER=y/g" $LINUXCONFIG
+                sed -i -e "$ a CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET=\"zynq_zed_smartcities\"" $LINUXCONFIG
+                echo -e "One last thing... I need to re-download the u-boot configurations because they are most likely are out of date..."
+                read -p "Mind if I give that a shot? No pressure. I'm just a computer who can patiently wait for input... unlike you (Y|N): " -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]
+                then
+                    git checkout $SWPATH/petalinux/$PROJNAME/subsystems/linux/configs/u-boot/config
+                fi
+            fi
         fi
     else
         echo -e "Unable to find the configuration files..."
@@ -118,8 +150,8 @@ case $i in
     SECURE=1
     shift
     ;;
-	-sep|--separate)
-	SEPARATE=1
+	-q|--QSPI)
+	QSPIBUILD=1
 	shift
 	;;
     -b=*|--bram-file=*)
@@ -266,11 +298,6 @@ case $a in
     then
 	# regenerate first stage bootloader for hardware
 #	hsi -mode batch -source $BUILDPATH/support/generate_fsbl.tcl -tclargs $HWPATH/project/zedboard_baseline.sdk/zedboard_baseline.hdf 
-        # get hw description & config
-        if [ $SEPARATE -eq 1 ]
-        then
-            rm -f $SWPATH/petalinux/$PROJNAME/subsystems/linux/configs/u-boot/config
-        fi
         setubootconfiguration
         petalinux-config -p $SWPATH/petalinux/$PROJNAME --get-hw-description=$HWPATH/project/zedboard_baseline.sdk/
         petalinux-build -p $SWPATH/petalinux/$PROJNAME
@@ -376,9 +403,9 @@ case $a in
     cd $SWPATH/mkboot
 
 	# Is this a single output BOOT.bin or two outputs (BOOT.bin & image.ub)
-	if [ $SEPARATE -eq 1 ]
+	if [ $QSPIBUILD -eq 1 ]
 	then
-		BIF=boot_test
+		BIF=boot_packaged
 	fi
 
     # Is this a secure build?
@@ -405,7 +432,7 @@ case $a in
         rm $SWPATH/mkboot/keyfile.nky
     fi
 
-	if [ $SEPARATE -eq 1 ]
+	if [ $QSPIBUILD -eq 0 ]
 	then
     	echo "cp $SWPATH/petalinux/$PROJNAME/images/image.ub $BUILDPATH/boot"
     	cp $SWPATH/petalinux/$PROJNAME/images/linux/image.ub $BUILDPATH/boot
