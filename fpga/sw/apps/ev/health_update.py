@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+#import os
 import SSLClient
 import socket
 from itertools import islice
@@ -14,8 +14,8 @@ def chunks(data, SIZE=10):
 
 data = {}
 
-logfile = open("/home/ubuntu/ev/sensor.log", 'r')
-#logfile = open("sensor.log", 'r')
+#logfile = open("/home/ubuntu/ev/sensor.log", 'r')
+logfile = open("sensor.log", 'r')
 
 for line in logfile.readlines():
   splitline = line.strip("\n")
@@ -27,8 +27,8 @@ for line in logfile.readlines():
   # put in dict here
   data[timestamp]=message
 
-idfile = open("/home/ubuntu/ev/id.log", 'r')
-#idfile = open("id.log", 'r')
+#idfile = open("/home/ubuntu/ev/id.log", 'r')
+idfile = open("id.log", 'r')
 
 for line in idfile.readlines():
   splitline = line.strip("\n")
@@ -38,7 +38,7 @@ chunksize = 10
 dlen = len(data)
 num_packets = int(math.ceil(float(dlen) / chunksize))
 
-times = time.strftime("%c")
+times = time.strftime("%a %b %d")
 dictcount = 0
 
 for item in chunks(data, chunksize):
@@ -48,4 +48,4 @@ for item in chunks(data, chunksize):
   item["NodeID"]=splitline
   SSLClient.send_data(item)
 
-os.remove("sensor.log")
+#os.remove("sensor.log")
