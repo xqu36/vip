@@ -134,12 +134,7 @@ extract_key () {
       HEX_CHARACTER=${HEX_WORD:((10 - $j)):2}
       KEY="${KEY}$(echo -e \\x${HEX_CHARACTER})"
     done
-    echo "${i}: ${HEX_WORD}" >> word_output.txt
-    #echo "$KEY" >> key_output.txt
   done
-  #KEY=${KEY//$'\r'/}
-  echo "$KEY"
-  #printf '%s\n' "${KEY}" # | sed -e "s/.\{64\}/&\n/g")
   return 0
 }
 
