@@ -249,7 +249,16 @@ def poll_sensors_4(session):
       mutex.acquire()
 
       try:
-        data["GPS"]=report
+        if hasattr(report, 'lon'):
+          data["Longitude"]=report.lon 
+        if hasattr(report, 'lat'):
+          data["Latitude"]=report.lat
+        if hasattr(report, 'alt'):
+          data["Altitude"]=report.alt
+
+        idlog = report.lon + "," + report.lat
+        with open("/home/ubuntu/ev/id.log", 'w') as f:
+          f.write(idlog)
       finally:
         mutex.release()
 
@@ -324,37 +333,43 @@ def hold_data():
 
     time.sleep(1)
 
- 
 def main():
   process = start_proc("/home/ubuntu/ev/segmentation")
   atexit.register(kill_child)
 
   session = start_gps()
   
+  # EV's segmentation
   t1 = threading.Thread(target=poll_proc, args=(process,))
   t1.daemon = True
   t1.start()
 
+  # COAvg
   t2 = threading.Thread(target=poll_sensors_0)
   t2.daemon = True
   t2.start()
 
+  # Temp/Pressure
   t3 = threading.Thread(target=poll_sensors_1)
   t3.daemon = True
   t3.start()
 
+  # Data caching
   t4 = threading.Thread(target=hold_data)
   t4.daemon = True
   t4.start()
 
+  # Microphone
   t5 = threading.Thread(target=poll_sensors_2)
   t5.daemon = True
   t5.start()
 
+  # UV/IR/VIS
   t6 = threading.Thread(target=poll_sensors_3)
   t6.daemon = True
   t6.start()
 
+  # GPS
   t7 = threading.Thread(target=poll_sensors_4, args=(session,))
   t7.daemon = True
   t7.start()

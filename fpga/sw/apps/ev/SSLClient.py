@@ -7,14 +7,14 @@ import pprint
 import time
 
 def send_data(data, attempt_count=1):
-  for attempts in xrange (1, attempt_count):
+  for attempts in xrange(attempt_count):
     try:
       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       # Require a certificate from the server. We used a self-signed certificate
       # so here ca_certs must be the server certificate itself.
       ssl_sock = ssl.wrap_socket(s,
                                  ca_certs="node1/cacert.pem",
-                                 cert_reqs=ssl.CERT_REQUIRED, 
+                                 cert_reqs=ssl.CERT_REQUIRED,
                                  certfile="node1/node1.pem",
                                  keyfile="node1/server.key",
                                  ciphers= "HIGH",
@@ -40,6 +40,7 @@ def send_data(data, attempt_count=1):
         ssl_sock.close()
 
       print "Successfully transmitted data!"
+      break
     except socket.error, msg:
       print "ERROR: Unable to send data!"
       if attempts != attempt_count:

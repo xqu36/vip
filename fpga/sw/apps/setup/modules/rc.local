@@ -11,7 +11,11 @@
 #
 # By default this script does nothing.
 
-#Export USER_GPIO and add permissions for ubuntu to use
+#Export USER_GPIO and add permissions for ubuntu to use.
+#960 -> JA3
+#961 -> JA9
+#962 -> JA4
+#963 -> JA10
 echo 960 > /sys/class/gpio/export
 echo 961 > /sys/class/gpio/export
 echo 962 > /sys/class/gpio/export
@@ -33,6 +37,7 @@ chmod g+w /sys/class/gpio/gpio963/value
 chmod g+w /sys/class/gpio/gpio960/value
 chmod g+w /sys/class/gpio/gpio961/value
 
+#Launches GPS daemon using the PS1 serial port.
 gpsd -F /var/run/gpsd.sock /dev/ttyPS1
 
 exit 0

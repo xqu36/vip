@@ -31,6 +31,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
   pedsInPath = 1000;
   carsInPath = 600;
 
+  pedsInPathDivisor = 2;
+
   bgValid = false;
 }
 
@@ -66,7 +68,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
     recalibrate = !recalibrate;
   }
 
-  if(pedQueue.size() >= pedsInPath/2) pedPathIsValid = true;
+  if(pedQueue.size() >= pedsInPath/pedsInPathDivisor) pedPathIsValid = true;
   if(carQueue.size() >= carsInPath/3) carPathIsValid = true;
 
   // second stage: Path Position
@@ -239,3 +241,10 @@ void PathClassifier::redrawMask() {
     dilate(pedPath, pedPath, sE_d, Point(-1,-1), 2);
 }
 
+int PathClassifier::getCurrentPedCount() {
+  return pedQueue.size();
+}
+
+int PathClassifier::getPedCountCalibration() {
+  return pedsInPath / pedsInPathDivisor;
+}

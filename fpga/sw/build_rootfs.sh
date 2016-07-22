@@ -10,12 +10,11 @@
 # provide mount location of the rootfs partition.
 
 
-
+## To add new software packages refer to build_chroot.sh. ##
 ## Variable Definitions ##
 RFSLOC=0
 CLEAN=0
 VERBOSE=0
-#name=$USER
 BUILDPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
@@ -27,8 +26,7 @@ function usage() {
     echo -e "\t -h|--help: Show help information. Hint: You're lookin' at it!"
 }
 
-
-
+## For loop to check for arguments and assign variables. ##
 for i in "$@"
 do
 case $i in 
@@ -54,7 +52,6 @@ case $i in
     ;;
 esac
 done
-
 
 echo "##################################"
 echo "##        BUILDING ROOTFS       ##"
@@ -95,11 +92,9 @@ echo "##################################"
 #sudo parted /dev/"$OutputDev" print
 #sudo parted "$@"
 
-
 ###########################################################
 ##       DOWNLOADING AND INSTALLING UBUNTU CORE FS       ##
 ###########################################################
-
 
 
 ## Download Ubuntu Core ##
@@ -127,6 +122,7 @@ then
     echo "Editing access configuration to include serial ports..."
 fi
 
+## Creating access.conf ##
 cd $RFSLOC/etc/security/
 chmod a=rw access.conf
 echo "# Zynq's UARTs" >> access.conf
@@ -138,6 +134,7 @@ then
     echo "Editing serial 0 configuration for terminal access..."
 fi
 
+## Creating ttyPS0.conf ##
 cd ../init/
 touch ttyPS0.conf
 chmod a=rw ttyPS0.conf
@@ -168,27 +165,30 @@ else
     tar xzf $BUILDPATH/apps/setup/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
 fi
 
-
 ####################################################################
 ## PREPARING THE ROOTFS FOR DEVELOPMENT WITH PROJECT INFORMATION  ##
 ####################################################################
 
-##  Copying all project specific files from the /sw/apps folder   ##
+
+##  Copying all project specific files from the /sw/apps folder excluding setup   ##
 if [ "$VERBOSE" -eq 1 ]
 then
     echo "Copying all project specific files to rootfs..."
-    echo "All files located under the $BUILDPATH/apps folder are included except the modules folder."
+    echo "All files located under the $BUILDPATH/apps folder are included except the setup folder."
 fi
 
-rsync -r --exclude=modules $BUILDPATH/apps/ $RFSLOC/home/ubuntu
+
+rsync -r --exclude=setup $BUILDPATH/apps/ $RFSLOC/home/ubuntu
 cp $BUILDPATH/apps/setup/modules/rc.local $RFSLOC/etc/.
 cp $BUILDPATH/apps/setup/modules/interfaces $RFSLOC/etc/network/.
 cp $BUILDPATH/apps/setup/modules/wpa_supplicant.conf $RFSLOC/etc/.
 cp $BUILDPATH/apps/setup/modules/failsafe.conf $RFSLOC/etc/init/.
 cp $BUILDPATH/apps/setup/modules/.bashrc $RFSLOC/home/ubuntu/.
+
+
 ## chroot into the rootfs and running the build_chroot.sh script ##
 ## Any commands to be run from chroot should be added to build_chroot.sh ##
-
+## To add new software packages refer to build_chroot.sh. ##
 apt-get install qemu-user-static
 cd $RFSLOC 
 echo "###################"
@@ -219,8 +219,6 @@ mv etc/resolv.conf.saved etc/resolv.conf
 
 rm $RFSLOC/build_chroot.sh
 
-
 echo "#######################"
 echo "# END OF BUILD SCRIPT #"
 echo "#######################"
-

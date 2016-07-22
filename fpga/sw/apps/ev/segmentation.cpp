@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  //VideoCapture capture("img/pedxing_seq2.mp4");
-  VideoCapture capture(-1);
+  VideoCapture capture("img/pedxing_seq2.mp4");
+  //VideoCapture capture(-1);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -265,7 +265,8 @@ int main(int argc, char** argv) {
       }
 
       // output to python script-piped stdout
-      cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
+      //cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
+      cout << pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << "," << sec_PedCount << "," << totalPed << endl;
 
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;

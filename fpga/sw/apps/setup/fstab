@@ -1,0 +1,2 @@
+# UNCONFIGURED FSTAB FOR BASE SYSTEM
+tmpfs	/mnt/ramdisk tmpfs rw,suid,dev,exec,auto,nouser,async,size=64M	0 0
