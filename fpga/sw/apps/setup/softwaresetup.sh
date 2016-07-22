@@ -14,6 +14,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 . /lib/lsb/init-functions
 
+SOFTWARE_UPDATES="/etc/software_updates"
 CURRENT_SOFTWARE_ENC="/etc/software_updates/software.secure"
 NEW_SOFTWARE_ENC="/etc/software_updates/new_softwareupdate.secure"
 CURRENT_OUTPUT="/mnt/ramdisk/software.tar.gz"
@@ -24,7 +25,8 @@ NEW_VERSION+="new_${VERSION}"
 VERSION_TEXT=
 NEW_VERSION_TEXT=
 KEY=""
-RSA_FILE="${OUTPUT_DIRECTORY}/rsa.pub"
+#RSA_FILE="${OUTPUT_DIRECTORY}/rsa.pub"
+RSA_FILE="$SOFTWARE_UPDATES/rsa.pub"
 CURRENT_SOFTWARE_SIGNATURE="/etc/software_updates/software.sha256"
 NEW_SOFTWARE_SIGNATURE="/etc/software_updates/new_softwareupdate.sha256"
 AES_START=1073741824 
@@ -32,7 +34,9 @@ AES_END=1073741852
 RSA_START=1073741856 
 #RSA_END=1073742752
 RSA_END=1073742248
+FILE_SIZE_LIMIT="62914560" #60 MBytes
 LOGIN="ubuntu"
+LOGS="/home/ubuntu/ev/sensor.log"
 
 valid_version() {
     echo $1 | egrep -q '[0-9]+\.[0-9]+\.[0-9]+'
@@ -61,7 +65,7 @@ vercomp () {
       $2="0.0.0"
     fi
 
-    if [ $RC -e 2 ]
+    if [[ $RC == 2 ]]
     then
       return 3
     fi
@@ -98,11 +102,28 @@ vercomp () {
 
 change_owner () {
   chown -R "$LOGIN":"$LOGIN" /mnt
-  #echo "Successfully loaded current version of software"
 }
 
 decrypt () {
-    openssl enc -aes-256-cbc -d -salt -in "$1" -out "$2" -pass pass:${3}
+  openssl enc -aes-256-cbc -d -salt -in "$1" -out "$2" -pass pass:${3}
+}
+
+echo_and_log() {
+  echo -e "$1"
+  echo -e "${1} ~~ No timestamp available!! >:(" >> "$LOGS"
+  # changed owner just in case this script is the first to write the file
+  chown "$LOGIN":"$LOGIN" "$LOGS"
+}
+
+is_not_valid_tar_size() {
+  SIZE=$(zcat $1 | wc --bytes)
+  if [ "$SIZE" -ge "$FILE_SIZE_LIMIT" ]
+  then
+    echo_and_log "ERROR: $1 is too large to fit on the RAMDisk!"
+    return 0
+  else
+    return 1
+  fi
 }
 
 check_signature() {
@@ -134,6 +155,7 @@ extract_key () {
       HEX_CHARACTER=${HEX_WORD:((10 - $j)):2}
       KEY="${KEY}$(echo -e \\x${HEX_CHARACTER})"
     done
+    echo "${i}: ${HEX_WORD}" >> word_output.txt
   done
   return 0
 }
@@ -145,12 +167,12 @@ RC=0
 if [ -e "$CURRENT_SOFTWARE_ENC" ] && [ -e "$CURRENT_SOFTWARE_SIGNATURE" ]; then
   check_signature "$CURRENT_SOFTWARE_ENC" "$CURRENT_SOFTWARE_SIGNATURE"
   if [[ $? != 0 ]]; then
-    echo -e "ERROR: Mismatch between current software and its signature!"
-    #rm -f $CURRENT_SOFTWARE_ENC $CURRENT_SOFTWARE_SIGNATURE
+    echo_and_log "ERROR: Mismatch between current software and its signature!"
+    rm -f $CURRENT_SOFTWARE_ENC $CURRENT_SOFTWARE_SIGNATURE
     RC=$(($RC + 1))
   fi  
 else
-  echo -e "ERROR: Current software and corresponding signature not found!" 
+  echo_and_log "ERROR: Current software and corresponding signature not found!" 
   RC=$(($RC + 1))
 fi
 
@@ -159,12 +181,12 @@ fi
 if [ -e "$NEW_SOFTWARE_ENC" ] && [ -e "$NEW_SOFTWARE_SIGNATURE" ]; then
   check_signature "$NEW_SOFTWARE_ENC" "$NEW_SOFTWARE_SIGNATURE"
   if [[ $? != 0 ]]; then
-    echo -e "ERROR: Mismatch between current software and its signature!"
-    #rm -f $NEW_SOFTWARE_ENC $NEW_SOFTWARE_SIGNATURE
+    echo_and_log "ERROR: Mismatch between current software and its signature!"
+    rm -f $NEW_SOFTWARE_ENC $NEW_SOFTWARE_SIGNATURE
     RC=$(($RC + 2))
   fi  
 else
-  echo -e "No new software updates found!" 
+  echo_and_log "No new software updates found!" 
   RC=$(($RC + 2))
 fi
 
@@ -173,7 +195,6 @@ if [ "$RC" -ge 3 ]; then
 fi 
 # Get the key from the specified BRAM on board
 extract_key $AES_START $AES_END 
-echo $RC
 case $RC in
   0)
     # Decrypt the current software
@@ -186,26 +207,32 @@ case $RC in
     tar --extract --file="$CURRENT_OUTPUT" "$VERSION" &> /dev/null
     VERSION_TEXT=$(cat $VERSION)
     NEW_VERSION_TEXT=$(cat $NEW_VERSION)
+    if is_not_valid_tar_size "$CURRENT_OUTPUT"
+    then
+      VERSION_TEXT="N/A"
+    fi
+    if is_not_valid_tar_size "$NEW_OUTPUT"
+    then
+      NEW_VERSION_TEXT="N/A"
+    fi
     vercomp "$VERSION_TEXT" "$NEW_VERSION_TEXT"
     case $? in
       0|1)
-        rm -f "$NEW_OUTPUT"
-        rm -f "$NEW_SOFTWARE_ENC"
-        echo -e "Success! Loading software version number $VERSION_TEXT ..."
-        tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+        rm -f "$NEW_OUTPUT" "$NEW_SOFTWARE_ENC" "$NEW_SOFTWARE_SIGNATURE"
+        echo_and_log "Success! Loading software version number $VERSION_TEXT ..."
+        tar -xzf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
         change_owner
         ;; 
       2)
-        rm -f "$CURRENT_OUTPUT"
-        rm -f "$CURRENT_SOFTWARE_ENC"
+        rm -f "$CURRENT_OUTPUT" "$CURRENT_SOFTWARE_ENC" "$CURRENT_SOFTWARE_SIGNATURE"
         mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
         mv "$NEW_SOFTWARE_SIGNATURE" "$CURRENT_SOFTWARE_SIGNATURE"
-        echo -e "Success! Loading software version $NEW_VERSION_TEXT ..."
-        tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+        echo_and_log "Success! Loading software version $NEW_VERSION_TEXT ..."
+        tar -xzf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
         change_owner
         ;;
       *)
-        echo "ERROR: Not valid version numbers! Great Scott!?!"
+        echo_and_log "ERROR: Not valid version numbers! Great Scott!?!"
         return 1
         ;;
     esac
@@ -216,14 +243,17 @@ case $RC in
     tar --extract --file="$NEW_OUTPUT" "$VERSION" &> /dev/null
     mv "$VERSION" "$NEW_VERSION"
     NEW_VERSION_TEXT=$(cat $NEW_VERSION)
+    if is_not_valid_tar_size "$NEW_OUTPUT"
+    then
+      NEW_VERSION_TEXT="N/A"  
+    fi
     valid_version $NEW_VERSION_TEXT
     if [[ $? == 0 ]]; then
-      rm -f "$CURRENT_OUTPUT"
-      rm -f "$CURRENT_SOFTWARE_ENC"
+      rm -f "$CURRENT_OUTPUT" "$CURRENT_SOFTWARE_ENC" "$CURRENT_SOFTWARE_SIGNATURE"
       mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
       mv "$NEW_SOFTWARE_SIGNATURE" "$CURRENT_SOFTWARE_SIGNATURE"
-      echo -e "Success! Loading software version $NEW_VERSION_TEXT ..."
-      tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+      echo_and_log "Success! Loading software version $NEW_VERSION_TEXT ..."
+      tar -xzf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
       change_owner
     else
       return 1
@@ -234,25 +264,30 @@ case $RC in
     decrypt "$CURRENT_SOFTWARE_ENC" "$CURRENT_OUTPUT" "$KEY"
     tar --extract --file="$CURRENT_OUTPUT" "$VERSION" &> /dev/null
     VERSION_TEXT=$(cat $VERSION)
+    if is_not_valid_tar_size "$CURRENT_OUTPUT"
+    then
+      VERSION_TEXT="N/A"  
+    fi
     valid_version "$VERSION_TEXT"
     if [[ $? == 0 ]]; then
-      rm -f "$NEW_OUTPUT"
-      rm -f "$NEW_SOFTWARE_ENC"
-      echo -e "Success! Loading software version $VERSION_TEXT ..."
-      tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+      rm -f "$NEW_OUTPUT" "$NEW_SOFTWARE_ENC" "$NEW_SOFTWARE_SIGNATURE"
+      echo_and_log "Success! Loading software version $VERSION_TEXT ..."
+      tar -xzf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
       change_owner
     else
       return 1
     fi
     ;;
   3)
-    echo -e "Error: Unable to find any valid software files!"
+    echo_and_log "Error: Unable to find any valid software files!"
     return 1;
     ;;
   *)
-    echo -e "Error: You really broke things now..."
+    echo_and_log "Error: You really broke things now..."
     return 1;
 esac
+# Clean up of files
+rm -f "$CURRENT_OUTPUT" "$NEW_OUTPUT" "$VERSION" "$NEW_VERSION" "${OUTPUT_DIRECTORY}/${VERSION}"
 
 return 0
 }
@@ -261,11 +296,12 @@ return 0
 case "$1" in
   start)
     log_action_msg "Initializing Software Setup" "softwaresetup.sh"
+    echo_and_log "Initializing Software Setup - Softwaresetup.sh"
     setup
     if [[ $? == 0 ]]; then
       log_end_msg 0 || true
     else
-      echo -e "Failure: Unable to load software!"
+      echo_and_log "Failure: Unable to load software!"
       log_end_msg 1 || true
     fi
     ;;

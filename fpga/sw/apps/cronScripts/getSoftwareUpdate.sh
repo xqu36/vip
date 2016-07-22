@@ -9,12 +9,21 @@
 
 # Web URL of the binary file (dummy file for now)
 WEB_URL="http://smartcities.gatech.edu/files/"
-SOFTWARE="${WEB_URL}new_softwareupdate.secure"
-SIGNATURE="${WEB_URL}new_softwareupdate.sha256"
+SOFTWARE="new_softwareupdate.secure"
+SIGNATURE="new_softwareupdate.sha256"
+SOFTWARE_URL="${WEB_URL}${SOFTWARE}"
+SIGNATURE_URL="${WEB_URL}${SIGNATURE}"
+RSA_KEY="rsa.pub"
+LOGS="/home/ubuntu/ev/sensor.log"
 
 # Location of the target directory
 MOUNTED_DIRECTORY="/etc/software_updates/"
 # Name for downloaded file
+
+echo_and_log() {
+  echo -e "$1"
+  echo -e "${1} | $(date +\"%c\")" >> "$LOGS"
+}
 
 # Check that the path in MOUNTED_DIRECTORY exists
 if [ -d "$MOUNTED_DIRECTORY" ]; then
@@ -27,10 +36,10 @@ if [ -d "$MOUNTED_DIRECTORY" ]; then
                 --tries=10 \
                 --accept secure \
                 --timestamping \
-                "$SOFTWARE"; then
-            echo "STATUS: New software update downloaded successfully!"
+                "$SOFTWARE_URL"; then
+            echo_and_log "STATUS: New software update downloaded successfully!"
         else
-            echo "ERROR: Unable to download new software update"
+            echo_and_log "ERROR: Unable to download new software update"
             exit 1
         fi
         if wget --ignore-case \
@@ -39,17 +48,25 @@ if [ -d "$MOUNTED_DIRECTORY" ]; then
                 --tries=10 \
                 --accept sha256 \
                 --timestamping \
-                "$SIGNATURE"; then
-            echo "STATUS: New software update downloaded successfully!"
+                "$SIGNATURE_URL"; then
+            echo_and_log "STATUS: Accompanying signature downloaded successfully!"
         else
-            echo "ERROR: Unable to download new software update"
+            echo_and_log "ERROR: Unable to download accompanying signature"
+            rm -f "$SOFTWARE"
             exit 1
         fi
+        # Check the signature to see if they are valid updates
+        openssl dgst -sha256 -verify "$RSA_KEY" -signature "$SIGNATURE" "$SOFTWARE"
+        if [ $? -eq 1 ]
+        then
+          echo_and_log "ERROR: Not a valid software update! Removing files..."
+          rm -f "$SOFTWARE" "$SIGNATURE"
+        fi
     else
-        echo "ERROR: Unable to reach specified URL!"
+        echo_and_log "ERROR: Unable to reach specified URL!"
         exit 1
     fi
 else
-    echo "ERROR: Mounted directory not found."
+    echo_and_log "ERROR: Mounted directory not found."
     exit 1
 fi
