@@ -158,11 +158,11 @@ if [ "$VERBOSE" -eq 1 ]
 then
     echo "Unpacking xilinx modules..."
     mkdir $RFSLOC/lib/modules
-    tar xzvf $BUILDPATH/apps/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
+    tar xzvf $BUILDPATH/apps/setup/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
 else
     echo "Unpacking xilinx modules..."
     mkdir $RFSLOC/lib/modules
-    tar xzf $BUILDPATH/apps/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
+    tar xzf $BUILDPATH/apps/setup/modules/4.0.0-xilinx.tar.gz -C $RFSLOC/lib/modules/
 fi
 
 ####################################################################
@@ -177,12 +177,14 @@ then
     echo "All files located under the $BUILDPATH/apps folder are included except the setup folder."
 fi
 
+
 rsync -r --exclude=setup $BUILDPATH/apps/ $RFSLOC/home/ubuntu
-cp $BUILDPATH/apps/modules/rc.local $RFSLOC/etc/.
-cp $BUILDPATH/apps/modules/interfaces $RFSLOC/etc/network/.
-cp $BUILDPATH/apps/modules/wpa_supplicant.conf $RFSLOC/etc/.
-cp $BUILDPATH/apps/modules/failsafe.conf $RFSLOC/etc/init/.
-cp $BUILDPATH/apps/modules/.bashrc $RFSLOC/home/ubuntu/.
+cp $BUILDPATH/apps/setup/modules/rc.local $RFSLOC/etc/.
+cp $BUILDPATH/apps/setup/modules/interfaces $RFSLOC/etc/network/.
+cp $BUILDPATH/apps/setup/modules/wpa_supplicant.conf $RFSLOC/etc/.
+cp $BUILDPATH/apps/setup/modules/failsafe.conf $RFSLOC/etc/init/.
+cp $BUILDPATH/apps/setup/modules/.bashrc $RFSLOC/home/ubuntu/.
+
 
 ## chroot into the rootfs and running the build_chroot.sh script ##
 ## Any commands to be run from chroot should be added to build_chroot.sh ##

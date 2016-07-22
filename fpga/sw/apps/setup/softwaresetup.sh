@@ -1,4 +1,4 @@
-#! /bin/bash -x
+#! /bin/bash 
 ### BEGIN INIT INFO
 # Provides:          softwaresetup
 # Required-Start:    $remote_fs $syslog     
@@ -14,8 +14,8 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 . /lib/lsb/init-functions
 
-CURRENT_SOFTWARE_ENC="/etc/software_updates/software_enc"
-NEW_SOFTWARE_ENC="/etc/software_updates/new_softwareupdate_enc"
+CURRENT_SOFTWARE_ENC="/etc/software_updates/software.secure"
+NEW_SOFTWARE_ENC="/etc/software_updates/new_softwareupdate.secure"
 CURRENT_OUTPUT="/mnt/ramdisk/software.tar.gz"
 NEW_OUTPUT="/mnt/ramdisk/new_softwareupdate.tar.gz"
 OUTPUT_DIRECTORY="/mnt/ramdisk"
@@ -24,9 +24,48 @@ NEW_VERSION+="new_${VERSION}"
 VERSION_TEXT=
 NEW_VERSION_TEXT=
 KEY=""
+RSA_FILE="${OUTPUT_DIRECTORY}/rsa.pub"
+CURRENT_SOFTWARE_SIGNATURE="/etc/software_updates/software.sha256"
+NEW_SOFTWARE_SIGNATURE="/etc/software_updates/new_softwareupdate.sha256"
+AES_START=1073741824 
+AES_END=1073741852
+RSA_START=1073741856 
+#RSA_END=1073742752
+RSA_END=1073742248
 LOGIN="ubuntu"
 
+valid_version() {
+    echo $1 | egrep -q '[0-9]+\.[0-9]+\.[0-9]+'
+    if [[ $? != 0 ]]
+    then
+      return 1
+    else
+      return 0
+    fi
+}
+
 vercomp () {
+    # Sanitize the inputs 
+    RC=0
+    valid_version $1
+    if [[ $? != 0 ]]
+    then
+      RC=1
+      $1="0.0.0"
+    fi
+
+    valid_version $2
+    if [[ $? != 0 ]]
+    then
+      RC=$(($RC + 1))
+      $2="0.0.0"
+    fi
+
+    if [ $RC -e 2 ]
+    then
+      return 3
+    fi
+
     if [[ $1 == $2 ]]
     then
         return 0
@@ -62,13 +101,31 @@ change_owner () {
   #echo "Successfully loaded current version of software"
 }
 
+decrypt () {
+    openssl enc -aes-256-cbc -d -salt -in "$1" -out "$2" -pass pass:${3}
+}
+
+check_signature() {
+    # Check software signature
+    extract_key $RSA_START $RSA_END
+    echo -e "-----BEGIN PUBLIC KEY-----" > "$RSA_FILE"
+    # Method to handle formatting
+    printf '%s\n' "${KEY}" | sed -e "s/.\{64\}/&\n/g" >> "$RSA_FILE"
+    echo "-----END PUBLIC KEY-----" >> "$RSA_FILE" 
+    # Return of 0 means successful verification. Return of 1 indicates not valid
+    openssl dgst -sha256  -verify "$RSA_FILE" -signature "$2" "$1"
+    return $?
+}
+
 extract_key () {
-  LOCATION=40000000
+  KEY=""
+  START=$1
+  END=$2
   HEX_INDEX=
   HEX_WORD=""
   HEX_CHARACTER=""
 
-  for i in {1073741824..1073741852..4} 
+  for (( i=$START; i<=${END}; i=${i}+4)) 
   do
     printf -v HEX_INDEX '%x\n' "$i"
     HEX_WORD="$(/etc/init.d/peek 0x${HEX_INDEX})"
@@ -82,67 +139,121 @@ extract_key () {
 }
 
 setup () {
-# Check that the file exists
-if [ -e "$CURRENT_SOFTWARE_ENC" ]; then
-  # Get the key from the specified BRAM on board
-  extract_key
-  # Decrypt the software updates
-  openssl enc -aes-256-cbc -d -salt -in "$CURRENT_SOFTWARE_ENC" -out "$CURRENT_OUTPUT" -pass pass:${KEY}
-  if [ -e "$NEW_SOFTWARE_ENC" ]; then
-    # Decrypt the software updates
-    openssl enc -aes-256-cbc -d -salt -in "$NEW_SOFTWARE_ENC" -out "$NEW_OUTPUT" -pass pass:${KEY}
-    # Compare the two versions
+RC=0
+# Checking to see that the current software is in the expected location
+# If it is, verify the signature.
+if [ -e "$CURRENT_SOFTWARE_ENC" ] && [ -e "$CURRENT_SOFTWARE_SIGNATURE" ]; then
+  check_signature "$CURRENT_SOFTWARE_ENC" "$CURRENT_SOFTWARE_SIGNATURE"
+  if [[ $? != 0 ]]; then
+    echo -e "ERROR: Mismatch between current software and its signature!"
+    #rm -f $CURRENT_SOFTWARE_ENC $CURRENT_SOFTWARE_SIGNATURE
+    RC=$(($RC + 1))
+  fi  
+else
+  echo -e "ERROR: Current software and corresponding signature not found!" 
+  RC=$(($RC + 1))
+fi
+
+# Checking to see if there is new software in the expected location
+# If it is, verify the signature.
+if [ -e "$NEW_SOFTWARE_ENC" ] && [ -e "$NEW_SOFTWARE_SIGNATURE" ]; then
+  check_signature "$NEW_SOFTWARE_ENC" "$NEW_SOFTWARE_SIGNATURE"
+  if [[ $? != 0 ]]; then
+    echo -e "ERROR: Mismatch between current software and its signature!"
+    #rm -f $NEW_SOFTWARE_ENC $NEW_SOFTWARE_SIGNATURE
+    RC=$(($RC + 2))
+  fi  
+else
+  echo -e "No new software updates found!" 
+  RC=$(($RC + 2))
+fi
+
+if [ "$RC" -ge 3 ]; then
+  return 1
+fi 
+# Get the key from the specified BRAM on board
+extract_key $AES_START $AES_END 
+echo $RC
+case $RC in
+  0)
+    # Decrypt the current software
+    decrypt "$CURRENT_SOFTWARE_ENC" "$CURRENT_OUTPUT" "$KEY"
+    # Decrypt the software update
+    decrypt "$NEW_SOFTWARE_ENC" "$NEW_OUTPUT" "$KEY"
+    # Compare the two versions to see which is newer
     tar --extract --file="$NEW_OUTPUT" "$VERSION" &> /dev/null
     mv "$VERSION" "$NEW_VERSION"
     tar --extract --file="$CURRENT_OUTPUT" "$VERSION" &> /dev/null
     VERSION_TEXT=$(cat $VERSION)
     NEW_VERSION_TEXT=$(cat $NEW_VERSION)
-    if [ ! -z "$VERSION_TEXT" ]; then
-      if [ ! -z "$NEW_VERSION_TEXT" ]; then
-        vercomp "$VERSION_TEXT" "$NEW_VERSION_TEXT"
-        case $? in
-          0|1)
-            rm -f "$NEW_OUTPUT"
-            rm -f "$NEW_SOFTWARE_ENC"
-            tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
-            change_owner
-            ;; 
-          2)
-            rm -f "$CURRENT_OUTPUT"
-            rm -f "$CURRENT_SOFTWARE_ENC"
-            mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
-            tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
-            change_owner
-            ;;
-          *)
-            echo "ERROR: Great Scott!?!"
-            return 1
-            ;;
-        esac
-      else
-        "ERROR: No version information in the new software file!"
+    vercomp "$VERSION_TEXT" "$NEW_VERSION_TEXT"
+    case $? in
+      0|1)
         rm -f "$NEW_OUTPUT"
         rm -f "$NEW_SOFTWARE_ENC"
+        echo -e "Success! Loading software version number $VERSION_TEXT ..."
         tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
         change_owner
-      fi
+        ;; 
+      2)
+        rm -f "$CURRENT_OUTPUT"
+        rm -f "$CURRENT_SOFTWARE_ENC"
+        mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
+        mv "$NEW_SOFTWARE_SIGNATURE" "$CURRENT_SOFTWARE_SIGNATURE"
+        echo -e "Success! Loading software version $NEW_VERSION_TEXT ..."
+        tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+        change_owner
+        ;;
+      *)
+        echo "ERROR: Not valid version numbers! Great Scott!?!"
+        return 1
+        ;;
+    esac
+    ;;
+  1)
+    # Decrypt the software update
+    decrypt "$NEW_SOFTWARE_ENC" "$NEW_OUTPUT" "$KEY"
+    tar --extract --file="$NEW_OUTPUT" "$VERSION" &> /dev/null
+    mv "$VERSION" "$NEW_VERSION"
+    NEW_VERSION_TEXT=$(cat $NEW_VERSION)
+    valid_version $NEW_VERSION_TEXT
+    if [[ $? == 0 ]]; then
+      rm -f "$CURRENT_OUTPUT"
+      rm -f "$CURRENT_SOFTWARE_ENC"
+      mv "$NEW_SOFTWARE_ENC" "$CURRENT_SOFTWARE_ENC"
+      mv "$NEW_SOFTWARE_SIGNATURE" "$CURRENT_SOFTWARE_SIGNATURE"
+      echo -e "Success! Loading software version $NEW_VERSION_TEXT ..."
+      tar -xzvf "$NEW_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+      change_owner
     else
-      echo "ERROR: File does not contain version information"
       return 1
     fi
-  else
-    tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
-    change_owner
-  fi
-  
-else
-  echo "ERROR: $CURRENT_SOFTWARE_END not found."
-  return 1
-fi
-rm -f "$NEW_OUTPUT"
-rm -f "$CURRENT_OUTPUT"
-rm -f "$VERSION"
-rm -f "$NEW_VERSION"
+    ;;
+  2)
+    # Decrypt the current software
+    decrypt "$CURRENT_SOFTWARE_ENC" "$CURRENT_OUTPUT" "$KEY"
+    tar --extract --file="$CURRENT_OUTPUT" "$VERSION" &> /dev/null
+    VERSION_TEXT=$(cat $VERSION)
+    valid_version "$VERSION_TEXT"
+    if [[ $? == 0 ]]; then
+      rm -f "$NEW_OUTPUT"
+      rm -f "$NEW_SOFTWARE_ENC"
+      echo -e "Success! Loading software version $VERSION_TEXT ..."
+      tar -xzvf "$CURRENT_OUTPUT" --directory "$OUTPUT_DIRECTORY" &> /dev/null
+      change_owner
+    else
+      return 1
+    fi
+    ;;
+  3)
+    echo -e "Error: Unable to find any valid software files!"
+    return 1;
+    ;;
+  *)
+    echo -e "Error: You really broke things now..."
+    return 1;
+esac
+
 return 0
 }
 
@@ -154,6 +265,7 @@ case "$1" in
     if [[ $? == 0 ]]; then
       log_end_msg 0 || true
     else
+      echo -e "Failure: Unable to load software!"
       log_end_msg 1 || true
     fi
     ;;
