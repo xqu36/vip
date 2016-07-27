@@ -337,6 +337,18 @@ def hold_data():
 
     time.sleep(1)
 
+def getUniqueIdentifier():
+  try:
+    fo = open("/etc/uniqsysidentity.conf")
+    identity = fo.read(16)
+    fo.close()
+  except IOError:
+    print "Error: Unable to open the Unique Identifier File! Who am I?"
+    identity = "Invalid Identity"
+  return identity
+      
+  
+
 def main():
   process = start_proc("/home/ubuntu/ev/segmentation")
   atexit.register(kill_child)
@@ -382,6 +394,8 @@ def main():
   global data_queue
   global TRANSMIT_INTERVAL
 
+  identity = getUniqueIdentifier()
+
   try:
     while True:
       time.sleep(TRANSMIT_INTERVAL)
@@ -389,6 +403,7 @@ def main():
       mutex.acquire()
       try:
         data["Timestamp"]=time.strftime("%c")
+        data["Identifier"]=str(identity)
       finally:
         mutex.release()
 
