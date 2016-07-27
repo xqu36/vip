@@ -18,7 +18,7 @@ using namespace cv;
 using namespace std;
 
 void sig_handler(int s) {
-  //cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
+  cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
   exit(0);
 }
 
@@ -40,12 +40,12 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  VideoCapture capture("img/pedxing_seq2.mp4");
-  //VideoCapture capture(-1);
+  //VideoCapture capture("img/pedxing_seq2.mp4");
+  VideoCapture capture(0);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
-    //cout << "Capture failed to open." << endl; 
+    cout << "Capture failed to open." << endl; 
     return -1; 
   }
 
@@ -129,10 +129,12 @@ int main(int argc, char** argv) {
     prev_frame = frame.clone();
     capture >> frame;
 
+#ifndef RELEASE
     if(frame.empty()) {
       capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
       continue;
     }
+#endif
 
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
@@ -182,8 +184,8 @@ int main(int argc, char** argv) {
       else reqSize = pedSize * 0.15;
       if(reqSize < 100) reqSize = 100;
 
-      if(currentSize < reqSize) continue;
-      if(currentSize > MAX_AREA) continue;  // can't be bigger than half the screen
+      //if(currentSize < reqSize) continue;
+      //if(currentSize > MAX_AREA) continue;  // can't be bigger than half the screen
 
       Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
@@ -251,8 +253,12 @@ int main(int argc, char** argv) {
     if(vstats.getMillisecUptime() >= pre_uptime+250) {
 
       updatetimer = true;
+
+#ifndef RELEASE 
       frame.copyTo(sec_frame);
       cvtColor(sec_frame, sec_frame, CV_RGB2GRAY);
+#endif
+
       prev_sec_PedCount = sec_PedCount;
       sec_PedCount = inst_PedCount;
 
@@ -260,23 +266,38 @@ int main(int argc, char** argv) {
         if(sec_PedCount < prev_sec_PedCount) totalPed += prev_sec_PedCount - sec_PedCount;
       }
 
+#ifndef RELEASE
       if(pedPerSec) {
         oframe.copyTo(sec_frame);
       }
+#endif
 
       // output to python script-piped stdout
-      //cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
-      cout << pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << "," << sec_PedCount << "," << totalPed << endl;
+#ifdef RELEASE
+      cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
+#endif
+
+#ifndef RELEASE
+      cout << "[" << vstats.getWidth() << "x" << vstats.getHeight() << 
+              "](" << frame.cols << "x" << frame.rows << ") " <<
+              pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
+              "," << sec_PedCount << 
+              "," << totalPed << 
+              "," << vec_cc.size() << endl;
+#endif
 
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;
     }
 
+#ifdef RELEASE
     // recalibrate every 6 hrs
     if(vstats.getUptime() > 21600) {
       pclass.recalibrate = true;
       vstats.resetUptime();
     }
+#endif
+
   }
   return 0;
 }

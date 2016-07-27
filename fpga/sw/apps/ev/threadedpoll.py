@@ -97,9 +97,13 @@ def poll_proc(process):
     # put in dict here
     mutex.acquire()
     try:
-      data["Calibration"]=splitline[0]
-      data["Pedestrians"]=splitline[1]
-      data["TotalPedestrians"]=splitline[2]
+      #data["Calibration"]=splitline[0]
+      if(len(splitline) == 3):
+        data["CameraStatus"]=splitline[0]
+        data["Pedestrians"]=splitline[1]
+        data["TotalPedestrians"]=splitline[2]
+      else:
+        data["CameraStatus"]=splitline
     finally:
       mutex.release()
 
