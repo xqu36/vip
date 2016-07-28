@@ -69,4 +69,4 @@ echo "Y" | sudo apt-get purge xz-utils
 echo "Y" | sudo apt-get purge whiptail
 
 #delete its self to cover up changed password
-sudo rm -- "$0"n
+sudo rm -- "$0"
