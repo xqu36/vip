@@ -36,7 +36,7 @@ PathClassifier::PathClassifier(int rows, int cols) {
   bgValid = false;
 }
 
-int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame) {
+int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame, const Mat& frame_hd) {
 
   // return -1          = not worth of consideration
   // classification 0   = car
@@ -81,10 +81,10 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
 
       // reasonably sure this is a ped; on path with more votes. Update path
       // TODO: assign weights with updating path?
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, outType, objmask, frame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED_ONPATH, outType, objmask, frame, frame_hd);
       if(outType != TYPE_PED_ONPATH) pedVotes -= 0;
     } else {
-      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame);
+      if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame, frame_hd);
       //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
     }
   } else ;
@@ -101,7 +101,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   return (carVotes > pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
-void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame) {
+void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame, const Mat& frame_hd) {
 
   outType = type; 
 
@@ -113,6 +113,47 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
   Mat objframe;
   Rect rectMask = ccomp.getRectMask(frame.rows, frame.cols);
   objframe = frame(rectMask);
+
+  /** @csi_enhance
+    * 1) get centroid
+    * 2) compute scaled offset within 320x240 frame
+    * 3) compute size scaling for 320x240 frame
+    * 4) apply both scales to HD frame to obtain HD person
+    */
+
+  Point bbp = Point(ccomp.getBoundingBox().x, ccomp.getBoundingBox().y);
+
+  double pos_scalex = (double)bbp.x / frame.cols;
+  double pos_scaley = (double)bbp.y / frame.rows;
+
+  double sze_scalex = (double)ccomp.getBoundingBox().width / frame.cols;
+  double sze_scaley = (double)ccomp.getBoundingBox().height / frame.rows;
+
+  //cout << "Size: " << frame.size() << " Rect: " << ccomp.getBoundingBox().size() << 
+  //     " @ " << ccomp.getBoundingBox().x << ", " << ccomp.getBoundingBox().y << endl;
+
+  // create secondary RectMask for HD
+
+  int xx = frame_hd.cols*pos_scalex;
+  int yy = frame_hd.rows*pos_scaley;
+  int ww = frame_hd.cols*sze_scalex;
+  int hh = frame_hd.rows*sze_scaley;
+
+  xx = (xx-10 < 0) ? 0 : xx-10;
+  yy = (yy-10 < 0) ? 0 : yy-10;
+  ww = (xx+ww+20 > frame_hd.cols) ? frame_hd.cols-xx : ww+20;
+  hh = (yy+hh+20 > frame_hd.rows) ? frame_hd.rows-yy : hh+20;
+
+  Rect r_hd(Point(xx, yy), Size(ww, hh));
+
+  Mat objframe_hd;
+  //cout << "Size: " << frame_hd.size() << " Rect: " << r_hd.size() << 
+  //     " @ " << r_hd.x << ", " << r_hd.y << endl;
+  objframe_hd = frame_hd(r_hd);
+  objframe = objframe_hd;
+
+  //imwrite("lowres.jpg", objframe);
+  //imwrite("highres.jpg", objframe_hd);
 
   if(type == TYPE_PED) {
 

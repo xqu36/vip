@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  //VideoCapture capture("img/illegal_seagull.mp4");
-  VideoCapture capture("img/illegal_seagull_320x240.mp4");
+  VideoCapture capture("img/illegal_seagull.mp4");
+  //VideoCapture capture("img/illegal_seagull_320x240.mp4");
   //VideoCapture capture(0);
   VideoStats vstats;
 
@@ -50,8 +50,8 @@ int main(int argc, char** argv) {
     return -1; 
   }
 
-  capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-  capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+  //capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+  //capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
   //assert(capture.get(CV_CAP_PROP_FRAME_WIDTH) == 320);
   //assert(capture.get(CV_CAP_PROP_FRAME_HEIGHT) == 240);
@@ -60,16 +60,21 @@ int main(int argc, char** argv) {
   /* INITIALIZATION */
   ////////////////////
 
-  vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
-  vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
+  // @csi_enhance
+  //vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
+  //vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
+  vstats.setWidth(320);
+  vstats.setHeight(240);
 
   int loop_count = 0;
 
   // set MAX_AREA for pedestrians
   int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
 
-  Mat frame;
-  capture >> frame;
+  Mat frame, frame_hd;
+  capture >> frame_hd;
+  // @csi_enhance
+  resize(frame_hd, frame, Size(320,240));
 
   Mat prev_frame;
   prev_frame = frame.clone();
@@ -128,14 +133,17 @@ int main(int argc, char** argv) {
 
     // take new current frame
     prev_frame = frame.clone();
-    capture >> frame;
+    capture >> frame_hd;
 
 #ifndef RELEASE
-    if(frame.empty()) {
+    //if(frame.empty()) {
+    if(frame_hd.empty()) {
       capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
       continue;
     }
 #endif
+
+    resize(frame_hd, frame, Size(320,240));
 
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
@@ -195,7 +203,7 @@ int main(int argc, char** argv) {
       dilate(objmask, objmask, sE_d, Point(-1, -1), 2);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], objmask, oframe);
+      classification = pclass.classify(vec_cc[i], objmask, oframe, frame_hd);
       
       ped = false;
       bool draw = /* pclass.carPathIsValid && */ pclass.pedPathIsValid;
