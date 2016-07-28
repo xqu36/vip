@@ -40,8 +40,9 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  //VideoCapture capture("img/pedxing_seq2.mp4");
-  VideoCapture capture(0);
+  //VideoCapture capture("img/illegal_seagull.mp4");
+  VideoCapture capture("img/illegal_seagull_320x240.mp4");
+  //VideoCapture capture(0);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -52,8 +53,8 @@ int main(int argc, char** argv) {
   capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
-  assert(capture.get(CV_CAP_PROP_FRAME_WIDTH) == 320);
-  assert(capture.get(CV_CAP_PROP_FRAME_HEIGHT) == 240);
+  //assert(capture.get(CV_CAP_PROP_FRAME_WIDTH) == 320);
+  //assert(capture.get(CV_CAP_PROP_FRAME_HEIGHT) == 240);
 
   ////////////////////
   /* INITIALIZATION */
@@ -162,7 +163,7 @@ int main(int argc, char** argv) {
 
     // remove detected shadows
     //threshold(foregroundMask, foregroundMask, 0, 255, THRESH_BINARY);
-    //threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
+    threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
 
     erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
@@ -184,8 +185,8 @@ int main(int argc, char** argv) {
       else reqSize = pedSize * 0.15;
       if(reqSize < 100) reqSize = 100;
 
-      //if(currentSize < reqSize) continue;
-      //if(currentSize > MAX_AREA) continue;  // can't be bigger than half the screen
+      if(currentSize < reqSize) continue;
+      if(currentSize > MAX_AREA) continue;  // can't be bigger than half the screen
 
       Mat objmask = Mat::zeros(vstats.getHeight(), vstats.getWidth(), CV_8U);
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
@@ -246,7 +247,7 @@ int main(int argc, char** argv) {
     if(ped) pedPerSec = true;
     inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
-    //vstats.displayStats("inst", result);
+    vstats.displayStats("inst", result);
     if(vstats.getUptime() > 4.0) pclass.bgValid = true;
 
     // update every quarter second
@@ -283,7 +284,9 @@ int main(int argc, char** argv) {
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
               "," << sec_PedCount << 
               "," << totalPed << 
-              "," << vec_cc.size() << endl;
+              "," << vec_cc.size() <<
+              "," << pclass.peddetect.getMinSize().area() <<
+              "," << pclass.peddetect.getMinSize().area()*.15 << endl;
 #endif
 
       pedPerSec = false;
@@ -296,6 +299,13 @@ int main(int argc, char** argv) {
       pclass.recalibrate = true;
       vstats.resetUptime();
     }
+#endif
+
+#ifndef RELEASE
+    imshow("frame", oframe);
+    imshow("fg", foregroundMask_ed3);
+    imshow("probable path", dangerPath);
+    if(waitKey(30) >= 0) break;
 #endif
 
   }
