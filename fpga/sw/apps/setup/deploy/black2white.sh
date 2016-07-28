@@ -1,1 +1,0 @@
-echo $1 >> /home/ryan/Desktop/deploy/whitelist.txt
