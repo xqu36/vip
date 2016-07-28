@@ -1,0 +1,5 @@
+fruit
+  Depends: libc6
+  Suggests: scid
+  Suggests: xboard
+  Conflicts: fruit:i386
