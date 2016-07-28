@@ -27,7 +27,8 @@ sudo cp /home/ubuntu/cronScripts/updateChecker /etc/cron.monthly/
 (sudo crontab -l 2>/dev/null; echo "0 4   *   *   *    /sbin/shutdown -r now") | sudo crontab -
 
 #removing packages
-./lib/deploy/blacklist.sh
+sudo chmod +x /lib/deploy/blacklist.sh
+source /lib/deploy/blacklist.sh
 
 #delete its self to cover up changed password
 sudo rm -- "$0"n
