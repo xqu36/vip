@@ -36,7 +36,8 @@ PathClassifier::PathClassifier(int rows, int cols) {
   bgValid = false;
 }
 
-int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame, const Mat& frame_hd) {
+//int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame, const Mat& frame_hd) {
+int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, Mat& frame, const Mat& frame_hd) {
 
   // return -1          = not worth of consideration
   // classification 0   = car
@@ -101,7 +102,8 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, cons
   return (carVotes > pedVotes) ? TYPE_CAR : TYPE_PED;
 }
 
-void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame, const Mat& frame_hd) {
+//void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame, const Mat& frame_hd) {
+void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, Mat& frame, const Mat& frame_hd) {
 
   outType = type; 
 
@@ -177,6 +179,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       vector<Point> cntd_vec;
 
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
+        rectangle(frame, ccomp.getBoundingBox(), Scalar(255,0,0), 3);
 
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
@@ -184,6 +187,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         for(int i = 0; i < cntd_vec.size(); i++) {
           // add the offsets for the centroid
           circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+          //circle(frame, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getBoundingBox().y+cntd_vec[i].y/3.2), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(0,255,0), CV_FILLED);
         }
 
         if(pedQueue.size() < pedsInPath) {
@@ -227,12 +231,14 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
 
+        rectangle(frame, ccomp.getBoundingBox(), Scalar(255,0,0), 3);
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
 
         for(int i = 0; i < cntd_vec.size(); i++) {
           // add the offsets for the centroid
           circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+          //circle(frame, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(0,255,0), CV_FILLED);
         }
 
         if(pedQueue.size() < pedsInPath) {

@@ -149,7 +149,8 @@ int main(int argc, char** argv) {
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
     //frame.copyTo(oframe);
-    //GaussianBlur(frame, frame, Size(1, 1), 0, 0);
+    GaussianBlur(frame, frame, Size(11,11), 0, 0);
+    GaussianBlur(frame_hd, frame_hd, Size(7,7), 0, 0);
     frame.copyTo(oframe);
 
     ////////////////
