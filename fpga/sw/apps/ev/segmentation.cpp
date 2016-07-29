@@ -40,9 +40,8 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  VideoCapture capture("img/illegal_seagull.mp4");
-  //VideoCapture capture("img/illegal_seagull_320x240.mp4");
-  //VideoCapture capture(0);
+  //VideoCapture capture("img/illegal_seagull.mp4");
+  VideoCapture capture(0);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -310,10 +309,10 @@ int main(int argc, char** argv) {
 #endif
 
 #ifndef RELEASE
-    imshow("frame", oframe);
+    //imshow("frame", oframe);
     //imshow("fg", foregroundMask_ed3);
-    imshow("probable path", dangerPath);
-    if(waitKey(30) >= 0) break;
+    //imshow("probable path", dangerPath);
+    //if(waitKey(30) >= 0) break;
 #endif
 
   }
