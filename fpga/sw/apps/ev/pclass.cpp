@@ -123,6 +123,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
     * 4) apply both scales to HD frame to obtain HD person
     */
 
+  bool hd = false;
   Point bbp = Point(ccomp.getBoundingBox().x, ccomp.getBoundingBox().y);
 
   double pos_scalex = (double)bbp.x / frame.cols;
@@ -131,11 +132,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
   double sze_scalex = (double)ccomp.getBoundingBox().width / frame.cols;
   double sze_scaley = (double)ccomp.getBoundingBox().height / frame.rows;
 
-  //cout << "Size: " << frame.size() << " Rect: " << ccomp.getBoundingBox().size() << 
-  //     " @ " << ccomp.getBoundingBox().x << ", " << ccomp.getBoundingBox().y << endl;
-
   // create secondary RectMask for HD
-
   int xx = frame_hd.cols*pos_scalex;
   int yy = frame_hd.rows*pos_scaley;
   int ww = frame_hd.cols*sze_scalex;
@@ -149,13 +146,14 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
   Rect r_hd(Point(xx, yy), Size(ww, hh));
 
   Mat objframe_hd;
-  //cout << "Size: " << frame_hd.size() << " Rect: " << r_hd.size() << 
-  //     " @ " << r_hd.x << ", " << r_hd.y << endl;
-  objframe_hd = frame_hd(r_hd);
-  objframe = objframe_hd;
+  Scalar color = Scalar(255,0,0);
 
-  //imwrite("lowres.jpg", objframe);
-  //imwrite("highres.jpg", objframe_hd);
+  objframe_hd = frame_hd(r_hd);
+  if(objframe.size().height < 128 || objframe.size().width < 64) {
+    color = Scalar(255,0,255);
+    objframe = objframe_hd;
+    hd = true;
+  } else { color = Scalar(255,0,0); hd = false; }
 
   if(type == TYPE_PED) {
 
@@ -179,15 +177,18 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       vector<Point> cntd_vec;
 
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
-        rectangle(frame, ccomp.getBoundingBox(), Scalar(255,0,0), 3);
+        //rectangle(frame, ccomp.getBoundingBox(), color, 3);
 
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
 
         for(int i = 0; i < cntd_vec.size(); i++) {
           // add the offsets for the centroid
-          circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
-          //circle(frame, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getBoundingBox().y+cntd_vec[i].y/3.2), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(0,255,0), CV_FILLED);
+          if(hd) {
+            circle(ctrd_mat, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getCentroidBox().y+cntd_vec[i].y/3.2), MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+          } else {
+            circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+          }
         }
 
         if(pedQueue.size() < pedsInPath) {
@@ -231,14 +232,17 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
 
-        rectangle(frame, ccomp.getBoundingBox(), Scalar(255,0,0), 3);
+        //rectangle(frame, ccomp.getBoundingBox(), color, 3);
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
 
         for(int i = 0; i < cntd_vec.size(); i++) {
           // add the offsets for the centroid
-          circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
-          //circle(frame, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(0,255,0), CV_FILLED);
+          if(hd) {
+            circle(ctrd_mat, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getCentroidBox().y+cntd_vec[i].y/3.2), MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+          } else {
+            circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+          }
         }
 
         if(pedQueue.size() < pedsInPath) {

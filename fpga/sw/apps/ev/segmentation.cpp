@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
       objmask = vec_cc[i].getMask(objmask.rows, objmask.cols);
 
       // FIXME - four times too much?
-      dilate(objmask, objmask, sE_d, Point(-1, -1), 2);
+      //dilate(objmask, objmask, sE_d, Point(-1, -1), 2);
 
       int classification = -1;
       classification = pclass.classify(vec_cc[i], objmask, oframe, frame_hd);
@@ -218,7 +218,7 @@ int main(int argc, char** argv) {
           //rectangle(oframe, r, Scalar(255,0,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          //rectangle(oframe, r, Scalar(255,0,0), 3);
+          rectangle(oframe, r, Scalar(255,0,0), 3);
           ped = true;
           inst_PedCount++;
           break;
@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
     if(vstats.getUptime() > 4.0) pclass.bgValid = true;
 
     // update every quarter second
-    if(vstats.getMillisecUptime() >= pre_uptime+250) {
+    if(vstats.getMillisecUptime() >= pre_uptime+1000) {
 
       updatetimer = true;
 
@@ -292,10 +292,9 @@ int main(int argc, char** argv) {
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
               "," << sec_PedCount << 
-              "," << totalPed << 
-              "," << vec_cc.size() <<
-              "," << pclass.peddetect.getMinSize().area() <<
-              "," << pclass.peddetect.getMinSize().area()*.15 << endl;
+              "," << totalPed << endl;
+              //"," << pclass.peddetect.getMinSize().area() <<
+              //"," << pclass.peddetect.getMinSize().area()*.15 << endl;
 #endif
 
       pedPerSec = false;
@@ -312,7 +311,7 @@ int main(int argc, char** argv) {
 
 #ifndef RELEASE
     imshow("frame", oframe);
-    imshow("fg", foregroundMask_ed3);
+    //imshow("fg", foregroundMask_ed3);
     imshow("probable path", dangerPath);
     if(waitKey(30) >= 0) break;
 #endif
