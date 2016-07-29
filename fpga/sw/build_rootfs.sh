@@ -22,7 +22,7 @@ function usage() {
     echo "Usage: build_rootfs.sh -t=[SD mount location] [options]"
     echo -e "\t -t|--target: Must provide full mount address of the rootfs SD card partition."
     echo -e "\t -v|--verbose: Enables verbose mode. [Default 0]"
-    echo -e "\t -c|--clean: Erases all files on the SD card, and downloads a new copy of the ubuntu core tar."
+   # echo -e "\t -c|--clean: Erases all files on the SD card, and downloads a new copy of the ubuntu core tar."
     echo -e "\t -h|--help: Show help information. Hint: You're lookin' at it!"
 }
 
