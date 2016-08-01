@@ -6,7 +6,7 @@
 adduser --gecos "" ubuntu
 addgroup ubuntu adm
 addgroup ubuntu sudo
-addgroup ubuntu i2c
+#addgroup ubuntu i2c
 addgroup ubuntu audio
 addgroup ubuntu video
 addgroup ubuntu dialout
@@ -42,6 +42,7 @@ sudo apt-get -y install gpsd
 sudo apt-get -y install python-GPS
 sudo apt-get -y install usbutils
 sudo apt-get -y install python-pyaudio
+sudo apt-get -y install ntp
 
 ## Python libraries ##
 ## Add addtional libs here, and list them on the wiki page. ##
@@ -68,7 +69,7 @@ sudo make
 rm *.cpp
 rm *.hpp
 
-
+addgroup ubuntu i2c
 echo "#####################"
 echo "   EXITING CHROOT"
 echo "#####################"
