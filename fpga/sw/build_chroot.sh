@@ -6,6 +6,10 @@
 adduser --gecos "" ubuntu
 addgroup ubuntu adm
 addgroup ubuntu sudo
+addgroup ubuntu i2c
+addgroup ubuntu audio
+addgroup ubuntu video
+addgroup ubuntu dialout
 sudo chown -R ubuntu.ubuntu /home/ubuntu
 rm /home/ubuntu/chroot.log
 
