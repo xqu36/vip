@@ -15,10 +15,10 @@ echo 'version number: '$version'' > /home/ubuntu/version
 echo "ubuntu:@G30rg1@T3chN0tUG@1738" | sudo chpasswd
 
 #cron job stuff
-sudo cp /home/ubuntu/cronScripts/updateSoftware.sh /etc/cron.weekly/
-sudo cp /home/ubuntu/cronScripts/updateChecker.sh /etc/cron.monthly/
-sudo cp /home/ubuntu/cronScripts/updateSoftware /etc/cron.weekly/
-sudo cp /home/ubuntu/cronScripts/updateChecker /etc/cron.monthly/
+sudo mv /mnt/ramdisk/apps/cronScripts/updateSoftware.sh /etc/cron.weekly/
+sudo mv /mnt/ramdisk/apps/cronScripts/updateChecker.sh /etc/cron.monthly/
+sudo mv /mnt/ramdisk/apps/cronScripts/updateSoftware /etc/cron.weekly/
+sudo mv /mnt/ramdisk/apps/cronScripts/updateChecker /etc/cron.monthly/
 (crontab -l 2>/dev/null; echo "* * * * * cd /mnt/ramdisk/apps/cronScripts; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh_script.sh") | crontab -
 (sudo crontab -l 2>/dev/null; echo "0 4   *   *   *    /sbin/shutdown -r now") | sudo crontab -
 
