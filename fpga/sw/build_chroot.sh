@@ -70,7 +70,9 @@ rm *.cpp
 rm *.hpp
 
 addgroup ubuntu i2c
-(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
+#(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
+(crontab -l; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
+(crontab -l; echo "#* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh") | crontab -
 
 echo "#####################"
 echo "   EXITING CHROOT"
