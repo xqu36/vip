@@ -218,7 +218,6 @@ for m in `echo 'sys dev proc'`; do sudo umount ./$m; done
 mv etc/resolv.conf.saved etc/resolv.conf
 
 rm $RFSLOC/build_chroot.sh
-(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 
 echo "#######################"
 echo "# END OF BUILD SCRIPT #"
