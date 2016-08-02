@@ -218,6 +218,8 @@ for m in `echo 'sys dev proc'`; do sudo umount ./$m; done
 mv etc/resolv.conf.saved etc/resolv.conf
 
 rm $RFSLOC/build_chroot.sh
+cp -r $BUILDPATH/apps/setup/modules/rtl_driver_update/rtlwifi $RFSLOC/lib/modules/4.0.0-xilinx/kernel/drivers/net/wireless/.
+
 
 echo "#######################"
 echo "# END OF BUILD SCRIPT #"
