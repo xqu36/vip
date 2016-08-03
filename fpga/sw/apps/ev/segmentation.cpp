@@ -41,7 +41,8 @@ int main(int argc, char** argv) {
   ////////
 
   //VideoCapture capture("img/illegal_seagull.mp4");
-  VideoCapture capture(0);
+  VideoCapture capture(argv[1]);
+  //VideoCapture capture(0);
   VideoStats vstats;
 
   if (!capture.isOpened()) { 
@@ -214,10 +215,10 @@ int main(int argc, char** argv) {
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          //rectangle(oframe, r, Scalar(255,0,0), 1);
+          rectangle(oframe, r, Scalar(255,255,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          rectangle(oframe, r, Scalar(255,0,0), 3);
+          rectangle(oframe, r, Scalar(255,255,0), 3);
           ped = true;
           inst_PedCount++;
           break;
@@ -291,9 +292,11 @@ int main(int argc, char** argv) {
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
               "," << sec_PedCount << 
-              "," << totalPed << endl;
+              "," << totalPed <<
               //"," << pclass.peddetect.getMinSize().area() <<
               //"," << pclass.peddetect.getMinSize().area()*.15 << endl;
+              "," << pclass.peddetect.getMinSize() <<
+              "," << pclass.peddetect.getMaxSize() << endl;
 #endif
 
       pedPerSec = false;
@@ -309,10 +312,10 @@ int main(int argc, char** argv) {
 #endif
 
 #ifndef RELEASE
-    //imshow("frame", oframe);
-    //imshow("fg", foregroundMask_ed3);
-    //imshow("probable path", dangerPath);
-    //if(waitKey(30) >= 0) break;
+    imshow("frame", oframe);
+    imshow("fg", foregroundMask_ed3);
+    imshow("probable path", dangerPath);
+    if(waitKey(30) >= 0) break;
 #endif
 
   }
