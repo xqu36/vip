@@ -13,6 +13,7 @@ addgroup ubuntu dialout
 sudo chown -R ubuntu.ubuntu /home/ubuntu
 rm /home/ubuntu/chroot.log
 
+
 ## Adding repositories and updating apt-get package manager ##
 echo "deb http://ports.ubuntu.com/ trusty main restricted universe multiverse" > /etc/apt/sources.list
 echo "deb http://ports.ubuntu.com/ trusty-security main restricted universe multiverse" >> /etc/apt/sources.list
@@ -71,8 +72,11 @@ rm *.hpp
 
 addgroup ubuntu i2c
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
-(crontab -l; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
-(crontab -l; echo "#* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh") | crontab -
+echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
+echo "#* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
+echo "ubuntu localhost = (root) NOPASSWD: /sbin/reboot" >> /etc/sudoers.d/reboot
+echo "ubuntu localhost = (root) NOPASSWD: /sbin/poweroff" >> /etc/sudoers.d/poweroff
+exit
 
 echo "#####################"
 echo "   EXITING CHROOT"
