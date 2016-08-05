@@ -18,6 +18,91 @@
 using namespace cv;
 using namespace std;
 
+/////////////
+/* GLOBALS */
+/////////////
+
+// only the Queue itself needs to be global
+// init size to be 1
+
+deque<Mat> frameQueue;
+int frameQueueSetSize = 1;
+bool frameQueueReady = false;
+
+pthread_mutex_t qutex = PTHREAD_MUTEX_INITIALIZER;
+
+void* frameGrabber(void*) {
+
+  Mat qFrame;
+
+  VideoCapture capture("img/spring_high_angle_5.mp4");
+
+  if (!capture.isOpened()) { 
+    cout << "Capture failed to open." << endl; 
+    pthread_exit(NULL);
+  }
+
+  capture >> qFrame;
+
+pthread_mutex_lock(&qutex);
+// >>>
+  frameQueue.push_back(qFrame);
+  frameQueueReady = true;
+// >>>
+pthread_mutex_unlock(&qutex);
+
+  for(;;) {
+
+    capture >> qFrame;
+
+    if(qFrame.empty()) {
+      capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
+      continue;
+    }
+
+    // keep it real-time if necessary
+    if(frameQueueSetSize == 1) {
+      // while in this mode, keep updating [0] to be real-time frame
+      if(frameQueue.size() <= 1) {
+pthread_mutex_lock(&qutex);
+// >>>
+        frameQueue.push_back(qFrame);
+// >>>
+pthread_mutex_unlock(&qutex);
+      }
+     if(frameQueue.size() > 1) {
+pthread_mutex_lock(&qutex);
+// >>>
+        frameQueue.pop_front();
+        frameQueue.push_back(qFrame);
+// >>>
+pthread_mutex_unlock(&qutex);
+      }
+
+    } else if(frameQueueSetSize != 1) {
+      // while in this mode, update frameQ up to specified amount
+      if(frameQueue.size() < frameQueueSetSize) {
+pthread_mutex_lock(&qutex);
+// >>>
+        frameQueue.push_back(qFrame);
+// >>>
+pthread_mutex_unlock(&qutex);
+      }
+
+      else {
+        // else implies the queue is now frameQSetSize large
+        // switch desired size back down to 1
+pthread_mutex_lock(&qutex);
+// >>>
+        frameQueueSetSize = 1;
+// >>>
+pthread_mutex_unlock(&qutex);
+      }
+    }
+    waitKey(30);
+  }
+}
+
 void sig_handler(int s) {
   cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
   exit(0);
@@ -41,15 +126,24 @@ int main(int argc, char** argv) {
   /* IN */
   ////////
 
-  //VideoCapture capture("img/illegal_seagull.mp4");
-  VideoCapture capture(argv[1]);
+  // @queue
+  // Create frameGrabber pthread
+  pthread_t fgrabber;
+  int rval;
+
+  rval = pthread_create(&fgrabber, NULL, frameGrabber, 0);
+  if(rval) { cout << "HALPO" << endl; exit(0); }
+
+  //VideoCapture capture(argv[1]);
   //VideoCapture capture(0);
   VideoStats vstats;
 
+/*
   if (!capture.isOpened()) { 
     cout << "Capture failed to open." << endl; 
     return -1; 
   }
+  */
 
   //capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   //capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
@@ -73,7 +167,25 @@ int main(int argc, char** argv) {
   int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
 
   Mat frame, frame_hd;
-  capture >> frame_hd;
+
+  //@queue
+  //capture >> frame_hd;
+
+  do {
+    if(frameQueueReady) {
+pthread_mutex_lock(&qutex);
+// >>>
+      //frame_hd = frameQueue[0];
+      frameQueue[0].copyTo(frame_hd);
+      //frameQueue.pop_front();
+// >>>
+pthread_mutex_unlock(&qutex);
+    }
+  } while(frame_hd.empty());
+
+if(frame_hd.empty()) cout << "I empty" << endl;
+
+
   // @csi_enhance
   resize(frame_hd, frame, Size(320,240));
 
@@ -120,7 +232,7 @@ int main(int argc, char** argv) {
 
   // processing loop
   for(;;) {
-
+cout << "size of q: " << frameQueue.size() << endl;
     ////////////////////
     /* PRE-PROCESSING */
     ////////////////////
@@ -133,8 +245,18 @@ int main(int argc, char** argv) {
 
     // take new current frame
     prev_frame = frame.clone();
-    capture >> frame_hd;
 
+    //@queue
+    //capture >> frame_hd;
+pthread_mutex_lock(&qutex);
+// >>>
+  frameQueue[0].copyTo(frame_hd);
+  //frameQueue.pop_front();
+  //frame_hd = frameQueue[0];
+// >>>
+pthread_mutex_unlock(&qutex);
+
+    /*
 #ifndef RELEASE
     //if(frame.empty()) {
     if(frame_hd.empty()) {
@@ -142,6 +264,7 @@ int main(int argc, char** argv) {
       continue;
     }
 #endif
+    */
 
     resize(frame_hd, frame, Size(320,240));
 
@@ -149,8 +272,8 @@ int main(int argc, char** argv) {
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
     //frame.copyTo(oframe);
-    GaussianBlur(frame, frame, Size(11,11), 0, 0);
-    GaussianBlur(frame_hd, frame_hd, Size(7,7), 0, 0);
+    GaussianBlur(frame, frame, Size(5,5), 0, 0);
+    GaussianBlur(frame_hd, frame_hd, Size(5,5), 0, 0);
     frame.copyTo(oframe);
 
     ////////////////
