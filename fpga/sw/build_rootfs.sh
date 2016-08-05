@@ -174,11 +174,11 @@ fi
 if [ "$VERBOSE" -eq 1 ]
 then
     echo "Copying all project specific files to rootfs..."
-    echo "All files located under the $BUILDPATH/apps folder are included except the setup folder."
+    echo "All files located under the $BUILDPATH/apps folder are included except the modules folder."
 fi
 
 
-rsync -r --exclude=setup $BUILDPATH/apps/ $RFSLOC/home/ubuntu
+rsync -r --exclude=setup/moduels $BUILDPATH/apps/ $RFSLOC/home/ubuntu
 cp $BUILDPATH/apps/setup/modules/rc.local $RFSLOC/etc/.
 cp $BUILDPATH/apps/setup/modules/interfaces $RFSLOC/etc/network/.
 cp $BUILDPATH/apps/setup/modules/wpa_supplicant.conf $RFSLOC/etc/.
