@@ -73,7 +73,12 @@ rm *.hpp
 addgroup ubuntu i2c
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> etc/cron.d/healthMon
 echo "#* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" >> /etc/cron.d/sentinel
+echo "#30 5 * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/ev/health_update.sh" >> /etc/cron.d/healthUpdate
+echo "#30 4 * * * ubuntu cd /mnt/ramdisk/apps; /bin/bash /mnt/ramdisk/apps/cronScripts/getSoftwareUpdate.sh" >> /etc/cron.d/softwareUpdate
+echo "#30 4 * * * ubuntu cd /mnt/ramdisk/apps; /bin/bash /mnt/ramdisk/apps/cronScripts/updateChecker.sh" >> /etc/cron.d/firmwareUpdate
 echo "ubuntu localhost = (root) NOPASSWD: /sbin/reboot" >> /etc/sudoers.d/reboot
 echo "ubuntu localhost = (root) NOPASSWD: /sbin/poweroff" >> /etc/sudoers.d/poweroff
 exit
