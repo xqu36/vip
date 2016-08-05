@@ -126,13 +126,16 @@ is_not_valid_tar_size() {
   fi
 }
 
-check_signature() {
-    # Check software signature
+create_RSA_key() {
     extract_key $RSA_START $RSA_END
     echo -e "-----BEGIN PUBLIC KEY-----" > "$RSA_FILE"
     # Method to handle formatting
     printf '%s\n' "${KEY}" | sed -e "s/.\{64\}/&\n/g" >> "$RSA_FILE"
-    echo "-----END PUBLIC KEY-----" >> "$RSA_FILE" 
+    echo "-----END PUBLIC KEY-----" >> "$RSA_FILE"
+}
+
+check_signature() {
+    # Check software signature
     # Return of 0 means successful verification. Return of 1 indicates not valid
     openssl dgst -sha256  -verify "$RSA_FILE" -signature "$2" "$1"
     return $?
@@ -162,6 +165,10 @@ extract_key () {
 
 setup () {
 RC=0
+
+# First extract and put the RSA key into a usable format
+create_RSA_key
+
 # Checking to see that the current software is in the expected location
 # If it is, verify the signature.
 if [ -e "$CURRENT_SOFTWARE_ENC" ] && [ -e "$CURRENT_SOFTWARE_SIGNATURE" ]; then
