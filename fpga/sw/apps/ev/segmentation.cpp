@@ -7,6 +7,7 @@
  *
  */
 
+#include <pthread.h>
 #include <unistd.h>
 #include "segmentation.hpp"
 #include "vidstab.hpp"
@@ -79,8 +80,7 @@ int main(int argc, char** argv) {
   Mat prev_frame;
   prev_frame = frame.clone();
 
-  Mat oframe, sec_frame;
-  capture >> sec_frame;
+  Mat oframe;
 
   Mat foregroundMask, backgroundModel;
   Mat foregroundMask_color;
@@ -257,17 +257,12 @@ int main(int argc, char** argv) {
     inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
     vstats.displayStats("inst", result);
-    if(vstats.getUptime() > 4.0) pclass.bgValid = true;
+    if(vstats.getUptime() > 1.0) pclass.bgValid = true;
 
     // update every quarter second
     if(vstats.getMillisecUptime() >= pre_uptime+1000) {
 
       updatetimer = true;
-
-#ifndef RELEASE 
-      frame.copyTo(sec_frame);
-      cvtColor(sec_frame, sec_frame, CV_RGB2GRAY);
-#endif
 
       prev_sec_PedCount = sec_PedCount;
       sec_PedCount = inst_PedCount;
@@ -275,12 +270,6 @@ int main(int argc, char** argv) {
       if(pclass.pedPathIsValid) {
         if(sec_PedCount < prev_sec_PedCount) totalPed += prev_sec_PedCount - sec_PedCount;
       }
-
-#ifndef RELEASE
-      if(pedPerSec) {
-        oframe.copyTo(sec_frame);
-      }
-#endif
 
       // output to python script-piped stdout
 #ifdef RELEASE
