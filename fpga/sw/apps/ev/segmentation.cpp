@@ -149,8 +149,9 @@ int main(int argc, char** argv) {
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
     //frame.copyTo(oframe);
-    GaussianBlur(frame, frame, Size(11,11), 0, 0);
-    GaussianBlur(frame_hd, frame_hd, Size(7,7), 0, 0);
+    //GaussianBlur(frame, frame, Size(11,11), 0, 0);
+    GaussianBlur(frame, frame, Size(5,5), 0, 0);
+    GaussianBlur(frame_hd, frame_hd, Size(5,5), 0, 0);
     frame.copyTo(oframe);
 
     ////////////////
@@ -215,10 +216,10 @@ int main(int argc, char** argv) {
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          rectangle(oframe, r, Scalar(255,255,0), 1);
+          //rectangle(oframe, r, Scalar(255,255,0), 1);
           break;
         case TYPE_PED_ONPATH:
-          rectangle(oframe, r, Scalar(255,255,0), 3);
+          //rectangle(oframe, r, Scalar(255,255,0), 3);
           ped = true;
           inst_PedCount++;
           break;

@@ -61,6 +61,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, Mat&
     //if(ccomp.getBoundingBoxHeight() / ccomp.getBoundingBoxWidth() > 1.25)  pedVotes += 300;
     double ratio = (double)ccomp.getBoundingBoxHeight() / (double)ccomp.getBoundingBoxWidth();
     if(ratio > 1.25)  pedVotes += 30;
+    //if(ratio > 1)  pedVotes += 30;
   } else carVotes += 30;
 
   if(recalibrate) {
@@ -150,7 +151,8 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
   objframe_hd = frame_hd(r_hd);
   //if(objframe.size().height < 64 || objframe.size().width < 32) {
-  if(objframe.size().height < 128 || objframe.size().width < 64) {
+  if(objframe.size().height < 96 || objframe.size().width < 48) {
+  //if(objframe.size().height < 128 || objframe.size().width < 64) {
     color = Scalar(255,0,255);
     objframe = objframe_hd;
     hd = true;
@@ -186,9 +188,11 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         for(int i = 0; i < cntd_vec.size(); i++) {
           // add the offsets for the centroid
           if(hd) {
-            circle(ctrd_mat, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getCentroidBox().y+cntd_vec[i].y/3.2), MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+            circle(ctrd_mat, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getCentroidBox().y+cntd_vec[i].y/3.2), 
+                   MIN(ccomp.getBoundingBoxArea() / (scale*cntd_vec.size()),10), redrawColor, CV_FILLED);
           } else {
-            circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+            circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], 
+                   MIN(ccomp.getBoundingBoxArea() / (scale*cntd_vec.size()),10), redrawColor, CV_FILLED);
           }
         }
 
@@ -240,9 +244,11 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         for(int i = 0; i < cntd_vec.size(); i++) {
           // add the offsets for the centroid
           if(hd) {
-            circle(ctrd_mat, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getCentroidBox().y+cntd_vec[i].y/3.2), MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+            circle(ctrd_mat, Point(ccomp.getCentroidBox().x+cntd_vec[i].x/3.2,ccomp.getCentroidBox().y+cntd_vec[i].y/3.2), 
+                   MIN(ccomp.getBoundingBoxArea() / (scale*cntd_vec.size()),10), redrawColor, CV_FILLED);
           } else {
-            circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], MIN(ccomp.getBoundingBoxArea() / scale,10), redrawColor, CV_FILLED);
+            circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], 
+                   MIN(ccomp.getBoundingBoxArea() / (scale*cntd_vec.size()),10), redrawColor, CV_FILLED);
           }
         }
 
