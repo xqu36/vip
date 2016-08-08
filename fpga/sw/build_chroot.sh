@@ -71,17 +71,32 @@ rm *.cpp
 rm *.hpp
 
 addgroup ubuntu i2c
+
+# Folder setup for software/firmware updates
+SOFTWARE="/etc/software_updates"
+mkdir $SOFTWARE
+cp /home/ubuntu/cronScripts/getSoftwareUpdate.sh ${SOFTWARE}/.
+cp /home/ubuntu/cronScripts/updateChecker.sh ${SOFTWARE}/.
+# Software Setup Initialization
+SETUP_DIR="/home/ubuntu/setup"
+cp ${SETUP_DIR}/softwaresetup.sh /etc/init.d/.
+cp ${SETUP_DIR}/fstab /etc/.
+cp ${SETUP_DIR}/tools/peek /etc/init.d/.
+cd /etc/rc2.d
+ln -s ../init.d/softwaresetup.sh S99softwaresetup.sh
+
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
-echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> etc/cron.d/healthMon
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" > /etc/cron.d/healthMon
 echo "#* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
-echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" >> /etc/cron.d/sentinel
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" > /etc/cron.d/sentinel
 echo "#30 5 * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/ev/health_update.sh" >> /etc/cron.d/healthUpdate
-echo "#30 4 * * * ubuntu cd /mnt/ramdisk/apps; /bin/bash /mnt/ramdisk/apps/cronScripts/getSoftwareUpdate.sh" >> /etc/cron.d/softwareUpdate
-echo "#30 4 * * * ubuntu cd /mnt/ramdisk/apps; /bin/bash /mnt/ramdisk/apps/cronScripts/updateChecker.sh" >> /etc/cron.d/firmwareUpdate
+echo "#30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/getSoftwareUpdate.sh" >> /etc/cron.d/softwareUpdate
+echo "#30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/updateChecker.sh" >> /etc/cron.d/firmwareUpdate
 echo "ubuntu localhost = (root) NOPASSWD: /sbin/reboot" >> /etc/sudoers.d/reboot
 echo "ubuntu localhost = (root) NOPASSWD: /sbin/poweroff" >> /etc/sudoers.d/poweroff
 exit
+
 
 echo "#####################"
 echo "   EXITING CHROOT"
