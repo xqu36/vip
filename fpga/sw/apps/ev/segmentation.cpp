@@ -25,11 +25,16 @@ using namespace std;
 // only the Queue itself needs to be global
 // init size to be 1
 
+// Create frameGrabber pthread
+pthread_t fgrabber;
+
 deque<Mat> frameQueue;
 int frameQueueSetSize = 1;
 bool frameQueueReady = false;
+bool pthreadExit = false;
 
 pthread_mutex_t qutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t kutex = PTHREAD_MUTEX_INITIALIZER;
 
 void* frameGrabber(void*) {
 
@@ -44,14 +49,14 @@ void* frameGrabber(void*) {
 
   capture >> qFrame;
 
-pthread_mutex_lock(&qutex);
-// >>>
+  pthread_mutex_lock(&qutex);
+  // >>>
   frameQueue.push_back(qFrame);
   frameQueueReady = true;
-// >>>
-pthread_mutex_unlock(&qutex);
+  // >>>
+  pthread_mutex_unlock(&qutex);
 
-  for(;;) {
+  while(!pthreadExit) {
 
     capture >> qFrame;
 
@@ -64,47 +69,58 @@ pthread_mutex_unlock(&qutex);
     if(frameQueueSetSize == 1) {
       // while in this mode, keep updating [0] to be real-time frame
       if(frameQueue.size() <= 1) {
-pthread_mutex_lock(&qutex);
-// >>>
+        pthread_mutex_lock(&qutex);
+        // >>>
         frameQueue.push_back(qFrame);
-// >>>
-pthread_mutex_unlock(&qutex);
+        frameQueue.pop_front();
+        // >>>
+        pthread_mutex_unlock(&qutex);
       }
      if(frameQueue.size() > 1) {
-pthread_mutex_lock(&qutex);
-// >>>
+        pthread_mutex_lock(&qutex);
+        // >>>
         frameQueue.pop_front();
-        frameQueue.push_back(qFrame);
-// >>>
-pthread_mutex_unlock(&qutex);
+        // >>>
+        pthread_mutex_unlock(&qutex);
       }
 
     } else if(frameQueueSetSize != 1) {
       // while in this mode, update frameQ up to specified amount
       if(frameQueue.size() < frameQueueSetSize) {
-pthread_mutex_lock(&qutex);
-// >>>
+        pthread_mutex_lock(&qutex);
+        // >>>
         frameQueue.push_back(qFrame);
-// >>>
-pthread_mutex_unlock(&qutex);
-      }
-
-      else {
+        // >>>
+        pthread_mutex_unlock(&qutex);
+        cout << "saving frame: " << capture.get(CV_CAP_PROP_POS_FRAMES) << endl;
+      } else {
         // else implies the queue is now frameQSetSize large
         // switch desired size back down to 1
-pthread_mutex_lock(&qutex);
-// >>>
+        pthread_mutex_lock(&qutex);
+        // >>>
         frameQueueSetSize = 1;
-// >>>
-pthread_mutex_unlock(&qutex);
+        // >>>
+        pthread_mutex_unlock(&qutex);
       }
     }
-    waitKey(30);
+    usleep(66000);
   }
+  cout << "Thread is exiting." << endl;
+  pthread_exit(NULL);
 }
 
 void sig_handler(int s) {
   cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
+
+  //pthread_mutex_lock(&kutex);
+  // >>>
+  pthreadExit = true;
+  // >>>
+  //pthread_mutex_unlock(&kutex);
+
+  sleep(15);
+
+  cout << "goodbye" << endl;
   exit(0);
 }
 
@@ -127,12 +143,10 @@ int main(int argc, char** argv) {
   ////////
 
   // @queue
-  // Create frameGrabber pthread
-  pthread_t fgrabber;
   int rval;
 
   rval = pthread_create(&fgrabber, NULL, frameGrabber, 0);
-  if(rval) { cout << "HALPO" << endl; exit(0); }
+  if(rval) { cout << "Thread's dead, baby. Thread's dead." << endl; exit(0); }
 
   //VideoCapture capture(argv[1]);
   //VideoCapture capture(0);
@@ -173,18 +187,13 @@ int main(int argc, char** argv) {
 
   do {
     if(frameQueueReady) {
-pthread_mutex_lock(&qutex);
-// >>>
-      //frame_hd = frameQueue[0];
+      pthread_mutex_lock(&qutex);
+      // >>>
       frameQueue[0].copyTo(frame_hd);
-      //frameQueue.pop_front();
-// >>>
-pthread_mutex_unlock(&qutex);
+      // >>>
+      pthread_mutex_unlock(&qutex);
     }
   } while(frame_hd.empty());
-
-if(frame_hd.empty()) cout << "I empty" << endl;
-
 
   // @csi_enhance
   resize(frame_hd, frame, Size(320,240));
@@ -232,7 +241,6 @@ if(frame_hd.empty()) cout << "I empty" << endl;
 
   // processing loop
   for(;;) {
-cout << "size of q: " << frameQueue.size() << endl;
     ////////////////////
     /* PRE-PROCESSING */
     ////////////////////
@@ -248,23 +256,11 @@ cout << "size of q: " << frameQueue.size() << endl;
 
     //@queue
     //capture >> frame_hd;
-pthread_mutex_lock(&qutex);
-// >>>
-  frameQueue[0].copyTo(frame_hd);
-  //frameQueue.pop_front();
-  //frame_hd = frameQueue[0];
-// >>>
-pthread_mutex_unlock(&qutex);
-
-    /*
-#ifndef RELEASE
-    //if(frame.empty()) {
-    if(frame_hd.empty()) {
-      capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
-      continue;
-    }
-#endif
-    */
+    pthread_mutex_lock(&qutex);
+    // >>>
+    frameQueue[0].copyTo(frame_hd);
+    // >>>
+    pthread_mutex_unlock(&qutex);
 
     resize(frame_hd, frame, Size(320,240));
 
@@ -338,12 +334,24 @@ pthread_mutex_unlock(&qutex);
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          rectangle(oframe, r, Scalar(255,255,0), 1);
+          //rectangle(oframe, r, Scalar(255,255,0), 1);
           break;
         case TYPE_PED_ONPATH:
           rectangle(oframe, r, Scalar(255,255,0), 3);
           ped = true;
           inst_PedCount++;
+
+          // won't ever draw a pink rectangle over this one 
+          // break into capture mode if path is invalid
+          if(!pclass.pedPathIsValid) {
+
+            pthread_mutex_lock(&qutex);
+            // >>>
+            frameQueueSetSize = 15;
+            // >>>
+            pthread_mutex_unlock(&qutex);
+
+          }
           break;
         case TYPE_UNCLASS: 
           //rectangle(oframe, r, Scalar(0,255,0), 1);
@@ -400,6 +408,7 @@ pthread_mutex_unlock(&qutex);
 #endif
 
 #ifndef RELEASE
+      /*
       cout << "[" << vstats.getWidth() << "x" << vstats.getHeight() << 
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
@@ -409,6 +418,7 @@ pthread_mutex_unlock(&qutex);
               //"," << pclass.peddetect.getMinSize().area()*.15 << endl;
               "," << pclass.peddetect.getMinSize() <<
               "," << pclass.peddetect.getMaxSize() << endl;
+      */
 #endif
 
       pedPerSec = false;
