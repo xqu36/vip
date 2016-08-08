@@ -2,50 +2,66 @@
 #import os
 import SSLClient
 import socket
-from itertools import islice
 import math
 import time
+import fcntl
+import struct
+import urllib2
 
-# break the dict into a list of dicts to send
-def chunks(data, SIZE=10):
-  it = iter(data)
-  for i in xrange(0, len(data), SIZE):
-    yield {k:data[k] for k in islice(it, SIZE)}
+devPack = {}
 
-data = {}
+#Fcuntion for obtaining unique identifier.
+def getUniqueIdentifier():
+    try:
+      fo = open("/etc/uniqsysidentity.conf")
+      identity = fo.read(16)
+      fo.close()
+    except IOError:
+      print "Error: Unable to open the Unique Identifier File! /etc/uniqsysidentity.conf Who am I?"
+      identity = "Invalid Identity"
+    return identity
 
-#logfile = open("/home/ubuntu/ev/sensor.log", 'r')
-logfile = open("sensor.log", 'r')
+#Function for obtaining local ip address.
+def getIpAddr(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,
+        struct.pack('256s', ifname[:15])
+    )[20:24])
 
-for line in logfile.readlines():
-  splitline = line.strip("\n")
 
-  # timestamp is 28 chars long
-  timestamp = splitline[-28:]
-  message = splitline[:-28]
 
-  # put in dict here
-  data[timestamp]=message
+#Local IP set to locip
+def sendPacket():
+    uniqID = getUniqueIdentifier()
+    devPack["Unique Identifier"] = str(uniqID)
+    devPack["Timestamp"] = time.strftime("%c")
+    devPack["Local IP"] =  getIpAddr('wlan0')
+    print "Sending Data...."
+    print devPack
+    SSLClient.send_data(devPack)
 
-#idfile = open("/home/ubuntu/ev/id.log", 'r')
-idfile = open("id.log", 'r')
+def wifiSignal():
+    try:
+      host = socket.gethostbyname("smartcities.gatech.edu")
+      s = socket.create_connection((host, 80),2)
+      return False
+    except:
+      pass
+    return True
 
-for line in idfile.readlines():
-  splitline = line.strip("\n")
 
-chunksize = 10
 
-dlen = len(data)
-num_packets = int(math.ceil(float(dlen) / chunksize))
 
-times = time.strftime("%a %b %d")
-dictcount = 0
+noSignal = True
+while noSignal:
+    time.sleep(30)
+    print "No WIFI signal, attempting to resend development packet..."
+    noSignal = wifiSignal()
+    
 
-for item in chunks(data, chunksize):
-  dictcount += 1
-  item["HU_Index"]=str(dictcount) + "/" + str(num_packets)
-  item["HealthUpdate"]=times
-  item["NodeID"]=splitline
-  SSLClient.send_data(item)
+sendPacket()
 
+#data = {}
 #os.remove("sensor.log")
