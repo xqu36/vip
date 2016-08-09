@@ -87,11 +87,11 @@ ln -s ../init.d/softwaresetup.sh S99softwaresetup.sh
 
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
-echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" > etc/cron.d/healthMon
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> etc/cron.d/healthMon
 echo "@reboot ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
-echo "#@reboot ubuntu cd /mnt/ramdisk/appls/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/devPacket.sh" > /etc/cron.d/devPacket
+echo "#@reboot ubuntu cd /mnt/ramdisk/appls/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
 echo "#* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
-echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" > /etc/cron.d/sentinel
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" >> /etc/cron.d/sentinel
 echo "#30 5 * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/ev/health_update.sh" >> /etc/cron.d/healthUpdate
 echo "#30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/getSoftwareUpdate.sh" >> /etc/cron.d/softwareUpdate
 echo "#30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/updateChecker.sh" >> /etc/cron.d/firmwareUpdate
