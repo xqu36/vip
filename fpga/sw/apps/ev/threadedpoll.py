@@ -350,7 +350,9 @@ def getUniqueIdentifier():
   
 
 def main():
-  process = start_proc("/home/ubuntu/ev/segmentation")
+  dir_path = os.path.dirname(os.path.realpath(__file__))
+  segmentation_path = str(dir_path) + "/segmentation"
+  process = start_proc(segmentation_path)
   atexit.register(kill_child)
 
   session = start_gps()
