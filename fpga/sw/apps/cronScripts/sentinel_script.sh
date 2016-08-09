@@ -36,7 +36,12 @@ if [ $? -eq 0 ]; then
 	0)  /bin/echo "Starting Sensor Scripts...$(date)" >> /home/ubuntu/ev/sensor.log
 	    # Fetch the value and increase it
 	    sensor_check
-	    /usr/bin/python /home/ubuntu/ev/threadedpoll.py &
+	    if [ -e /mnt/ramdisk/apps/ev/threadedpoll.py ]; then
+                /usr/bin/python /mnt/ramdisk/apps/ev/threadedpoll.py &
+            else
+                /usr/bin/python /home/ubuntu/ev/threadedpoll.py &
+            fi
+
 	    ;;
 	1)  #alls well. update sentinel timestamp and reset counter
 	    touch $TEMPFILE
