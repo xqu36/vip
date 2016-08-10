@@ -31,14 +31,14 @@ for line in f:
         i = i+1
         atall = 1
 print("done searching")
-os.system('sudo rm /mnt/ramdisk/apps/allpacks.txt')
+os.system('sudo rm /mnt/ramdisk/apps/deploy/allpacks.txt')
 if i != 0:
     print("%d packages found that were not present on V1.1 build" %i)
     print("\n\nto complete the deployment process, perform one of the actions below:\n")
     response = raw_input("type d to delete packages or k to keep packages and update the package list")
     if response == "d":
         os.system('sudo chmod a+x /mnt/ramdisk/apps/deploy/deletepacks.sh')
-        os.system('./mnt/ramdisk/apps/deploy/deletepacks.sh')
+        os.system('/mnt/ramdisk/apps/deploy/deletepacks.sh')
         print("to make these changes perminent, alter the 'removing packages' part of the deployment script with the current deletepacks.sh")
     else:
         os.system('sudo rm /mnt/ramdisk/apps/deploy/hispacks.txt')
