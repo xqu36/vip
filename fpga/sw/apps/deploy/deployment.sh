@@ -7,7 +7,7 @@
 ###############################################################
 
 echo 'checking package list...'
-python /mnt/ramdisk/apps/deploy/compair2.py
+python /mnt/ramdisk/apps/deploy/compair.py
 #if [ -e /mnt/ramdisk/apps/deploy/deletepacks.sh ]
 #  then
 #    echo "exiting script"
