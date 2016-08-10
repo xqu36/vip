@@ -18,10 +18,14 @@ PedestrianDetector::PedestrianDetector() {
     carSizeValid = false;
 }
 
+//int counter=0;
+
 bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsize, vector<Point>& cntd_vec) {
 
     // determine centroid of objframe
     Point cntd_objframe = Point(objframe.cols/2, objframe.rows/2);
+    Mat printout;
+    objframe.copyTo(printout);
 
     vector<Rect> detected;
 
@@ -45,6 +49,11 @@ bool PedestrianDetector::detectPedestrian(const Mat& objframe, const Size& objsi
         for(int i = 0; i < detected.size(); i++) {
           // determine centroid of detected
           Point cntd_detected = Point(detected[i].x+(detected[i].width/2), detected[i].y+(detected[i].height/2));
+
+          //circle(printout, cntd_detected, 10, Scalar(0,255,0), CV_FILLED);
+          //string print = "print" + to_string(counter) + ".jpg";
+          //imwrite(print, printout);
+          //counter++;
 
           cntd_vec.push_back(cntd_detected - cntd_objframe);
         }

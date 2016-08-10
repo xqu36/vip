@@ -63,8 +63,10 @@ public:
   VideoStats pstats;
 
   PathClassifier(int rows, int cols);
-  int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame);
-  void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame);
+  //int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame, const Mat& frame_hd);
+  int classify(ConnectedComponent& ccomp, const Mat& objmask, Mat& frame, const Mat& frame_hd);
+  //void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame, const Mat& frame_hd);
+  void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, Mat& frame, const Mat& frame_hd);
   void redrawMask();
   int getCurrentPedCount();
   int getPedCountCalibration();

@@ -10,7 +10,7 @@ import datetime
 import math
 import wave
 import pyaudio
-from Adafruit_ADS1x15.Adafruit_ADS1x15 import ADS1x15 
+from Adafruit_ADS1x15.Adafruit_ADS1x15 import ADS1x15
 import Adafruit_BMP.BMP085 as BMP085
 import numpy as np
 try:
@@ -82,12 +82,12 @@ def start_gps():
   session.stream(gps.WATCH_ENABLE|gps.WATCH_NEWSTYLE)
   return session
 
-def movingAvg(values,window): 
+def movingAvg(values,window):
   weights = np.repeat(1.0,window)/window
   smas = np.convolve(values,weights,"valid")
   return smas
 
-# Polling Threads 
+# Polling Threads
 # report every .25s
 # EV
 def poll_proc(process):
@@ -169,13 +169,13 @@ def poll_sensors_2():
   RECORD_SECONDS = .125 #each recording is 1/8 sec long
   WAVE_OUTPUT_FILENAME = "file0.wav"
   audio = pyaudio.PyAudio()    #instantiate audio
-  
+
   while True:
     try:
       stream = audio.open(format=FORMAT, channels=CHANNELS,
                     rate=RATE, input=True,
                     frames_per_buffer=CHUNK)
-    
+
       frames = []
 
       for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
@@ -209,7 +209,7 @@ def poll_sensors_2():
       dat = byteList / 32768.0
       magSq = np.sum(dat ** 2.0) / len(dat)
       dB = 10.0 * math.log(magSq,10.0)
-      
+
 
       mutex.acquire()
       try:
@@ -217,12 +217,12 @@ def poll_sensors_2():
       finally:
         mutex.release()
         time.sleep(3)
-        
+
     except (IOError) as err:
       print "ruh roh error: {0}".format(err)
       data["dB"] = "NA"
       pass
-        
+
   # close audio when thread dies
   audio.terminate()
 
@@ -254,15 +254,11 @@ def poll_sensors_4(session):
 
       try:
         if hasattr(report, 'lon'):
-          data["Longitude"]=report.lon 
+          data["Longitude"]=report.lon
         if hasattr(report, 'lat'):
           data["Latitude"]=report.lat
         if hasattr(report, 'alt'):
           data["Altitude"]=report.alt
-
-        idlog = report.lon + "," + report.lat
-        with open("/home/ubuntu/ev/id.log", 'w') as f:
-          f.write(idlog)
       finally:
         mutex.release()
 
@@ -298,11 +294,11 @@ def hold_data():
         #qfile.close()
 
         # Testing encryption
-        #subprocess.call([ "openssl", 
-        #                  "rsautl", 
-        #                  "-encrypt", 
+        #subprocess.call([ "openssl",
+        #                  "rsautl",
+        #                  "-encrypt",
         #                  "-pubin", "-inkey", "node1/public.pem"
-        #                  "-in", qfilename, 
+        #                  "-in", qfilename,
         #                  "-out", qfilename+".enc" ])
 
         # TESTING
@@ -328,11 +324,11 @@ def hold_data():
           writing = False
 
           # Testing encryption
-        #subprocess.call([ "openssl", 
-        #                  "rsautl", 
-        #                  "-encrypt", 
+        #subprocess.call([ "openssl",
+        #                  "rsautl",
+        #                  "-encrypt",
         #                  "-pubin", "-inkey", "node1/public.pem"
-        #                  "-in", pfilename, 
+        #                  "-in", pfilename,
         #                  "-out", pfilename+".enc" ])
 
     time.sleep(1)
@@ -346,17 +342,17 @@ def getUniqueIdentifier():
     print "Error: Unable to open the Unique Identifier File! Who am I?"
     identity = "Invalid Identity"
   return identity
-      
-  
+
+
 
 def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
-  segmentation_path = str(dir_path) + "/segmentation"
+  segmentation_path = str(dir_path) + "/segmentation.arm"
   process = start_proc(segmentation_path)
   atexit.register(kill_child)
 
   session = start_gps()
-  
+
   # EV's segmentation
   t1 = threading.Thread(target=poll_proc, args=(process,))
   t1.daemon = True
