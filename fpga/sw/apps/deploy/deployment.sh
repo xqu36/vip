@@ -6,21 +6,47 @@
 #	after running, it deletes its self		      #
 ###############################################################
 
-#This will ask the user for the version number and write it to a .txt file
+echo 'checking package list...'
+python /home/ubuntu/deploy/compair2.py
+#if [ -e /home/ubuntu/deploy/deletepacks.sh ]
+#  then
+#    echo "exiting script"
+#    exit 1
+#  else
+#    echo "package list OK"
+#fi
+echo "package list OK"
+
+#Ask the user for an ID
+echo "what is this device's ID?";
+read uniqueid;
+echo ''$uniqueid'' >  /etc/uniqsysidentity.conf
+
+#Ask for the device's password
+echo "enter new device password";
+read passs;
+echo 'ubuntu:'$passs'' | sudo chpasswd
+
+#Ask the user for the version number and write it to a .txt file
 echo "what version is this?";
 read  version;
 echo 'version number: '$version'' > /home/ubuntu/version
 
 #change password
-echo "ubuntu:@G30rg1@T3chN0tUG@1738" | sudo chpasswd
+#echo "ubuntu:@G30rg1@T3chN0tUG@1738" | sudo chpasswd
 
 #cron job stuff
-sudo mv /mnt/ramdisk/apps/cronScripts/updateSoftware.sh /etc/cron.weekly/
-sudo mv /mnt/ramdisk/apps/cronScripts/updateChecker.sh /etc/cron.monthly/
-sudo mv /mnt/ramdisk/apps/cronScripts/updateSoftware /etc/cron.weekly/
-sudo mv /mnt/ramdisk/apps/cronScripts/updateChecker /etc/cron.monthly/
-(crontab -l 2>/dev/null; echo "* * * * * cd /mnt/ramdisk/apps/cronScripts; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh_script.sh") | crontab -
-(sudo crontab -l 2>/dev/null; echo "0 4   *   *   *    /sbin/shutdown -r now") | sudo crontab -
+sudo rm -r /etc/cron.d/
+echo "* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" > /etc/cron.d/sentinel
+echo "* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> etc/cron.d/healthMon
+echo "@reboot ubuntu cd /mnt/ramdisk/appls/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
+echo "30 5 * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/ev/health_update.sh" >> /etc/cron.d/healthUpdate
+echo "30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/getSoftwareUpdate.sh" >> /etc/cron.d/softwareUpdate
+echo "30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/updateChecker.sh" >> /etc/cron.d/firmwareUpdate
+
+#fstab reset
+sudo rm /etc/fstab
+sudo cp /home/ubuntu/setup/fstab /etc/fstab
 
 #removing packages
 echo "Y" | sudo apt-get purge bsdmainutils
@@ -67,6 +93,15 @@ echo "Y" | sudo apt-get purge xorg-sgml-doctools
 echo "Y" | sudo apt-get purge xtrans-dev
 echo "Y" | sudo apt-get purge xz-utils
 echo "Y" | sudo apt-get purge whiptail
+echo "Y" | sudo apt-get purge apt
+
+#remove unnecessary folders and make an empty ev folder for logs
+sudo rm -r /home/ubuntu/
+sudo mkdir /home/ubuntu/ev
+
+#delete wifi settings
+sudo rm /etc/udev/rules.d/70-persistent-net.rules
 
 #delete its self to cover up changed password
 sudo rm -- "$0"
+exit 0
