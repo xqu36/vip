@@ -401,7 +401,7 @@ def main():
       mutex.acquire()
       try:
         data["Timestamp"]=time.strftime("%c")
-        data["Identifier"]=str(identity)
+        data["Identity"]=str(identity)
       finally:
         mutex.release()
 
