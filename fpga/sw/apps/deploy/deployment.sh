@@ -7,8 +7,8 @@
 ###############################################################
 
 echo 'checking package list...'
-python /home/ubuntu/deploy/compair2.py
-#if [ -e /home/ubuntu/deploy/deletepacks.sh ]
+python /mnt/ramdisk/apps/deploy/compair2.py
+#if [ -e /mnt/ramdisk/apps/deploy/deletepacks.sh ]
 #  then
 #    echo "exiting script"
 #    exit 1
@@ -30,7 +30,7 @@ echo 'ubuntu:'$passs'' | sudo chpasswd
 #Ask the user for the version number and write it to a .txt file
 echo "what version is this?";
 read  version;
-echo 'version number: '$version'' > /home/ubuntu/version
+echo 'version number: '$version'' > /mnt/ramdisk/apps/version
 
 #change password
 #echo "ubuntu:@G30rg1@T3chN0tUG@1738" | sudo chpasswd
@@ -46,7 +46,7 @@ echo "30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/updateChecker.sh" >>
 
 #fstab reset
 sudo rm /etc/fstab
-sudo cp /home/ubuntu/setup/fstab /etc/fstab
+sudo cp /mnt/ramdisk/apps/setup/fstab /etc/fstab
 
 #removing packages
 echo "Y" | sudo apt-get purge bsdmainutils
