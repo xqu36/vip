@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#import os
+import os
 import SSLClient
 import socket
 from itertools import islice
@@ -27,7 +27,7 @@ for line in logfile.readlines():
   # put in dict here
   data[timestamp]=message
 
-idfile = open("/home/ubuntu/ev/id.log", 'r')
+idfile = open("/etc/uniqsysidentity.conf", 'r')
 #idfile = open("id.log", 'r')
 
 for line in idfile.readlines():
@@ -45,7 +45,7 @@ for item in chunks(data, chunksize):
   dictcount += 1
   item["HU_Index"]=str(dictcount) + "/" + str(num_packets)
   item["HealthUpdate"]=times
-  item["NodeID"]=splitline
+  item["Identity"]=splitline
   SSLClient.send_data(item)
 
-os.remove("sensor.log")
+os.remove("/home/ubuntu/ev/sensor.log")
