@@ -347,7 +347,7 @@ def getUniqueIdentifier():
 
 def main():
   dir_path = os.path.dirname(os.path.realpath(__file__))
-  segmentation_path = str(dir_path) + "/segmentation"
+  segmentation_path = str(dir_path) + "/segmentation.arm"
   process = start_proc(segmentation_path)
   atexit.register(kill_child)
 
