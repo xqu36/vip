@@ -88,6 +88,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, Mat&
     } else {
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame, frame_hd);
       //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
+      if(outType == TYPE_PED_ONPATH) pedVotes += 20;  // make sure outType is in line with what is returned
     }
   } else ;
 
@@ -180,7 +181,8 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       vector<Point> cntd_vec;
 
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
-        rectangle(frame, ccomp.getBoundingBox(), color, 3);
+        //rectangle(frame, ccomp.getBoundingBox(), color, 3);
+        rectangle(frame, ccomp.getBoundingBox(), color, 1);
 
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
