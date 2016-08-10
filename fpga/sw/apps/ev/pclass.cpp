@@ -87,6 +87,7 @@ int PathClassifier::classify(ConnectedComponent& ccomp, const Mat& objmask, Mat&
     } else {
       if(pedVotes > carVotes) updatePath(ccomp, TYPE_PED, outType, objmask, frame, frame_hd);
       //if(outType != TYPE_PED || outType != TYPE_PED_ONPATH) pedVotes = 0;
+      if(outType == TYPE_PED_ONPATH) pedVotes += 20;  // make sure outType is in line with what is returned
     }
   } else ;
 

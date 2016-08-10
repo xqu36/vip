@@ -40,10 +40,12 @@ void* frameGrabber(void*) {
 
   Mat qFrame;
 
-  VideoCapture capture("img/spring_high_angle_5.mp4");
+  //VideoCapture capture("img/spring_high_angle_5.mp4");
+  VideoCapture capture(0);
 
   if (!capture.isOpened()) { 
     cout << "Capture failed to open." << endl; 
+    cout << "Thread is exiting." << endl;
     pthread_exit(NULL);
   }
 
@@ -76,13 +78,15 @@ void* frameGrabber(void*) {
         // >>>
         pthread_mutex_unlock(&qutex);
       }
-     if(frameQueue.size() > 1) {
+      /*
+      if(frameQueue.size() > 1) {
         pthread_mutex_lock(&qutex);
         // >>>
         frameQueue.pop_front();
         // >>>
         pthread_mutex_unlock(&qutex);
       }
+      */
 
     } else if(frameQueueSetSize != 1) {
       // while in this mode, update frameQ up to specified amount
@@ -92,7 +96,7 @@ void* frameGrabber(void*) {
         frameQueue.push_back(qFrame);
         // >>>
         pthread_mutex_unlock(&qutex);
-        cout << "saving frame: " << capture.get(CV_CAP_PROP_POS_FRAMES) << endl;
+        cout << capture.get(CV_CAP_PROP_POS_FRAMES) << endl;
       } else {
         // else implies the queue is now frameQSetSize large
         // switch desired size back down to 1
@@ -103,7 +107,7 @@ void* frameGrabber(void*) {
         pthread_mutex_unlock(&qutex);
       }
     }
-    usleep(66000);
+    //usleep(66000);
   }
   cout << "Thread is exiting." << endl;
   pthread_exit(NULL);
@@ -196,7 +200,7 @@ int main(int argc, char** argv) {
   } while(frame_hd.empty());
 
   // @csi_enhance
-  resize(frame_hd, frame, Size(320,240));
+  resize(frame_hd, frame, Size(320,240), 4);
 
   Mat prev_frame;
   prev_frame = frame.clone();
@@ -262,7 +266,7 @@ int main(int argc, char** argv) {
     // >>>
     pthread_mutex_unlock(&qutex);
 
-    resize(frame_hd, frame, Size(320,240));
+    resize(frame_hd, frame, Size(320,240), 4);
 
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
@@ -343,11 +347,11 @@ int main(int argc, char** argv) {
 
           // won't ever draw a pink rectangle over this one 
           // break into capture mode if path is invalid
-          if(!pclass.pedPathIsValid) {
+          if(!pclass.pedPathIsValid && frameQueueSetSize == 1) {
 
             pthread_mutex_lock(&qutex);
             // >>>
-            frameQueueSetSize = 15;
+            frameQueueSetSize = 60;
             // >>>
             pthread_mutex_unlock(&qutex);
 
@@ -390,6 +394,14 @@ int main(int argc, char** argv) {
     vstats.displayStats("inst", result);
     if(vstats.getUptime() > 1.0) pclass.bgValid = true;
 
+    if(frameQueue.size() > frameQueueSetSize) {
+      pthread_mutex_lock(&qutex);
+      // >>>
+      frameQueue.pop_front();
+      // >>>
+      pthread_mutex_unlock(&qutex);
+    }
+
     // update every quarter second
     if(vstats.getMillisecUptime() >= pre_uptime+1000) {
 
@@ -408,7 +420,6 @@ int main(int argc, char** argv) {
 #endif
 
 #ifndef RELEASE
-      /*
       cout << "[" << vstats.getWidth() << "x" << vstats.getHeight() << 
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
@@ -418,7 +429,6 @@ int main(int argc, char** argv) {
               //"," << pclass.peddetect.getMinSize().area()*.15 << endl;
               "," << pclass.peddetect.getMinSize() <<
               "," << pclass.peddetect.getMaxSize() << endl;
-      */
 #endif
 
       pedPerSec = false;
@@ -434,10 +444,13 @@ int main(int argc, char** argv) {
 #endif
 
 #ifndef RELEASE
+
+    /*
     imshow("frame", oframe);
     imshow("fg", foregroundMask_ed3);
     imshow("probable path", dangerPath);
     if(waitKey(30) >= 0) break;
+    */
 #endif
 
   }
