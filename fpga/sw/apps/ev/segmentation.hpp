@@ -22,9 +22,7 @@
 //#define MAX(x,y) (((x)>(y))?(x):(y))
 //#define MIN(x,y) (((x)<(y))?(x):(y))
 
-#define INFILE "img/klaus_high_320x240.mp4"
-
-#define DETECTSHADOWS 0
+#define DETECTSHADOWS 1
 #define NMIXTURES 3
 
 #define STABILIZE 0
