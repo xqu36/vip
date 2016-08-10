@@ -96,7 +96,6 @@ void* frameGrabber(void*) {
         frameQueue.push_back(qFrame);
         // >>>
         pthread_mutex_unlock(&qutex);
-        cout << capture.get(CV_CAP_PROP_POS_FRAMES) << endl;
       } else {
         // else implies the queue is now frameQSetSize large
         // switch desired size back down to 1
@@ -351,7 +350,7 @@ int main(int argc, char** argv) {
 
             pthread_mutex_lock(&qutex);
             // >>>
-            frameQueueSetSize = 60;
+            frameQueueSetSize = 15;
             // >>>
             pthread_mutex_unlock(&qutex);
 

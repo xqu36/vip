@@ -182,7 +182,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
 
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
         //rectangle(frame, ccomp.getBoundingBox(), color, 3);
-        rectangle(frame, ccomp.getBoundingBox(), color, 1);
+        //rectangle(frame, ccomp.getBoundingBox(), color, 1);
 
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
@@ -239,7 +239,7 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
       // check to make sure
       if(peddetect.detectPedestrian(re_objframe, rectMask.size(), cntd_vec)) {
 
-        rectangle(frame, ccomp.getBoundingBox(), color, 3);
+        //rectangle(frame, ccomp.getBoundingBox(), color, 3);
         // prepare ctrd_mat
         Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
 
