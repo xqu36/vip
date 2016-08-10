@@ -35,7 +35,7 @@ def getIpAddr(ifname):
 #Local IP set to locip
 def sendPacket():
     uniqID = getUniqueIdentifier()
-    devPack["Unique Identifier"] = str(uniqID)
+    devPack["Identity"] = str(uniqID)
     devPack["Timestamp"] = time.strftime("%c")
     devPack["Local IP"] =  getIpAddr('wlan0')
     print "Sending Data...."
