@@ -43,11 +43,11 @@ sudo apt-get -y install gpsd
 sudo apt-get -y install python-GPS
 sudo apt-get -y install usbutils
 sudo apt-get -y install python-pyaudio
-sudo apt-get -y install ntp
+#sudo apt-get -y install ntp
 
 ## Python libraries ##
 ## Add addtional libs here, and list them on the wiki page. ##
-sudo pip install Adafruit_Libraries
+sudo pip -y install Adafruit_Libraries
 #sudo pip install python-smbus
 sudo apt-get -y install python-smbus
 sudo apt-get -y install python-numpy
@@ -88,7 +88,7 @@ ln -s ../init.d/softwaresetup.sh S99softwaresetup.sh
 
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
-echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> etc/cron.d/healthMon
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
 echo "@reboot ubuntu sleep 60 &&  cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
 echo "#@reboot ubuntu sleep 60 &&  cd /mnt/ramdisk/appls/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
 echo "#* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
