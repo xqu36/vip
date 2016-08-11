@@ -67,6 +67,7 @@ sudo python setup.py install
 ## Make segmentation and cleanup files. ##
 cd /home/ubuntu/ev/
 sudo make
+mv segmentation segmentation.arm
 rm *.cpp
 rm *.hpp
 

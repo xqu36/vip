@@ -419,6 +419,7 @@ int main(int argc, char** argv) {
 #endif
 
 #ifndef RELEASE
+      /*
       cout << "[" << vstats.getWidth() << "x" << vstats.getHeight() << 
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
@@ -428,6 +429,10 @@ int main(int argc, char** argv) {
               //"," << pclass.peddetect.getMinSize().area()*.15 << endl;
               "," << pclass.peddetect.getMinSize() <<
               "," << pclass.peddetect.getMaxSize() << endl;
+             */ 
+      cout << pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
+              "," << sec_PedCount << 
+              "," << totalPed << endl;
 #endif
 
       pedPerSec = false;
