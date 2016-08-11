@@ -3,7 +3,15 @@
  * 
  * Main program with which to experiment with segmentation
  *
- *  ZED-READY --> no references to imshow or anything needed visually
+ *  Current version: v1.1 - 
+ *
+ *  Major changes from v1.0 include:
+ *    implemented queue to process frames at slower pace - threaded
+ *    implemented 'enhance' feature, switching to hd frame when necessary
+ *    DEBUG mode
+ *    more visibility for calibration
+ *    blurring (Gaussian, 5x5)
+ *    shadow removal (MoG2 binary thresholding)
  *
  */
 
@@ -40,12 +48,17 @@ void* frameGrabber(void*) {
 
   Mat qFrame;
 
-  //VideoCapture capture("img/spring_high_angle_5.mp4");
+#ifdef DEBUG
+  VideoCapture capture("img/spring_high_angle_5.mp4");
+#endif
+
+#ifndef DEBUG
   VideoCapture capture(0);
+#endif
 
   if (!capture.isOpened()) { 
     cout << "Capture failed to open." << endl; 
-    cout << "Thread is exiting." << endl;
+    cout << "Thread is exiting: CTRL-C to terminate application." << endl;
     pthread_exit(NULL);
   }
 
@@ -62,13 +75,16 @@ void* frameGrabber(void*) {
 
     capture >> qFrame;
 
+#ifdef DEBUG
     if(qFrame.empty()) {
       capture.set(CV_CAP_PROP_POS_AVI_RATIO, 0.0);
       continue;
     }
+#endif
 
     // keep it real-time if necessary
     if(frameQueueSetSize == 1) {
+
       // while in this mode, keep updating [0] to be real-time frame
       if(frameQueue.size() <= 1) {
         pthread_mutex_lock(&qutex);
@@ -78,17 +94,8 @@ void* frameGrabber(void*) {
         // >>>
         pthread_mutex_unlock(&qutex);
       }
-      /*
-      if(frameQueue.size() > 1) {
-        pthread_mutex_lock(&qutex);
-        // >>>
-        frameQueue.pop_front();
-        // >>>
-        pthread_mutex_unlock(&qutex);
-      }
-      */
-
     } else if(frameQueueSetSize != 1) {
+
       // while in this mode, update frameQ up to specified amount
       if(frameQueue.size() < frameQueueSetSize) {
         pthread_mutex_lock(&qutex);
@@ -97,6 +104,7 @@ void* frameGrabber(void*) {
         // >>>
         pthread_mutex_unlock(&qutex);
       } else {
+
         // else implies the queue is now frameQSetSize large
         // switch desired size back down to 1
         pthread_mutex_lock(&qutex);
@@ -106,7 +114,9 @@ void* frameGrabber(void*) {
         pthread_mutex_unlock(&qutex);
       }
     }
-    //usleep(66000);
+#ifdef DEBUG
+    usleep(66000);
+#endif
   }
   cout << "Thread is exiting." << endl;
   pthread_exit(NULL);
@@ -115,14 +125,9 @@ void* frameGrabber(void*) {
 void sig_handler(int s) {
   cout << "\nCaught signal " << s << " -- EXITING SAFELY" << endl;
 
-  //pthread_mutex_lock(&kutex);
-  // >>>
   pthreadExit = true;
-  // >>>
-  //pthread_mutex_unlock(&kutex);
 
-  sleep(15);
-
+  sleep(10);
   cout << "goodbye" << endl;
   exit(0);
 }
@@ -151,16 +156,9 @@ int main(int argc, char** argv) {
   rval = pthread_create(&fgrabber, NULL, frameGrabber, 0);
   if(rval) { cout << "Thread's dead, baby. Thread's dead." << endl; exit(0); }
 
-  //VideoCapture capture(argv[1]);
-  //VideoCapture capture(0);
-  VideoStats vstats;
-
-/*
-  if (!capture.isOpened()) { 
-    cout << "Capture failed to open." << endl; 
-    return -1; 
-  }
-  */
+  ////////////////////
+  /* INITIALIZATION */
+  ////////////////////
 
   //capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   //capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
@@ -168,26 +166,18 @@ int main(int argc, char** argv) {
   //assert(capture.get(CV_CAP_PROP_FRAME_WIDTH) == 320);
   //assert(capture.get(CV_CAP_PROP_FRAME_HEIGHT) == 240);
 
-  ////////////////////
-  /* INITIALIZATION */
-  ////////////////////
+  VideoStats vstats;
 
-  // @csi_enhance
-  //vstats.setWidth(capture.get(CV_CAP_PROP_FRAME_WIDTH));
-  //vstats.setHeight(capture.get(CV_CAP_PROP_FRAME_HEIGHT));
+  // Set desired final resolution
   vstats.setWidth(320);
   vstats.setHeight(240);
-
-  int loop_count = 0;
 
   // set MAX_AREA for pedestrians
   int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
 
   Mat frame, frame_hd;
 
-  //@queue
-  //capture >> frame_hd;
-
+  // get next frame off of the top of the queue
   do {
     if(frameQueueReady) {
       pthread_mutex_lock(&qutex);
@@ -198,17 +188,14 @@ int main(int argc, char** argv) {
     }
   } while(frame_hd.empty());
 
-  // @csi_enhance
+  // csi_enhance - TODO what interpolation method works best?
   resize(frame_hd, frame, Size(320,240), 4);
 
+  // define for img stabilization
   Mat prev_frame;
   prev_frame = frame.clone();
 
-  Mat oframe;
-
   Mat foregroundMask, backgroundModel;
-  Mat foregroundMask_color;
-  Mat foregroundMask_ed3;
 
   Mat dangerPath;
 
@@ -224,9 +211,12 @@ int main(int argc, char** argv) {
   bool updatetimer = true;
   int result = 0;  // calibrating [0], no ped [-1], ped [+1]
 
+  // for img stabilization 
   Mat prev_gradient = frame.clone();
-  cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
-  prev_gradient.convertTo(prev_gradient, CV_32FC1);
+  if(STABILIZE) {
+    cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
+    prev_gradient.convertTo(prev_gradient, CV_32FC1);
+  }
 
   // initialize MoG background subtractor
   BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2();
@@ -244,6 +234,7 @@ int main(int argc, char** argv) {
 
   // processing loop
   for(;;) {
+
     ////////////////////
     /* PRE-PROCESSING */
     ////////////////////
@@ -254,7 +245,7 @@ int main(int argc, char** argv) {
       updatetimer = !updatetimer;
     }
 
-    // take new current frame
+    // take new current frame for img stabilization
     prev_frame = frame.clone();
 
     //@queue
@@ -270,10 +261,8 @@ int main(int argc, char** argv) {
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
-    //frame.copyTo(oframe);
     GaussianBlur(frame, frame, Size(5,5), 0, 0);
     GaussianBlur(frame_hd, frame_hd, Size(5,5), 0, 0);
-    frame.copyTo(oframe);
 
     ////////////////
     /* PROCESSING */
@@ -293,18 +282,18 @@ int main(int argc, char** argv) {
     MOG.getBackgroundImage(backgroundModel);
 
     // remove detected shadows
-    //threshold(foregroundMask, foregroundMask, 0, 255, THRESH_BINARY);
     threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
 
-    erode(foregroundMask, foregroundMask_ed3, sE_e, Point(-1, -1), 1);
-    dilate(foregroundMask_ed3, foregroundMask_ed3, sE_d, Point(-1, -1), 2);
-    erode(foregroundMask_ed3, foregroundMask_ed3, sE_e, Point(-1, -1), 0);
+    erode(foregroundMask, foregroundMask, sE_e, Point(-1, -1), 1);
+    dilate(foregroundMask, foregroundMask, sE_d, Point(-1, -1), 2);
+    erode(foregroundMask, foregroundMask, sE_e, Point(-1, -1), 0);
 
     // find CCs in foregroundMask
-    findCC(foregroundMask_ed3, vec_cc);
+    findCC(foregroundMask, vec_cc);
 
     prev_PedCount = inst_PedCount;
     inst_PedCount = 0;
+
     // iterate through the found CCs
     for(int i=0; i<vec_cc.size(); i++) {
 
@@ -326,25 +315,28 @@ int main(int argc, char** argv) {
       //dilate(objmask, objmask, sE_d, Point(-1, -1), 2);
 
       int classification = -1;
-      classification = pclass.classify(vec_cc[i], objmask, oframe, frame_hd);
+      classification = pclass.classify(vec_cc[i], objmask, frame, frame_hd);
       
       ped = false;
-      bool draw = /* pclass.carPathIsValid && */ pclass.pedPathIsValid;
       Rect r = vec_cc[i].getBoundingBox();
+
       switch(classification) {
         case TYPE_CAR:
           break;
         case TYPE_CAR_ONPATH:
           break;
         case TYPE_PED:
-          //rectangle(oframe, r, Scalar(255,255,0), 1);
+#ifdef DEBUG
+          rectangle(frame, r, Scalar(255,255,0), 1);
+#endif
           break;
         case TYPE_PED_ONPATH:
-          //rectangle(oframe, r, Scalar(255,255,0), 3);
+#ifdef DEBUG
+          rectangle(frame, r, Scalar(255,255,0), 3);
+#endif
           ped = true;
           inst_PedCount++;
 
-          // won't ever draw a pink rectangle over this one 
           // break into capture mode if path is invalid
           if(!pclass.pedPathIsValid && frameQueueSetSize == 1) {
 
@@ -353,11 +345,12 @@ int main(int argc, char** argv) {
             frameQueueSetSize = 15;
             // >>>
             pthread_mutex_unlock(&qutex);
-
           }
           break;
         case TYPE_UNCLASS: 
-          //rectangle(oframe, r, Scalar(0,255,0), 1);
+#ifdef DEBUG
+          rectangle(frame, r, Scalar(0,255,0), 1);
+#endif
           break;
         default:
           ped = false;
@@ -401,7 +394,7 @@ int main(int argc, char** argv) {
       pthread_mutex_unlock(&qutex);
     }
 
-    // update every quarter second
+    // update every second
     if(vstats.getMillisecUptime() >= pre_uptime+1000) {
 
       updatetimer = true;
@@ -414,32 +407,29 @@ int main(int argc, char** argv) {
       }
 
       // output to python script-piped stdout
-#ifdef RELEASE
-      cout << result*result << "," << sec_PedCount << "," << totalPed << endl;
+#ifndef DEBUG
+      cout << pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
+              "," << sec_PedCount << 
+              "," << totalPed << endl;
 #endif
 
-#ifndef RELEASE
-      /*
+#ifdef DEBUG
       cout << "[" << vstats.getWidth() << "x" << vstats.getHeight() << 
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
               "," << sec_PedCount << 
               "," << totalPed <<
-              //"," << pclass.peddetect.getMinSize().area() <<
-              //"," << pclass.peddetect.getMinSize().area()*.15 << endl;
+              "," << pclass.peddetect.getMinSize().area() <<
+              "," << pclass.peddetect.getMinSize().area()*.15 <<
               "," << pclass.peddetect.getMinSize() <<
               "," << pclass.peddetect.getMaxSize() << endl;
-             */ 
-      cout << pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
-              "," << sec_PedCount << 
-              "," << totalPed << endl;
 #endif
 
       pedPerSec = false;
       prev_PedCount = inst_PedCount =  0;
     }
 
-#ifdef RELEASE
+#ifndef DEBUG
     // recalibrate every 6 hrs
     if(vstats.getUptime() > 21600) {
       pclass.recalibrate = true;
@@ -447,14 +437,11 @@ int main(int argc, char** argv) {
     }
 #endif
 
-#ifndef RELEASE
-
-    /*
-    imshow("frame", oframe);
-    imshow("fg", foregroundMask_ed3);
+#ifdef DEBUG
+    imshow("frame", frame);
+    imshow("fg", foregroundMask);
     imshow("probable path", dangerPath);
     if(waitKey(30) >= 0) break;
-    */
 #endif
 
   }
