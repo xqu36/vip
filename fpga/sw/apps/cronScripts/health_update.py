@@ -1,3 +1,11 @@
+# In order to find Health Update packets in the MongoDB, sort like so:
+# find({HealthUpdate : "$time" })
+# where $time is in format "Wed Jun 20"
+#
+# The date will always be 10 chars long and padded with spaces.
+# For single-digit dates, add space in front of number:
+# "Wed Jun  8", not "Wed Jun 08"
+
 #!/usr/bin/python
 import os
 import SSLClient
