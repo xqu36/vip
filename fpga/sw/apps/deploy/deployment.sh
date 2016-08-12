@@ -8,13 +8,6 @@
 
 echo 'checking package list...'
 python /mnt/ramdisk/apps/deploy/compair.py
-#if [ -e /mnt/ramdisk/apps/deploy/deletepacks.sh ]
-#  then
-#    echo "exiting script"
-#    exit 1
-#  else
-#    echo "package list OK"
-#fi
 echo "package list OK"
 
 #Ask the user for an ID
@@ -26,11 +19,6 @@ echo ''$uniqueid'' >  /etc/uniqsysidentity.conf
 echo "enter new device password";
 read passs;
 echo 'ubuntu:'$passs'' | sudo chpasswd
-
-#Ask the user for the version number and write it to a .txt file
-echo "what version is this?";
-read  version;
-echo 'version number: '$version'' > /mnt/ramdisk/apps/version
 
 #change password
 #echo "ubuntu:@G30rg1@T3chN0tUG@1738" | sudo chpasswd
@@ -46,7 +34,7 @@ echo "30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/updateChecker.sh" >>
 
 #fstab reset
 sudo rm /etc/fstab
-sudo cp /mnt/ramdisk/apps/setup/fstab /etc/fstab
+sudo echo "tmpfs	/mnt/ramdisk tmpfs rw,suid,dev,exec,auto,nouser,async,size=64M	0 0" > /etc/fstab
 
 #removing packages
 echo "Y" | sudo apt-get purge bsdmainutils
