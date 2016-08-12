@@ -49,7 +49,7 @@ void* frameGrabber(void*) {
   Mat qFrame;
 
 #ifdef DEBUG
-  VideoCapture capture("img/spring_high_angle_5.mp4");
+  VideoCapture capture("img/spring_high_angle_8.mp4");
 #endif
 
 #ifndef DEBUG
@@ -188,8 +188,8 @@ int main(int argc, char** argv) {
     }
   } while(frame_hd.empty());
 
-  // csi_enhance - TODO what interpolation method works best?
-  resize(frame_hd, frame, Size(320,240), 4);
+  // csi enhance
+  resize(frame_hd, frame, Size(320,240), INTER_NEAREST);
 
   // define for img stabilization
   Mat prev_frame;
@@ -256,7 +256,7 @@ int main(int argc, char** argv) {
     // >>>
     pthread_mutex_unlock(&qutex);
 
-    resize(frame_hd, frame, Size(320,240), 4);
+    resize(frame_hd, frame, Size(320,240), INTER_NEAREST);
 
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
