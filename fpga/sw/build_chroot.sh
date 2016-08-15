@@ -88,7 +88,7 @@ ln -s ../init.d/softwaresetup.sh S99softwaresetup.sh
 # Setup Unique Identifier
 cp ${SETUP_DIR}/setidentity.sh /etc/init.d/.
 cd /etc/rc2.d
-ln -s ../init.d/setidentity.sh /etc/init.d/.
+ln -s ../init.d/setidentity.sh S99setidentity.sh
 
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
