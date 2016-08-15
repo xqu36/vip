@@ -92,7 +92,7 @@ echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cro
 echo "@reboot ubuntu sleep 60 &&  cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
 echo "#@reboot ubuntu sleep 60 &&  cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/devPacket.sh" >> /etc/cron.d/devPacket
 echo "#* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
-echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_scrpt.sh" >> /etc/cron.d/sentinel
+echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel_script.sh" >> /etc/cron.d/sentinel
 echo "#30 5 * * * ubuntu cd /mnt/ramdisk/apps/ev; /usr/bin/python /mnt/ramdisk/apps/cronScripts/health_update.py" >> /etc/cron.d/healthUpdate
 echo "#30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/getSoftwareUpdate.sh" >> /etc/cron.d/softwareUpdate
 echo "#30 4 * * * root cd ${SOFTWARE}; /bin/bash ${SOFTWARE}/updateChecker.sh" >> /etc/cron.d/firmwareUpdate

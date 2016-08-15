@@ -189,7 +189,7 @@ cp $BUILDPATH/apps/setup/modules/.bashrc $RFSLOC/home/ubuntu/.
 ## chroot into the rootfs and running the build_chroot.sh script ##
 ## Any commands to be run from chroot should be added to build_chroot.sh ##
 ## To add new software packages refer to build_chroot.sh. ##
-apt-get install qemu-user-static
+apt-get install qemu qemu-user-static
 cd $RFSLOC 
 echo "###################"
 echo "# ENTERING CHROOT #"
