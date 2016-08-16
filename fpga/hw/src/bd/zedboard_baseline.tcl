@@ -154,6 +154,9 @@ proc create_root_design { parentCell } {
 
   # Create ports
 
+  # Create instance: DeviceDNA_Reader_0, and set properties
+  set DeviceDNA_Reader_0 [ create_bd_cell -type ip -vlnv user.org:user:DeviceDNA_Reader:1.0 DeviceDNA_Reader_0 ]
+
   # Create instance: axi4_stream_user_processing_core_0, and set properties
   set axi4_stream_user_processing_core_0 [ create_bd_cell -type ip -vlnv gtri.gatech.edu:user:axi4_stream_user_processing_core:1.0 axi4_stream_user_processing_core_0 ]
 
@@ -259,20 +262,22 @@ CONFIG.NUM_MI {7} \
   connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M02_AXI [get_bd_intf_pins axi_gpio_1/S_AXI] [get_bd_intf_pins processing_system7_0_axi_periph/M02_AXI]
   connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M03_AXI [get_bd_intf_pins axi_dma_0/S_AXI_LITE] [get_bd_intf_pins processing_system7_0_axi_periph/M03_AXI]
   connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M04_AXI [get_bd_intf_pins axi4_stream_user_processing_core_0/S_AXI] [get_bd_intf_pins processing_system7_0_axi_periph/M04_AXI]
+  connect_bd_intf_net -intf_net processing_system7_0_axi_periph_M05_AXI [get_bd_intf_pins DeviceDNA_Reader_0/S_AXI] [get_bd_intf_pins processing_system7_0_axi_periph/M05_AXI]
 
   # Create port connections
   connect_bd_net -net axi_dma_0_mm2s_introut [get_bd_pins axi_dma_0/mm2s_introut] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net axi_dma_0_s2mm_introut [get_bd_pins axi_dma_0/s2mm_introut] [get_bd_pins xlconcat_0/In1]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi4_stream_user_processing_core_0/m_axis_aclk] [get_bd_pins axi4_stream_user_processing_core_0/s_axi_aclk] [get_bd_pins axi4_stream_user_processing_core_0/s_axis_aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/m_axi_sg_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_0/S01_ACLK] [get_bd_pins axi_interconnect_0/S02_ACLK] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_fifo_1/s_axis_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins processing_system7_0_axi_periph/ACLK] [get_bd_pins processing_system7_0_axi_periph/M00_ACLK] [get_bd_pins processing_system7_0_axi_periph/M01_ACLK] [get_bd_pins processing_system7_0_axi_periph/M02_ACLK] [get_bd_pins processing_system7_0_axi_periph/M03_ACLK] [get_bd_pins processing_system7_0_axi_periph/M04_ACLK] [get_bd_pins processing_system7_0_axi_periph/M05_ACLK] [get_bd_pins processing_system7_0_axi_periph/M06_ACLK] [get_bd_pins processing_system7_0_axi_periph/S00_ACLK] [get_bd_pins rst_processing_system7_0_100M/slowest_sync_clk]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins DeviceDNA_Reader_0/s_axi_aclk] [get_bd_pins axi4_stream_user_processing_core_0/m_axis_aclk] [get_bd_pins axi4_stream_user_processing_core_0/s_axi_aclk] [get_bd_pins axi4_stream_user_processing_core_0/s_axis_aclk] [get_bd_pins axi_bram_ctrl_0/s_axi_aclk] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axi_dma_0/m_axi_sg_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_0/S01_ACLK] [get_bd_pins axi_interconnect_0/S02_ACLK] [get_bd_pins axis_data_fifo_0/s_axis_aclk] [get_bd_pins axis_data_fifo_1/s_axis_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins processing_system7_0_axi_periph/ACLK] [get_bd_pins processing_system7_0_axi_periph/M00_ACLK] [get_bd_pins processing_system7_0_axi_periph/M01_ACLK] [get_bd_pins processing_system7_0_axi_periph/M02_ACLK] [get_bd_pins processing_system7_0_axi_periph/M03_ACLK] [get_bd_pins processing_system7_0_axi_periph/M04_ACLK] [get_bd_pins processing_system7_0_axi_periph/M05_ACLK] [get_bd_pins processing_system7_0_axi_periph/M06_ACLK] [get_bd_pins processing_system7_0_axi_periph/S00_ACLK] [get_bd_pins rst_processing_system7_0_100M/slowest_sync_clk]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_processing_system7_0_100M/ext_reset_in]
   connect_bd_net -net rst_processing_system7_0_100M_interconnect_aresetn [get_bd_pins processing_system7_0_axi_periph/ARESETN] [get_bd_pins rst_processing_system7_0_100M/interconnect_aresetn]
-  connect_bd_net -net rst_processing_system7_0_100M_peripheral_aresetn [get_bd_pins axi4_stream_user_processing_core_0/m_axis_aresetn] [get_bd_pins axi4_stream_user_processing_core_0/s_axi_aresetn] [get_bd_pins axi4_stream_user_processing_core_0/s_axis_aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_0/S01_ARESETN] [get_bd_pins axi_interconnect_0/S02_ARESETN] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_fifo_1/s_axis_aresetn] [get_bd_pins processing_system7_0_axi_periph/M00_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M01_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M02_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M03_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M04_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M05_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M06_ARESETN] [get_bd_pins processing_system7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_processing_system7_0_100M/peripheral_aresetn]
+  connect_bd_net -net rst_processing_system7_0_100M_peripheral_aresetn [get_bd_pins DeviceDNA_Reader_0/s_axi_aresetn] [get_bd_pins axi4_stream_user_processing_core_0/m_axis_aresetn] [get_bd_pins axi4_stream_user_processing_core_0/s_axi_aresetn] [get_bd_pins axi4_stream_user_processing_core_0/s_axis_aresetn] [get_bd_pins axi_bram_ctrl_0/s_axi_aresetn] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_0/S01_ARESETN] [get_bd_pins axi_interconnect_0/S02_ARESETN] [get_bd_pins axis_data_fifo_0/s_axis_aresetn] [get_bd_pins axis_data_fifo_1/s_axis_aresetn] [get_bd_pins processing_system7_0_axi_periph/M00_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M01_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M02_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M03_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M04_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M05_ARESETN] [get_bd_pins processing_system7_0_axi_periph/M06_ARESETN] [get_bd_pins processing_system7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_processing_system7_0_100M/peripheral_aresetn]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins processing_system7_0/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
 
   # Create address segments
   create_bd_addr_seg -range 0x20000000 -offset 0x0 [get_bd_addr_spaces axi_dma_0/Data_SG] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
   create_bd_addr_seg -range 0x20000000 -offset 0x0 [get_bd_addr_spaces axi_dma_0/Data_MM2S] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
   create_bd_addr_seg -range 0x20000000 -offset 0x0 [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs processing_system7_0/S_AXI_HP0/HP0_DDR_LOWOCM] SEG_processing_system7_0_HP0_DDR_LOWOCM
+  create_bd_addr_seg -range 0x10000 -offset 0x43C10000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs DeviceDNA_Reader_0/S_AXI/S_AXI_reg] SEG_DeviceDNA_Reader_0_S_AXI_reg
   create_bd_addr_seg -range 0x10000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi4_stream_user_processing_core_0/S_AXI/S_AXI_reg] SEG_axi4_stream_user_processing_core_0_S_AXI_reg
   create_bd_addr_seg -range 0x1000 -offset 0x40000000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_bram_ctrl_0/S_AXI/Mem0] SEG_axi_bram_ctrl_0_Mem0
   create_bd_addr_seg -range 0x10000 -offset 0x40400000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] SEG_axi_dma_0_Reg
@@ -297,6 +302,7 @@ preplace inst xlconcat_0 -pg 1 -lvl 6 -y 540 -defaultsOSRD
 preplace inst axi_gpio_0 -pg 1 -lvl 7 -y 670 -defaultsOSRD
 preplace inst blk_mem_gen_0 -pg 1 -lvl 4 -y 300 -defaultsOSRD
 preplace inst axi_gpio_1 -pg 1 -lvl 7 -y 800 -defaultsOSRD
+preplace inst DeviceDNA_Reader_0 -pg 1 -lvl 2 -y 260 -defaultsOSRD
 preplace inst axi_interconnect_0 -pg 1 -lvl 6 -y 290 -defaultsOSRD
 preplace inst axi_bram_ctrl_0 -pg 1 -lvl 3 -y 300 -defaultsOSRD
 preplace inst axi4_stream_user_processing_core_0 -pg 1 -lvl 3 -y 120 -defaultsOSRD
@@ -304,35 +310,36 @@ preplace inst processing_system7_0_axi_periph -pg 1 -lvl 2 -y 800 -defaultsOSRD
 preplace inst processing_system7_0 -pg 1 -lvl 7 -y 320 -defaultsOSRD
 preplace inst axis_data_fifo_0 -pg 1 -lvl 4 -y 440 -defaultsOSRD
 preplace netloc processing_system7_0_DDR 1 7 1 NJ
-preplace netloc processing_system7_0_axi_periph_M03_AXI 1 2 3 NJ 420 NJ 360 1420
-preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 5 760 650 NJ 650 NJ 650 NJ 650 NJ
-preplace netloc axi4_stream_user_processing_core_0_M_AXIS 1 3 1 1070
-preplace netloc processing_system7_0_M_AXI_GP0 1 1 7 380 370 NJ 380 NJ 110 NJ 110 NJ 110 NJ 110 2590
+preplace netloc processing_system7_0_axi_periph_M03_AXI 1 2 3 NJ 420 NJ 360 1660
+preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 5 1000 650 NJ 650 NJ 650 NJ 650 NJ
+preplace netloc axi4_stream_user_processing_core_0_M_AXIS 1 3 1 1310
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 7 NJ 370 NJ 380 NJ 110 NJ 110 NJ 110 NJ 110 2820
 preplace netloc axi_bram_ctrl_0_BRAM_PORTA 1 3 1 NJ
-preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 8 -10 350 NJ 350 NJ 390 NJ 100 NJ 100 NJ 100 NJ 100 2600
+preplace netloc processing_system7_0_axi_periph_M05_AXI 1 1 2 380 190 930
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 8 -10 350 NJ 350 NJ 390 NJ 100 NJ 100 NJ 100 NJ 100 2830
 preplace netloc processing_system7_0_IIC_0 1 7 1 NJ
-preplace netloc axi_dma_0_M_AXI_SG 1 5 1 1790
+preplace netloc axi_dma_0_M_AXI_SG 1 5 1 2030
 preplace netloc processing_system7_0_IIC_1 1 7 1 NJ
 preplace netloc processing_system7_0_axi_periph_M02_AXI 1 2 5 NJ 780 NJ 780 NJ 780 NJ 780 N
-preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 6 360 330 770 410 1080 250 1410 250 1810 480 2120
-preplace netloc axi_dma_0_s2mm_introut 1 5 1 1780
-preplace netloc axi_dma_0_M_AXI_MM2S 1 5 1 1800
-preplace netloc xlconcat_0_dout 1 6 1 2130
+preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 6 360 330 1010 410 1320 250 1650 250 2050 480 2360
+preplace netloc axi_dma_0_s2mm_introut 1 5 1 2020
+preplace netloc axi_dma_0_M_AXI_MM2S 1 5 1 2040
+preplace netloc xlconcat_0_dout 1 6 1 2370
 preplace netloc processing_system7_0_FIXED_IO 1 7 1 NJ
-preplace netloc axi_dma_0_mm2s_introut 1 5 1 1810
+preplace netloc axi_dma_0_mm2s_introut 1 5 1 2050
 preplace netloc axi_gpio_0_GPIO 1 7 1 NJ
-preplace netloc axi_interconnect_0_M00_AXI 1 6 1 2140
-preplace netloc axi_dma_0_M_AXI_S2MM 1 5 1 1820
+preplace netloc axi_interconnect_0_M00_AXI 1 6 1 2380
+preplace netloc axi_dma_0_M_AXI_S2MM 1 5 1 2060
 preplace netloc processing_system7_0_GPIO_0 1 7 1 N
-preplace netloc axis_data_fifo_1_M_AXIS 1 2 1 700
+preplace netloc axis_data_fifo_1_M_AXIS 1 2 1 940
 preplace netloc axis_data_fifo_0_M_AXIS 1 4 1 N
 preplace netloc rst_processing_system7_0_100M_interconnect_aresetn 1 1 1 340
-preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 0 390 350 390 720 400 1090 350 1430 330 1780 470 2140 480 2590
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 8 0 390 350 390 960 400 1330 350 1670 330 2020 470 2380 480 2820
 preplace netloc axi_gpio_1_GPIO 1 7 1 NJ
-preplace netloc axi_dma_0_M_AXIS_MM2S 1 1 5 370 360 NJ 370 NJ 240 NJ 240 1770
-preplace netloc processing_system7_0_axi_periph_M04_AXI 1 2 1 710
-preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 750
-levelinfo -pg 1 -30 170 540 900 1250 1600 1970 2370 2630 -top 0 -bot 1040
+preplace netloc axi_dma_0_M_AXIS_MM2S 1 1 5 NJ 360 NJ 370 NJ 240 NJ 240 2010
+preplace netloc processing_system7_0_axi_periph_M04_AXI 1 2 1 950
+preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 990
+levelinfo -pg 1 -30 170 770 1140 1490 1840 2210 2600 2860 -top 0 -bot 1040
 ",
 }
 
