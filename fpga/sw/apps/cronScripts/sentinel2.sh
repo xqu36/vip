@@ -22,6 +22,6 @@ echo $SHUTDOWN > /sys/class/gpio/gpio963/value
 if [ $(cat /sys/class/gpio/gpio961/value) = 1 ]
 then
     echo "Powering off for daily reset. $(date)" >> /home/ubuntu/ev/sensor.log 
-    sudo poweroff
+    #sudo poweroff
     
 fi
