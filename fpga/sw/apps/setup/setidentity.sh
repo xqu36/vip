@@ -1,4 +1,4 @@
-#! /bin/bash -x
+#! /bin/bash
 ### BEGIN INIT INFO
 # Provides:          setidentity
 # Required-Start:    $remote_fs $syslog     
@@ -26,8 +26,8 @@ echo_and_log() {
 }
 
 extract_id () {
-  HEX_ADDR1="0x43C20000"
-  HEX_ADDR2="0x43C20004"
+  HEX_ADDR1="0x43C10000"
+  HEX_ADDR2="0x43C10004"
   HEX_WORD=""
 
   HEX_WORD="$(/etc/init.d/peek ${HEX_ADDR1})"
