@@ -76,6 +76,7 @@ addgroup ubuntu i2c
 # Folder setup for software/firmware updates
 SOFTWARE="/etc/software_updates"
 mkdir $SOFTWARE
+chown ubuntu:ubuntu $SOFTWARE
 cp /home/ubuntu/cronScripts/getSoftwareUpdate.sh ${SOFTWARE}/.
 cp /home/ubuntu/cronScripts/updateChecker.sh ${SOFTWARE}/.
 # Software Setup Initialization
