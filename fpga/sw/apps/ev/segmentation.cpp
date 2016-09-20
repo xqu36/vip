@@ -49,7 +49,7 @@ void* frameGrabber(void*) {
   Mat qFrame;
 
 #ifdef DEBUG
-  VideoCapture capture("img/spring_high_angle_8.mp4");
+  VideoCapture capture("img/spring_high_angle_5.mp4");
 #endif
 
 #ifndef DEBUG

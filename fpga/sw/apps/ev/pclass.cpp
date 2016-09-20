@@ -278,115 +278,18 @@ void PathClassifier::updatePath(ConnectedComponent& ccomp, int type, int& outTyp
         redrawMask();
       }
     }
-  /* @cars */
-  } else if(type == TYPE_CAR) {
-    if(!carPathIsValid) {
-
-      // NOTE: No need to resize as in peddetect
-
-      // need to find the centroids in image
-      vector<Point> cntd_vec;
-
-      if(cardetect.detectCar(objframe, rectMask.size(), cntd_vec)) {
-
-        // prepare ctrd_mat
-        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-
-        for(int i = 0; i < cntd_vec.size(); i++) {
-          // add the offsets for the centroid
-          circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], 
-                 MIN(ccomp.getBoundingBoxArea() / (scale*cntd_vec.size()),10), redrawColor, CV_FILLED);
-        }
-
-        if (carQueue.size() < carsInPath) {
-          carQueue.push_back(crtd_mat);
-          redrawMask();
-        } else {
-          carQueue.pop_front();
-          carQueue.push_back(crtd_mat);
-          redrawMask();
-        }
-        outType = TYPE_CAR_ONPATH;
-      } else outType = TYPE_CAR;
-    } else {
-      if(carQueue.size() < carsInPath) {
-        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(redrawValue/2,redrawValue/2,redrawValue/2), CV_FILLED);
-        carQueue.push_back(ctrd_mat);
-        redrawMask();
-      } else {
-        carQueue.pop_front();
-        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(redrawValue/2,redrawValue/2,redrawValue/2), CV_FILLED);
-        carQueue.push_back(ctrd_mat);
-        redrawMask();
-      }
-    }
-
-  // already reasonably confident about car-ness
-  } else if (type == TYPE_CAR_ONPATH) {
-
-    int scaledMaxHeight = 1.1 * cardetect.getMaxSize().height;
-    int scaledMaxWidth = 1.1 * cardetect.getMaxSize().width;
-    int scaledMinHeight = 0.9 * cardetect.getMinSize().height;
-    int scaledMinWidth = 0.9 * cardetect.getMinSize().width;
-    int avgHeight = scaledMaxHeight+scaledMinHeight / 2;
-    int avgWidth = scaledMaxWidth+scaledMinWidth / 2;
-
-    //if(rectMask.size().height < avgHeight || rectMask.size().width < avgWidth) {
-    if(rectMask.size().height > scaledMaxHeight || rectMask.size().width > scaledMaxWidth ||
-       rectMask.size().height < scaledMinHeight || rectMask.size().width < scaledMinWidth ||
-       !carPathIsValid) {
-
-      // no need to resize as in PED
-
-      // need to find the centroids in image
-      vector<Point> cntd_vec;
-
-      if(cardetect.detectCar(objframe, rectMask.size()), cntd_vec) {
-
-        // prepare ctrd_mat
-        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-
-        for(int i = 0; i < cntd_vec.size(); i++) {
-          circle(ctrd_mat, ccomp.getCentroidBox()+cntd_vec[i], 
-                 MIN(ccomp.getBoundingBoxArea() / (scale*cntd_vec.size()),10), redrawColor, CV_FILLED);
-        }
-
-        if(carQueue.size() < carsInPath) {
-          carQueue.push_back(ctrd_mat);
-          redrawMask();
-        } else {
-          carQueue.pop_front();
-          carQueue.push_back(ctrd_mat);
-          redrawMask();
-        }
-        outType = TYPE_CAR_ONPATH;
-      } else outType = TYPE_CAR;
-    } else {
-      if(carQueue.size() < carsInPath) {
-        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(redrawValue/2,redrawValue/2,redrawValue/2), CV_FILLED);
-        carQueue.push_back(ctrd_mat);
-        redrawMask();
-      } else {
-        carQueue.pop_front();
-        Mat ctrd_mat = Mat::zeros(prows, pcols, CV_8U);
-        circle(ctrd_mat, ccomp.getCentroidBox(), MIN(ccomp.getBoundingBoxArea() / scale,10), Scalar(redrawValue/2,redrawValue/2,redrawValue/2), CV_FILLED);
-        carQueue.push_back(ctrd_mat);
-        redrawMask();
-      }
-    }
-  /* @cars */
+  }
 }
 
 void PathClassifier::redrawMask() {
 
+    /*
     carPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < carQueue.size(); i++) {
         // TODO: actual probabilities? +10 is too rigid
         carPath += carQueue[i];
     }
+    */
 
     pedPath = Mat::zeros(prows, pcols, CV_8U);
     for(int i = 0; i < pedQueue.size(); i++) {
