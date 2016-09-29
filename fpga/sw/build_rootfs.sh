@@ -178,7 +178,7 @@ then
 fi
 
 
-rsync -r --exclude=setup/moduels $BUILDPATH/apps/ $RFSLOC/home/ubuntu
+rsync -r --exclude=setup/modules $BUILDPATH/apps/ $RFSLOC/home/ubuntu
 cp $BUILDPATH/apps/setup/modules/rc.local $RFSLOC/etc/.
 cp $BUILDPATH/apps/setup/modules/interfaces $RFSLOC/etc/network/.
 cp $BUILDPATH/apps/setup/modules/wpa_supplicant.conf $RFSLOC/etc/.
