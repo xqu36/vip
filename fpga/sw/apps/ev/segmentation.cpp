@@ -383,7 +383,7 @@ int main(int argc, char** argv) {
     if(ped) pedPerSec = true;
     inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
-    vstats.displayStats("inst", result);
+    //vstats.displayStats("inst", result);
     if(vstats.getUptime() > 1.0) pclass.bgValid = true;
 
     if(frameQueue.size() > frameQueueSetSize) {
