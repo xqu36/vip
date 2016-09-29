@@ -28,7 +28,7 @@ fi
 
 
 #Check for internet connectivity
-wget -q --spider http://smartcities.gatech.edu
+wget -q --spider http://techcities.vip.gatech.edu
 if [ $? -eq 0 ]; then
 	#Check for running process
 	case "$(pgrep -f threadedpoll | wc -l)" in
