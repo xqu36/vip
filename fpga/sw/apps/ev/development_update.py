@@ -44,7 +44,7 @@ def sendPacket():
 
 def wifiSignal():
     try:
-      host = socket.gethostbyname("smartcities.gatech.edu")
+      host = socket.gethostbyname("techcities.vip.gatech.edu")
       s = socket.create_connection((host, 80),2)
       return False
     except:
@@ -59,7 +59,7 @@ while noSignal:
     time.sleep(30)
     print "No WIFI signal, attempting to resend development packet..."
     noSignal = wifiSignal()
-    
+
 
 sendPacket()
 

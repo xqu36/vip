@@ -8,7 +8,7 @@
 # run as a cronjob that operates DAILY.
 
 # Web URL of the binary file (dummy file for now)
-WEB_URL="http://smartcities.gatech.edu/files/"
+WEB_URL="http://techcities.vip.gatech.edu/files/"
 SOFTWARE="new_softwareupdate.secure"
 SIGNATURE="new_softwareupdate.sha256"
 SOFTWARE_URL="${WEB_URL}${SOFTWARE}"
