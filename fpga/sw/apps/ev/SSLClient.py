@@ -1,6 +1,6 @@
 #!/usr/bin/python           # This is client.py file
 
-import socket               # Import socket module
+import socket
 import json
 import ssl
 import pprint
@@ -13,15 +13,15 @@ def send_data(data, attempt_count=1):
       # Require a certificate from the server. We used a self-signed certificate
       # so here ca_certs must be the server certificate itself.
       ssl_sock = ssl.wrap_socket(s,
-                                 ca_certs="node1/cacert.pem",
+                                 ca_certs="../security/cacert.crt",
                                  cert_reqs=ssl.CERT_REQUIRED,
-                                 certfile="node1/node1.pem",
-                                 keyfile="node1/server.key",
+                                 certfile="../security/node.crt",
+                                 keyfile="../security/server.key",
                                  ciphers= "HIGH",
                                  do_handshake_on_connect=True)
 
       ssl_sock.settimeout(1)
-      ssl_sock.connect(('smartcities.gatech.edu', 50008))
+      ssl_sock.connect(('techcities.vip.gatech.edu', 50008))
       info = data #encrypt_data(data)
       #print_log(ssl_sock)
       ssl_sock.write(json.dumps(info))
@@ -47,6 +47,7 @@ def send_data(data, attempt_count=1):
         print "Do, or do not. There is no try... Attempting to Resend..."
       else:
         print "I have failed you... Unable to send data"
+        print str(msg)
     finally:
       ssl_sock.close();
 
