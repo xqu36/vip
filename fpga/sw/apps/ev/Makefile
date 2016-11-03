@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-I/usr/include/opencv -I/usr/include/opencv2 -std=c++0x
+CFLAGS=-I/usr/include/opencv -I/usr/include/opencv2 -std=c++0x -D DEBUG -D LOGGING
 LIBS=`pkg-config --libs opencv` -lpthread
 LIBDIR=-L/usr/local/include
 OBJDIR=.obj

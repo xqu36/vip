@@ -22,6 +22,10 @@
 #include "utils.hpp"
 #include "ccomp.hpp"
 #include "pclass.hpp"
+#include <cstdio>
+#ifdef LOGGING
+#include <ctime>
+#endif
 
 using namespace cv;
 using namespace std;
@@ -45,7 +49,10 @@ pthread_mutex_t qutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t kutex = PTHREAD_MUTEX_INITIALIZER;
 
 void* frameGrabber(void*) {
-
+#ifdef LOGGING
+  clock_t begin = clock();
+  double elapsed_time;
+#endif
   Mat qFrame;
 
 #ifdef DEBUG
@@ -66,13 +73,24 @@ void* frameGrabber(void*) {
 
   pthread_mutex_lock(&qutex);
   // >>>
+  #ifdef LOGGING
+      clock_t begin_pop = clock();
+  #endif
   frameQueue.push_back(qFrame);
   frameQueueReady = true;
   // >>>
   pthread_mutex_unlock(&qutex);
-
+  #ifdef LOGGING
+  clock_t end = clock();
+  freopen("log.txt", "a", stderr);
+  elapsed_time = double(end - begin_pop);
+  cerr << "Frame pop time:" << elapsed_time << endl;
+  fclose(stderr);
+  #endif
   while(!pthreadExit) {
-
+#ifdef LOGGING
+    begin = clock();
+#endif
     capture >> qFrame;
 
 #ifdef DEBUG
@@ -89,10 +107,20 @@ void* frameGrabber(void*) {
       if(frameQueue.size() <= 1) {
         pthread_mutex_lock(&qutex);
         // >>>
-        frameQueue.push_back(qFrame);
-        frameQueue.pop_front();
-        // >>>
-        pthread_mutex_unlock(&qutex);
+  	#ifdef LOGGING
+        begin_pop = clock();
+ 	#endif
+  	frameQueue.push_back(qFrame);
+  	frameQueueReady = true;
+  	// >>>
+  	pthread_mutex_unlock(&qutex);
+  	#ifdef LOGGING
+  	end = clock();
+	elapsed_time = double(end - begin_pop);
+  	freopen("log.txt", "a", stderr);
+  	cerr << "Frame pop time:" << elapsed_time << endl;
+  	fclose(stderr);
+  	#endif
       }
     } else if(frameQueueSetSize != 1) {
 
@@ -100,22 +128,31 @@ void* frameGrabber(void*) {
       if(frameQueue.size() < frameQueueSetSize) {
         pthread_mutex_lock(&qutex);
         // >>>
-        frameQueue.push_back(qFrame);
-        // >>>
-        pthread_mutex_unlock(&qutex);
-      } else {
-
-        // else implies the queue is now frameQSetSize large
-        // switch desired size back down to 1
-        pthread_mutex_lock(&qutex);
-        // >>>
-        frameQueueSetSize = 1;
-        // >>>
-        pthread_mutex_unlock(&qutex);
+  	#ifdef LOGGING
+        begin_pop = clock();
+ 	#endif
+  	frameQueue.push_back(qFrame);
+  	frameQueueReady = true;
+  	// >>>
+  	pthread_mutex_unlock(&qutex);
+  	#ifdef LOGGING
+  	end = clock();
+	elapsed_time = double(end - begin_pop);
+  	freopen("log.txt", "a", stderr);
+  	cerr << "Frame pop time:" << elapsed_time << endl;
+  	fclose(stderr);
+  	#endif
       }
     }
+#ifdef LOGGING
+  end = clock();
+  elapsed_time = double(end - begin);
+  freopen("log.txt", "a", stderr);
+  cerr<< "Frame grabber function time:" << elapsed_time << endl;
+  fclose(stderr);
+#endif
 #ifdef DEBUG
-    usleep(66000);
+    usleep(1000);//(66000);
 #endif
   }
   cout << "Thread is exiting." << endl;
@@ -159,7 +196,7 @@ int main(int argc, char** argv) {
   ////////////////////
   /* INITIALIZATION */
   ////////////////////
-
+  clock_t init_begin = clock();
   //capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   //capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
@@ -176,20 +213,44 @@ int main(int argc, char** argv) {
   int MAX_AREA = vstats.getHeight()/2 * vstats.getWidth()/2;
 
   Mat frame, frame_hd;
-
+  #ifdef LOGGING
+  clock_t pop_begin;
+  clock_t pop_end;
+  double elapsed_time;
+  #endif
   // get next frame off of the top of the queue
   do {
+#ifdef LOGGING
+    pop_begin = clock();
+#endif
     if(frameQueueReady) {
       pthread_mutex_lock(&qutex);
       // >>>
       frameQueue[0].copyTo(frame_hd);
       // >>>
       pthread_mutex_unlock(&qutex);
+#ifdef LOGGING
+      pop_end = clock();
+      elapsed_time = double(pop_end - pop_begin);
+      freopen("log.txt", "a", stderr);
+      cerr << "Frame pop time:" << elapsed_time << endl;
+      fclose(stderr);
+#endif
     }
   } while(frame_hd.empty());
 
   // csi enhance
+ #ifdef LOGGING
+  clock_t resizing = clock(); 
+  #endif
   resize(frame_hd, frame, Size(320,240), INTER_NEAREST);
+  #ifdef LOGGING
+  clock_t end_resizing = clock();
+  elapsed_time = double(end_resizing - resizing);
+  freopen("log.txt", "a", stderr);
+  cerr << "CSI Resizing time:" << elapsed_time << endl;
+  fclose(stderr);
+  #endif
 
   // define for img stabilization
   Mat prev_frame;
@@ -212,13 +273,20 @@ int main(int argc, char** argv) {
   int result = 0;  // calibrating [0], no ped [-1], ped [+1]
 
   // for img stabilization 
+  clock_t img_stabilization_begin = clock();
   Mat prev_gradient = frame.clone();
   if(STABILIZE) {
     cvtColor(prev_gradient, prev_gradient, CV_RGB2GRAY);
     prev_gradient.convertTo(prev_gradient, CV_32FC1);
   }
+  clock_t end = clock();
+  elapsed_time = double(end - img_stabilization_begin);
+  freopen("log.txt", "a", stderr);
+  cerr << "Img stabilization time:" << elapsed_time << endl;
+  fclose(stderr);
 
   // initialize MoG background subtractor
+  clock_t MoG_begin = clock();
   BackgroundSubtractorMOG2 MOG = BackgroundSubtractorMOG2();
   MOG.set("detectShadows", DETECTSHADOWS);
   MOG.set("nmixtures", NMIXTURES);
@@ -226,6 +294,12 @@ int main(int argc, char** argv) {
 
   Mat sE_e = getStructuringElement(MORPH_ELLIPSE, Size(3, 3));
   Mat sE_d = getStructuringElement(MORPH_ELLIPSE, Size(5, 5));
+
+  end = clock();
+  elapsed_time = double(end - MoG_begin);
+  freopen("log.txt", "a", stderr);
+  cerr << "MoG initialization time:" << elapsed_time << endl;
+  fclose(stderr);
 
   // set up vector of ConnectedComponents
   vector<ConnectedComponent> vec_cc;
@@ -261,9 +335,18 @@ int main(int argc, char** argv) {
     // update the danger path
     dangerPath = /* pclass.carPath & */ pclass.pedPath;
 
+#ifdef LOGGING
+    clock_t begin_gaussian = clock();
+#endif
     GaussianBlur(frame, frame, Size(5,5), 0, 0);
     GaussianBlur(frame_hd, frame_hd, Size(5,5), 0, 0);
-
+#ifdef LOGGING
+    clock_t end_gaussian = clock();
+    elapsed_time = double(end_gaussian - begin_gaussian);
+    freopen("log.txt", "a", stderr);
+    cerr << "Gaussian Blur time:" << elapsed_time << endl;
+    fclose(stderr);
+#endif
     ////////////////
     /* PROCESSING */
     ////////////////
@@ -283,13 +366,32 @@ int main(int argc, char** argv) {
 
     // remove detected shadows
     threshold(foregroundMask, foregroundMask, 128, 255, THRESH_BINARY);
-
+    #ifdef LOGGING
+    clock_t begin_morphological = clock();
+    #endif
     erode(foregroundMask, foregroundMask, sE_e, Point(-1, -1), 1);
     dilate(foregroundMask, foregroundMask, sE_d, Point(-1, -1), 2);
     erode(foregroundMask, foregroundMask, sE_e, Point(-1, -1), 0);
+    #ifdef LOGGING
+    clock_t end_morph = clock();
+    elapsed_time = double(end_morph - begin_morphological);
+    freopen("log.txt", "a", stderr);
+    cerr << "Morphological time:" << elapsed_time << endl;
+    fclose(stderr);
+    #endif
 
     // find CCs in foregroundMask
+    #ifdef LOGGING
+    clock_t begin_CC = clock();
+    #endif
     findCC(foregroundMask, vec_cc);
+    #ifdef LOGGING
+    clock_t end_CC = clock();
+    elapsed_time = double(end_CC - begin_CC);
+    freopen("log.txt", "a", stderr);
+    cerr << "Connected Component find time:" << elapsed_time << endl;
+    fclose(stderr);
+    #endif
 
     prev_PedCount = inst_PedCount;
     inst_PedCount = 0;
@@ -313,10 +415,18 @@ int main(int argc, char** argv) {
 
       // FIXME - four times too much?
       //dilate(objmask, objmask, sE_d, Point(-1, -1), 2);
-
+#ifdef LOGGING
+      clock_t classification_begin = clock();
+#endif
       int classification = -1;
       classification = pclass.classify(vec_cc[i], objmask, frame, frame_hd);
-      
+#ifdef LOGGING
+      end = clock();
+      elapsed_time = double(end - classification_begin);
+      freopen("log.txt", "a", stderr);
+      cerr << "classification time:" << elapsed_time << endl;
+      fclose(stderr);
+#endif
       ped = false;
       Rect r = vec_cc[i].getBoundingBox();
 
@@ -383,15 +493,25 @@ int main(int argc, char** argv) {
     if(ped) pedPerSec = true;
     inst_PedCount = MAX(prev_PedCount,inst_PedCount);
 
-    //vstats.displayStats("inst", result);
+    vstats.displayStats("inst", result);
     if(vstats.getUptime() > 1.0) pclass.bgValid = true;
 
     if(frameQueue.size() > frameQueueSetSize) {
+#ifdef LOGGING
+      clock_t begin_pop = clock();
+#endif
       pthread_mutex_lock(&qutex);
       // >>>
       frameQueue.pop_front();
       // >>>
       pthread_mutex_unlock(&qutex);
+#ifdef LOGGING
+      clock_t end_pop = clock();
+      elapsed_time = double(end_pop - begin_pop);
+      freopen("log.txt", "a", stderr);
+      cerr << "pop time:" << elapsed_time << endl << endl;
+      fclose(stderr);
+#endif
     }
 
     // update every second
@@ -417,7 +537,7 @@ int main(int argc, char** argv) {
       cout << "[" << vstats.getWidth() << "x" << vstats.getHeight() << 
               "](" << frame.cols << "x" << frame.rows << ") " <<
               pclass.getCurrentPedCount() << "/" << pclass.getPedCountCalibration() << 
-              "," << sec_PedCount << 
+              "," << sec_PedCount << 	
               "," << totalPed <<
               "," << pclass.peddetect.getMinSize().area() <<
               "," << pclass.peddetect.getMinSize().area()*.15 <<
@@ -441,9 +561,9 @@ int main(int argc, char** argv) {
     imshow("frame", frame);
     imshow("fg", foregroundMask);
     imshow("probable path", dangerPath);
-    if(waitKey(30) >= 0) break;
+    if(waitKey(10) >= 0) break;//30
 #endif
 
   }
   return 0;
-}
+}	
