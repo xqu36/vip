@@ -56,11 +56,11 @@ void wakeSensor() {
 
 void initPoll() {
   Wire.beginTransmission(co2Addr);
-  Wire.send(0x11);
-  Wire.send(0x00);
-  Wire.send(0x60);
-  Wire.send(0x35);
-  Wire.send(0xA6);
+  Wire.write(0x11);
+  Wire.write(0x00);
+  Wire.write(0x60);
+  Wire.write(0x35);
+  Wire.write(0xA6);
 
   Wire.endTransmission();
   delay(20);  
@@ -70,7 +70,7 @@ void initPoll() {
   byte buffer[2] = {
     0, 0  };
   while(Wire.available()) {
-    buffer[i] = Wire.receive();
+    buffer[i] = Wire.read();
     i++;
   }   
 
@@ -92,10 +92,10 @@ double readCo2() {
   //////////////////////////
 
   Wire.beginTransmission(co2Addr);
-  Wire.send(0x22);
-  Wire.send(0x00);
-  Wire.send(0x08);
-  Wire.send(0x2A);
+  Wire.write(0x22);
+  Wire.write(0x00);
+  Wire.write(0x08);
+  Wire.write(0x2A);
 
   Wire.endTransmission();
   /*
@@ -126,7 +126,7 @@ double readCo2() {
    it in here for portability and to future proof our code
    */
   while(Wire.available()) {
-    buffer[i] = Wire.receive();
+    buffer[i] = Wire.read();
     i++;
   }   
 
@@ -151,7 +151,7 @@ double readCo2() {
      */
 
     digitalWrite(13, LOW);
-    return (double) ‐1;
+    return (double) - 1;
   }   
 }
 ///////////////////////////////////////////////////////////////////
@@ -165,10 +165,10 @@ double readTemp() {
   digitalWrite(13, HIGH);      
 
   Wire.beginTransmission(co2Addr);
-  Wire.send(0x22);
-  Wire.send(0x00);
-  Wire.send(0x12);
-  Wire.send(0x34);
+  Wire.write(0x22);
+  Wire.write(0x00);
+  Wire.write(0x12);
+  Wire.write(0x34);
 
   Wire.endTransmission();
 
@@ -181,7 +181,7 @@ double readTemp() {
     0, 0, 0, 0  };
 
   while(Wire.available()) {
-    buffer[i] = Wire.receive();
+    buffer[i] = Wire.read();
     i++;
   }   
 
@@ -200,7 +200,7 @@ double readTemp() {
 
   else {
     digitalWrite(13, LOW);
-    return ‐1;
+    return -1;
   }   
 
 }
@@ -216,10 +216,10 @@ double readRh() {
   digitalWrite(13, HIGH);  
 
   Wire.beginTransmission(co2Addr);
-  Wire.send(0x22);
-  Wire.send(0x00);
-  Wire.send(0x14);
-  Wire.send(0x36);
+  Wire.write(0x22);
+  Wire.write(0x00);
+  Wire.write(0x14);
+  Wire.write(0x36);
 
   Wire.endTransmission();
 
@@ -231,7 +231,7 @@ double readRh() {
   byte buffer[4] = {
     0, 0, 0, 0  };
   while(Wire.available()) {
-    buffer[i] = Wire.receive();
+    buffer[i] = Wire.read();
     i++;
   }  
 
@@ -249,7 +249,7 @@ double readRh() {
   }   
   else {
     digitalWrite(13, LOW);
-    return ‐1;
+    return -1;
   }    
 }
 
