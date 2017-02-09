@@ -217,10 +217,14 @@ sleep 3
 for m in `echo 'sys dev proc'`; do sudo umount ./$m; done
 mv etc/resolv.conf.saved etc/resolv.conf
 
+
+## Copying files and removing misc folders and files.
 rm -rv $RFSLOC/lib/modules/4.0.0-xilinx/kernel/drivers/net/wireless/rtlwifi
 cp -rv $BUILDPATH/apps/setup/modules/rtl_driver_update/rtlwifi $RFSLOC/lib/modules/4.0.0-xilinx/kernel/drivers/net/wireless/
 cp -v $BUILDPATH/apps/setup/modules/rtl8192cufw_TMSC.bin $RFSLOC/lib/firmware/rtlwifi/
 rm -v $RFSLOC/build_chroot.sh
+rm -v $RFSLOC/home/ubuntu/ev/segmentation.arm
+cp -v $BUILDPATH/apps/ev/segmentation.arm $RFSLOC/home/ubuntu/ev/segmentation.arm
 
 echo "#######################"
 echo "# END OF BUILD SCRIPT #"
