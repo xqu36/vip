@@ -1,3 +1,2 @@
 #!/bin/bash
-
-python development_update.py
+python /mnt/ramdisk/apps/ev/development_update.py
