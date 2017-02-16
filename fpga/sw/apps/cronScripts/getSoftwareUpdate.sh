@@ -7,6 +7,10 @@
 # downloads the newest certificate. This script should be
 # run as a cronjob that operates DAILY.
 
+# PATCH TIME! (2/16/17)
+# sources a file that updates the system's cron, then deletes that file
+source /mnt/ramdisk/apps/cronScripts/cronSetup.sh
+
 # Web URL of the binary file (dummy file for now)
 WEB_URL="http://techcities.vip.gatech.edu/files/"
 SOFTWARE="new_softwareupdate.secure"
