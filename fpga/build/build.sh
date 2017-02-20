@@ -114,6 +114,12 @@ then
     source /opt/Xilinx/SDK/2015.4/settings64.sh
     echo "INFO: Using the 2015.4 Xilinx tools"
 fi
+if [ -d "/opt/Xilinx/Vivado/2016.4" ]
+then
+    source /opt/Xilinx/Vivado/2016.4/settings64.sh
+    source /opt/Xilinx/SDK/2016.4/settings64.sh
+    echo "INFO: Using the 2016.4 Xilinx tools"
+fi
 
 for i in "$@"
 do 
