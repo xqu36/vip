@@ -91,6 +91,11 @@ cp ${SETUP_DIR}/setidentity.sh /etc/init.d/.
 cd /etc/rc2.d
 ln -s ../init.d/setidentity.sh S99setidentity.sh
 
+# Set MAC
+cp ${SETUP_DIR}/setmac.sh /etc/init.d/.
+cd /etc/rc2.d
+ln -s ../init.d/setmac.sh S99setmac.sh
+
 #(crontab -l 2>/dev/null; echo "* * * * * cd /home/ubuntu/cronScripts; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh") | crontab -
 echo "* * * * * ubuntu cd /home/ubuntu/ev; /bin/bash /home/ubuntu/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
 echo "#* * * * * ubuntu cd /mnt/ramdisk/apps/ev; /bin/bash /mnt/ramdisk/apps/cronScripts/sentinel2.sh" >> /etc/cron.d/healthMon
