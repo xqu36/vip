@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # find unique identity
 UNIQ=$(cat /etc/uniqsysidentity.conf)
@@ -12,7 +12,7 @@ dhclient -r eth0
 
 # assign MAC
 ifconfig eth0 down
-ifconfig eth0 hw ether $(MAC)
+ifconfig eth0 hw ether $UMAC
 ifconfig eth0 up
 
 # reassign IP
