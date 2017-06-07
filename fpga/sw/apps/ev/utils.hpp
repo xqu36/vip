@@ -28,7 +28,7 @@ private:
 
   char display[20];
 
-  time_t start, end;
+  time_t start, end, hour;
   clock_t _start, _end;
   clock_t istart, iend;
   timeval mstart, mend;
@@ -52,6 +52,7 @@ public:
   double getUptime();
   void resetUptime();
   double getMillisecUptime();
+  int getHour();
   void openLog(string name);
   void closeLog();
   void seekLog(ios_base::seekdir p);

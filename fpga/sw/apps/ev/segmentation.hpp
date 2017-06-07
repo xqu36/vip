@@ -18,6 +18,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <dirent.h>
+#include <map>
 
 //#define MAX(x,y) (((x)>(y))?(x):(y))
 //#define MIN(x,y) (((x)<(y))?(x):(y))

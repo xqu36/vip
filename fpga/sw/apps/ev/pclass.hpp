@@ -39,10 +39,18 @@ private:
   int carPathCount;
   int pedPathCount;
 
+  Mat carPath;
+  Mat pedPath;
+
   int carsInPath, pedsInPath;
-  int pedsInPathDivisor;
+
+  int pedsInPathDivisor, carsInPathDivisor;
+  int pedsInPathValid;
+
   deque<Mat> carQueue;
   deque<Mat> pedQueue;
+
+  vector<Mat> pedCalibration;
 
   //CascadeClassifier cascade;
 
@@ -50,12 +58,11 @@ public:
   bool bgValid;
 
   bool recalibrate;
+  int pHour;
+  map<int, int> hourToDetections;
 
   bool carPathIsValid;
   bool pedPathIsValid;
-
-  Mat carPath;
-  Mat pedPath;
 
   PedestrianDetector peddetect;
   PedestrianDetector cardetect;
@@ -63,13 +70,19 @@ public:
   VideoStats pstats;
 
   PathClassifier(int rows, int cols);
-  //int classify(ConnectedComponent& ccomp, const Mat& objmask, const Mat& frame, const Mat& frame_hd);
   int classify(ConnectedComponent& ccomp, const Mat& objmask, Mat& frame, const Mat& frame_hd);
-  //void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, const Mat& frame, const Mat& frame_hd);
   void updatePath(ConnectedComponent& ccomp, int type, int& outType, const Mat& objmask, Mat& frame, const Mat& frame_hd);
   void redrawMask();
   int getCurrentPedCount();
+  int getCurrentPedCount_adjusted();
   int getPedCountCalibration();
+  int getCurrentCarCount();
+  int getCarCountCalibration();
+  int getPedCountCalibration_adjusted();
+  Mat getPath(int select);
+  Mat retrieveCalibration();
+  void insertCalibration(int index, Mat mat);
+  void clearPath(int select);
 };
 
 #endif // PCLASS_H

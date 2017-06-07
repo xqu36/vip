@@ -109,6 +109,15 @@ double VideoStats::getMillisecUptime() {
   return uptime_msec;
 }
 
+int VideoStats::getHour() {
+  time(&hour);
+  struct tm *localTime;
+
+  localTime = localtime(&hour);
+
+  return localTime->tm_hour;
+}
+
 void VideoStats::openLog(string name) {
   log.open(name, ios::out);
 }

@@ -20,7 +20,7 @@ class PedestrianDetector {
 
         PedestrianDetector();
         bool detectPedestrian(const Mat& objframe, const Size& objsize, vector<Point>& cntd_vec);
-        bool detectCar(const Mat& objframe, const Size& objsize);
+        bool detectCar(const Mat& objframe, const Size& objsize, vector<Point>& cntd_vec);
         Size getMinSize();
         Size getMaxSize();
 };
