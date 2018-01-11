@@ -1,0 +1,30 @@
+Git Quick Intro
+===============
+
+Git works using using commits which are a check/save point of your entire project (directory structure/files) at a point in time.
+Each commit (besides the first one) has one or more parent commits (which came before it in time).
+This makes the commit history in a git repo a directed acyclic graph, or DAG (yay Computer Science theory!).
+
+
+But actually using Git is fairly simple. Here's what you need to know:
+To create a commit, you first add all of the changed files you want to be saved to a staging area. You do this with "git add".
+Then, when you're ready to save the changes you've added in the staging area into a commit, you use "git commit".
+If you don't specify a commit message on the command line (with -m "my commit message"), it will open an editor in your terminal
+to create the commit message. I believe this defaults to vi on Ubuntu, which may suprise some of you! I normally just put the commit message
+on the command line (though I'm an avid vim user and recommend everyone try it sometime :D).
+
+
+How to create a new Git repo in a directory:                                git init
+How to clone a remote repository to your computer:                          git clone https://url.example.com
+How to add a file to staging area:                                          git add file1 file2 directory1 file3...
+How to save all of the changes added to the staging area to a commit:       git commit / git commit -m "My commit message"
+How to list prior commits:                                                  git log
+How to push your changes to a remote server:                                git push
+How to pull others' changes from a remote server:                           git pull
+
+
+Current versions of Git have pretty good error messages when something goes wrong, and if it doesn't help you, Google/StackOverflow is your friend :)
+Often if you're doing something not listed here, instructions will be available - i.e. to add your SSH keys to github.gatech.edu, follow the instructions
+under the SSH key section on github.gatech.edu.
+
+
