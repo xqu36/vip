@@ -1,0 +1,1 @@
+/**/int analog0=0; //analog 0void setup() {    analogReference(DEFAULT);    Serial.begin(9600);}void loop() {    double data=analogRead(analog0); //convert the integer type of input data to double in order for the conversion for voltage    Serial.println(data*5/1023); //conversion from data in sample units to data in voltage    delay(500);}
